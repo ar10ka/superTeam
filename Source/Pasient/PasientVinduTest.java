@@ -1,9 +1,10 @@
 /*
-Oblig 1b
 
 Studentnr: s188097
-Navn: Ole Bøe Andreassen
-Klasse: Dataingeniør
+Navn: Ole Boee Andreassen
+
+
+Klasse: Dataingenioer
 
 */
 

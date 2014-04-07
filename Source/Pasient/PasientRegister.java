@@ -1,18 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package pasient;
 
 /*
 
 Studentnr: s188097
-Navn: Ole BÃ¸e Andreassen
+Navn: Ole Boee Andreassen
 
 
-Klasse: DataingeniÃ¸r
+Klasse: Dataingenioer
 
 */
 
@@ -41,7 +36,7 @@ public class PasientRegister implements Serializable
           return null;
   }
 
-  public boolean finnes ( String n, int fd ) // finnes bilen?
+  public boolean finnes ( String n, int fd ) // finnes pasienten?
   {
       return finn(n,fd) != null;
   }
@@ -53,19 +48,19 @@ public class PasientRegister implements Serializable
   }
 
  public boolean fjern( Pasient n )
-  {System.out.println("1");
+  {
           if(!reg.isEmpty())
-          {System.out.println("2");
+          {
             for( Pasient p : reg)
             {
-                System.out.println("3");
+                
                  if( p.getNavn().equals( n.getNavn()) && p.getFDato() == n.getFDato())
                  {
                     reg.remove(p);
-                    System.out.println("4");
+                    
                     return true;
                  }
-                 System.out.println("5");
+                 
             }
           }
           return false;
