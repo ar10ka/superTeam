@@ -9,10 +9,10 @@ package pasient;
 /*
 
 Studentnr: s188097
-Navn: Ole Bøe Andreassen
+Navn: Ole Boee Andreassen
 
 
-Klasse: Dataingeniør
+Klasse: Dataingenioer
 
 */
 

@@ -9,10 +9,10 @@ package pasient;
 /*
 
 Studentnr: s188097
-Navn: Ole Bøe Andreassen
+Navn: Ole BÃ¸e Andreassen
 
 
-Klasse: Dataingeniør
+Klasse: DataingeniÃ¸r
 
 */
 
@@ -23,13 +23,13 @@ public class PasientRegister implements Serializable
 {
   private Pasient pasient;
   private List<Pasient> reg = new ArrayList<>();
-  
+
   public PasientRegister()
   {
   }
 
  public Pasient finn(String n, int fd )//finner pasient
-  {      
+  {
           if(!reg.isEmpty())
           {
             for( Pasient p : reg)
@@ -52,15 +52,20 @@ public class PasientRegister implements Serializable
       return reg.isEmpty();
   }
 
- public boolean fjern( String n, int fd )
-  {
+ public boolean fjern( Pasient n )
+  {System.out.println("1");
           if(!reg.isEmpty())
-          {
+          {System.out.println("2");
             for( Pasient p : reg)
             {
-                 if( p.getNavn() == n && p.getFDato() == fd)
+                System.out.println("3");
+                 if( p.getNavn().equals( n.getNavn()) && p.getFDato() == n.getFDato())
+                 {
                     reg.remove(p);
-                 return true;
+                    System.out.println("4");
+                    return true;
+                 }
+                 System.out.println("5");
             }
           }
           return false;
@@ -69,6 +74,7 @@ public class PasientRegister implements Serializable
   public void settInnNy( Pasient ny )
   {
     reg.add(ny);
+
   }
 
   public void sorter()
