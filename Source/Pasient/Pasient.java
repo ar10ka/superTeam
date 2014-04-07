@@ -1,10 +1,18 @@
 /*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package pasient;
+
+/*
 
 Studentnr: s188097
-Navn: Ole Bøe Andreassen
+Navn: Ole BÃ¸e Andreassen
 
 
-Klasse: Dataingeniør
+Klasse: DataingeniÃ¸r
 
 */
 
@@ -20,7 +28,7 @@ public class Pasient implements Serializable
 	  {
 		navn = n;
 		fdato = fd;
-		//liste over resepter skrevet ut på pasienten.
+		//liste over resepter skrevet ut pÃ¥ pasienten.
 
 	  }
 

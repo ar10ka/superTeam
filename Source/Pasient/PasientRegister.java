@@ -1,89 +1,79 @@
 /*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package pasient;
+
+/*
 
 Studentnr: s188097
-Navn: Ole Bøe Andreassen
+Navn: Ole BÃ¸e Andreassen
 
 
-Klasse: Dataingeniør
+Klasse: DataingeniÃ¸r
 
 */
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 public class PasientRegister implements Serializable
 {
-  private List<Pasient> reg = new LinkedList<>();
-  private Iterator<Pasient> iter;
-  //private Bil hode;
+  private Pasient pasient;
+  private List<Pasient> reg = new ArrayList<>();
+  
   public PasientRegister()
   {
-	  //Konstruktør
-
-    //hode = null;
   }
 
  public Pasient finn(String n, int fd )//finner pasient
-  {
-	  for( Pasient p : reg)
-	  {
-
-	  }
+  {      
+          if(!reg.isEmpty())
+          {
+            for( Pasient p : reg)
+            {
+                 if( p.getNavn().equals(n) && p.getFDato() == fd)
+                    return p;
+            }
+          }
+          return null;
   }
 
   public boolean finnes ( String n, int fd ) // finnes bilen?
   {
-	  if (finn(n,fd) != null)
-	  	return true;
-	  else
-	  	return false;
+      return finn(n,fd) != null;
   }
 
 
   public boolean tom () //er lista tom?
   {
-	  if (reg.isEmpty())
-	  	return true;
-	  else
-	  	return false;
+      return reg.isEmpty();
   }
 
  public boolean fjern( String n, int fd )
   {
-
-	iter = reg.iterator();
-
-		if( reg.isEmpty() )
-		  return false;
-
-		if( iter.getNavn() == n && iter.getFDato() == fd )
-		{
-			iter.remove();
-			return true;
-		}
-
-
-    while( løper.appendix != null  )
-    {
-	  if(iter.getNavn() == n && iter.getFDato() == fd)
-       {
-         iter.remove();
-         return true;
-	   }
-	  else
-		iter.next();
-    }
-    return false;
+          if(!reg.isEmpty())
+          {
+            for( Pasient p : reg)
+            {
+                 if( p.getNavn() == n && p.getFDato() == fd)
+                    reg.remove(p);
+                 return true;
+            }
+          }
+          return false;
   }
 
-  public void setInnNy( Pasient ny )
+  public void settInnNy( Pasient ny )
   {
     reg.add(ny);
   }
 
   public void sorter()
   {
-	  Collections.sort(liste);
+	 Collections.sort(reg,new ComparatorImpl());
   }
 
   public String getText()
@@ -97,6 +87,17 @@ public class PasientRegister implements Serializable
     else
       return "Listen er tom";
   }
+
+    private static class ComparatorImpl implements Comparator<Pasient> {
+
+        public ComparatorImpl() {
+        }
+
+        @Override
+        public int compare(Pasient o1, Pasient o2) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
 
 
 }
