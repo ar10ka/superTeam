@@ -19,6 +19,28 @@ public class Lege implements Serializable {
 			reseptGruppe = rgruppe;
 
 		}
+		
+		public void setNavn(String n) {
+			navn = n;
+		}
+		
+		public void setEtternavn(String e) {
+			etternavn = e;
+		}
+		
+		public void setFNr(String nr) {
+			fNr = nr;
+		}
+		
+		public void setArbeidsSted(String s) {
+			arbeidsSted = s;
+		}
+		
+		public void setReseptGruppe(char [] r) {
+			reseptGruppe = r;
+		}
+
+
 
 		public String getNavn() {
 			return navn;
@@ -34,11 +56,11 @@ public class Lege implements Serializable {
 
 		}
 
-		private String getArbeidsSted() {
+		public String getArbeidsSted() {
 			return arbeidsSted;
 		}
 
-		private char[] getReseptGruppe() {
+		public char[] getReseptGruppe() {
 			return reseptGruppe;
 		}
 

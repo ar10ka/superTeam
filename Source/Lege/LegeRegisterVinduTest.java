@@ -16,7 +16,7 @@ import java.util.List;
 public class LegeRegisterVinduTest extends JFrame {
 	
 	private JTextField  fNrFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
-	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege;
+	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege, search;
 	private JRadioButton ARadio;
 	private JRadioButton BRadio;
 	private JRadioButton CRadio;
@@ -36,6 +36,22 @@ public class LegeRegisterVinduTest extends JFrame {
 	public LegeRegisterVinduTest() {
 		
 		super("LegeRegister DEMO");
+		
+	    try
+	    {
+	    	System.out.println("INNN I TRY");
+	      lastInnFil();
+	      System.out.println("ETTER LAST FIL");
+	    }
+
+	    catch (IOException ex)
+	    {
+	    	System.out.println("CATCH PÅ KON");
+	      ex.printStackTrace();
+	    }
+		
+		
+		
 		fNrFelt = new JTextField(11);
 		navnFelt = new JTextField(20);
 		etternavnFelt = new JTextField(20);
@@ -49,6 +65,7 @@ public class LegeRegisterVinduTest extends JFrame {
 		kSlettLege = new JButton("Slett Lege");
 		kVisLege = new JButton("Vis Lege");
 		kVisAlt = new JButton("Vis Alt");
+		search = new JButton("Søk Lege");
 		
 		tekstomraade  = new JTextArea(15, 55);
 	    tekstomraade.setEditable(false);
@@ -75,6 +92,7 @@ public class LegeRegisterVinduTest extends JFrame {
 	    c.add(kSlettLege);
 	    c.add(kVisLege);
 	    c.add(kVisAlt);
+	    c.add(search);
 	    c.add(rulle);
 	    c.add(rulle2);
 		
@@ -92,7 +110,27 @@ public class LegeRegisterVinduTest extends JFrame {
 
 	    kVisLege.addActionListener(sensor);
 	    kVisAlt.addActionListener(sensor);
+	    search.addActionListener(sensor);
 	    logomraade.setText("");
+	    
+	    addWindowListener(new WindowAdapter()
+	    {
+	        @Override
+	        public void windowClosing(WindowEvent e)
+	        {
+	        	try
+	        	{
+	               lagreFil();
+	               System.out.println("Lagret!");
+	            }
+
+	            catch (IOException ex)
+	            {
+	               ex.printStackTrace();
+	            }
+	            System.exit(0);
+	         }
+	     });
 	   
 		
 		
@@ -105,6 +143,45 @@ public class LegeRegisterVinduTest extends JFrame {
 		bg1.add(CRadio);
 		
 	} */
+	
+	
+	  private void lastInnFil() throws IOException
+	  {
+	    try
+	    {
+	      FileInputStream fileHandle = new FileInputStream("LegeData.txt");
+	      ObjectInputStream in = new ObjectInputStream(fileHandle);
+	      leger = (LegeRegister) in.readObject();
+	    }
+	    catch (FileNotFoundException ex)
+	    {
+	      System.out.println("Lager ny lagringsfil");
+	    }
+	    catch (ClassNotFoundException ex)
+	    {
+	      ex.printStackTrace();
+	    }
+	    catch (EOFException ex)
+	    {
+	      System.out.println("Ferdig lastet!");
+	    }
+	  }
+	
+	  void lagreFil() throws IOException
+	  {
+	    try
+	    {
+	      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("LegeData.txt"));
+	      out.writeObject(leger);
+	    }
+	    catch (FileNotFoundException ex)
+	    {
+	      ex.printStackTrace();
+	    }
+	  }
+	
+	
+	
 	
 	public char[]  ActivRadio() {
 				
@@ -203,7 +280,42 @@ public class LegeRegisterVinduTest extends JFrame {
 			
 		}
 	
-	
+	public void search() {
+		String fNr = fNrFelt.getText();
+		String navn = navnFelt.getText();
+		String etternavn = etternavnFelt.getText();
+		char [] grupper;
+		
+		if(leger.finnes(fNr)) {				
+			Lege l = leger.finn(fNr);						
+			fNrFelt.setText(l.getFNr());			
+			navnFelt.setText(l.getNavn());
+			etternavnFelt.setText(l.getEtternavn());
+			arbeidsStedFelt.setText(l.getArbeidsSted());
+			grupper = l.getReseptGruppe();
+			
+			for(char x : grupper ){
+				if(x == 'A') {
+					ARadio.setSelected(true);
+				}
+				
+				
+				if(x == 'B') {
+					BRadio.setSelected(true);
+				}
+				
+				if(x == 'C') {
+					CRadio.setSelected(true);
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		
+	}
 	
 	public void slettLege() {
 		String fNr = fNrFelt.getText();
@@ -277,6 +389,9 @@ public class LegeRegisterVinduTest extends JFrame {
 		    {
 		       visAlt();
 		    }
+		     else if ( e.getSource() == search ) {
+		    	 search();
+		     }
 		}
 
 	}
