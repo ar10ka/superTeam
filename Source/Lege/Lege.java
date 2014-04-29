@@ -5,42 +5,52 @@ import java.util.ArrayList;
 
 public class Lege implements Serializable {
 		private String navn;
+		private String etternavn;
 		private String arbeidsSted;
-		private char reseptGruppe;
+		private char[] reseptGruppe;
 		private ArrayList<String> reseptList = new ArrayList<>();
-		private String legeID;
-		
-		public Lege ( String n, String sted, char rgruppe, ArrayList<String> rList, String id ) {
+		private String fNr;
+
+		public Lege ( String nr, String n, String enavn, String sted, char[] rgruppe ) {
+			fNr = nr;
 			navn = n;
+			etternavn = enavn;
 			arbeidsSted = sted;
 			reseptGruppe = rgruppe;
-			reseptList = rList;	
-			legeID = id;
-			
-			
+
 		}
-		
+
 		public String getNavn() {
 			return navn;
 		}
-		
-		public String getLegeID() {
-			return legeID;
-			
+
+		public String getEtternavn() {
+			return etternavn;
 		}
+
 		
+		public String getFNr() {
+			return fNr;
+
+		}
+
 		private String getArbeidsSted() {
 			return arbeidsSted;
 		}
-		
-		private char getReseptGruppe() {
+
+		private char[] getReseptGruppe() {
 			return reseptGruppe;
 		}
-		
+
 		@Override
 		public String toString() {
-			return "Navn: " + navn + "\nLege ID: " + legeID + "\nArbeids Sted: " + arbeidsSted
-					+ "\nResept Gruppe: " + reseptGruppe;
+			String teksten ="";
+			for (char x : reseptGruppe)
+			{
+				teksten += x;
+			}
+			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nFødselsnummer: " + fNr +  "\nArbeidssted : " + arbeidsSted +
+					"\nBevilling: " + teksten + "\n";
 		}
-	
+
 }

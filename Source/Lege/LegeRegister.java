@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.JTextArea;
+
 /*
 
 Studentnr: s198757
@@ -26,18 +28,21 @@ public class LegeRegister implements Serializable
 	}
 	
 	public void settInn(Lege ny) {
-		if(ny.getLegeID() != null && ny.getNavn() != null)
+		if(ny.getNavn() != null)
 		{
 			reg.add(ny);
 		}
 	}
 	
-	public Lege finn(String n, String LegeID) {
+	public List<Lege> finn(String n, String e) {
+		List<Lege> LegeListe = new ArrayList<>();
 		if(!reg.isEmpty())
 		{
 			for( Lege l: reg) {
-				if(l.getNavn().equals(n) && l.getLegeID().equals(LegeID)) {
-					return l;
+				if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
+					LegeListe.add(l);
+					return LegeListe;
+					
 				}
 			}
 			
@@ -45,11 +50,23 @@ public class LegeRegister implements Serializable
 		return null;
 	}
 	
-	public boolean slettLege(String n, String LegeID) {
+	public Lege finn (String f) {
+		if(!reg.isEmpty()) {
+			for( Lege l: reg) {
+				if(l.getFNr().equals(f)) {
+					return l;
+				}
+			}
+		}
+		return null;
+	}
+	
+	
+	public boolean slettLege(String f) {
 		if(!reg.isEmpty())
 		{
 			for(Lege l: reg) {
-				if(l.getNavn().equals(n) && l.getLegeID().equals(LegeID)) {
+				if(l.getFNr().equals(f)) {
 					reg.remove(l);
 					return true;
 				}
@@ -62,8 +79,26 @@ public class LegeRegister implements Serializable
 		return reg.isEmpty();
 	}
 	
-	public boolean finnes(String n, String LegeID) {
-		return finn(n, LegeID ) != null;
+	public boolean finnes(String n, String e) {
+		return finn(n,e) != null;
+	}
+	
+	public String finnOgReturner ( String n, String e) {
+		String utskrift = "";
+		for( Lege l: reg) {
+			if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
+				utskrift +=  l.getNavn() + " " + l.getEtternavn() +" " + l.getFNr() + "\n";
+			}
+		}
+		return utskrift;
+	}
+	
+	public boolean finnes (String f) {
+		for ( Lege l: reg) {
+			if(l.getFNr().equals(f))
+				return true;		
+		}
+		return false;
 	}
 	
 	public void sorter() {
@@ -73,12 +108,24 @@ public class LegeRegister implements Serializable
 	public String getText() {
 		String utskrift = "";
 		
-		for (Object x: reg){
+		for (Lege x: reg){
 			if (!tomListe()) {
-				utskrift += reg.toString();
+				utskrift += x.toString() + "\n";
 			}
 		}
 		return utskrift;
+	}
+	
+	public int tellOppLeger() {
+		int antall = 0;
+		
+		for ( Lege l : reg) {
+			if(l.getNavn() != null) {
+				antall++;
+				
+			}
+		}
+		return antall;
 	}
 	
 }
