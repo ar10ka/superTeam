@@ -1,5 +1,7 @@
-
 package pasient;
+
+
+
 
 /*
 
@@ -16,29 +18,43 @@ import java.util.*;
 
 public class PasientRegister implements Serializable
 {
-  private Pasient pasient;
   private List<Pasient> reg = new ArrayList<>();
 
   public PasientRegister()
   {
   }
 
- public Pasient finn(String n, int fd )//finner pasient
+ public Pasient finn(String fn, String en )//finner pasient
   {
           if(!reg.isEmpty())
           {
             for( Pasient p : reg)
             {
-                 if( p.getNavn().equals(n) && p.getFDato() == fd)
+                 if( p.getFNavn().equals(fn) && p.getENavn().equals(en))
                     return p;
             }
           }
           return null;
   }
-
-  public boolean finnes ( String n, int fd ) // finnes pasienten?
+ public Pasient finn(String fNr)//finner pasient
   {
-      return finn(n,fd) != null;
+          if(!reg.isEmpty())
+          {
+            for( Pasient p : reg)
+            {
+                 if( p.getFNr().equals(fNr))
+                    return p;
+            }
+          }
+          return null;
+   }
+  public boolean finnes ( String fnavn, String enavn ) // finnes pasienten?
+  {
+      return finn(fnavn,enavn) != null;
+  }
+  public boolean finnes ( String fnr ) // finnes pasienten?
+  {
+      return finn(fnr) != null;
   }
 
 
@@ -49,18 +65,18 @@ public class PasientRegister implements Serializable
 
  public boolean fjern( Pasient n )
   {
-          if(!reg.isEmpty())
+          if(!tom())
           {
             for( Pasient p : reg)
             {
-                
-                 if( p.getNavn().equals( n.getNavn()) && p.getFDato() == n.getFDato())
+
+                 if( p.getENavn().equals( n.getENavn()) && p.getFNavn().equals( n.getFNavn()) && p.getFNr().equals( n.getFNr()))
                  {
                     reg.remove(p);
-                    
+
                     return true;
                  }
-                 
+
             }
           }
           return false;
@@ -77,7 +93,8 @@ public class PasientRegister implements Serializable
 	 Collections.sort(reg,new ComparatorImpl());
   }
 
-  public String getText()
+  @Override
+  public String toString()
   {
     String tekst = "                PASIENTER:\n";
 

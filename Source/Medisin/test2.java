@@ -1,5 +1,4 @@
-package pasient;
-
+package Medisin;
 
 /*
 
@@ -10,12 +9,12 @@ Navn: Ole Boee Andreassen
 Klasse: Dataingenioer
 
 */
-public class test {
+public class test2 {
 
   public static void main( String[] args )
   {
-    PasientVinduTest vindu = new PasientVinduTest();
+    MedisinVinduTest vindu = new MedisinVinduTest();
   }
 
-
+ 
 }

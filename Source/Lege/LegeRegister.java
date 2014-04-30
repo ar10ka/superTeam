@@ -1,3 +1,5 @@
+package Lege;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +14,7 @@ Studentnr: s198757
 Navn: Marius Baltramaitis
 
 
-Klasse: Dataingeniør
+Klasse: Dataingeniï¿½r
 
 */
 
@@ -33,22 +35,7 @@ public class LegeRegister implements Serializable
 			reg.add(ny);
 		}
 	}
-	
-	public List<Lege> finn(String n, String e) {
-		List<Lege> LegeListe = new ArrayList<>();
-		if(!reg.isEmpty())
-		{
-			for( Lege l: reg) {
-				if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
-					LegeListe.add(l);
-					return LegeListe;
-					
-				}
-			}
-			
-		}
-		return null;
-	}
+
 	
 	public Lege finn (String f) {
 		if(!reg.isEmpty()) {
@@ -80,7 +67,7 @@ public class LegeRegister implements Serializable
 	}
 	
 	public boolean finnes(String n, String e) {
-		return finn(n,e) != null;
+		return finnOgReturner(n,e) != null;
 	}
 	
 	public String finnOgReturner ( String n, String e) {

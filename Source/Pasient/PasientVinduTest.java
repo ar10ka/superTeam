@@ -7,8 +7,9 @@ Navn: Ole Boee Andreassen
 Klasse: Dataingenioer
 
 */
-
 package pasient;
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -19,15 +20,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.MaskFormatter;
 
 public class PasientVinduTest extends JFrame
 {
-  JTextField 	fDato, fNavn, eNavn;
+    JFormattedTextField fNr;
+  JTextField 	 fNavn, eNavn, adresse;
   JButton 		kNyPasient, kSlettPasient, kVisAlt, kVisEier;
-  JRadioButton 	radioPasient, radioFirma;
+  JRadioButton 	radioMann, radioKvinne;
   JTextArea		tekstområde;
+  
+  MaskFormatter fNrformatter;
 
   private PasientRegister bibliotek;
+  private char gender;
   private Lytter sensor;
   public static final int _PERSON = 1;
   public static final int _FIRMA  = 2;
@@ -35,6 +44,14 @@ public class PasientVinduTest extends JFrame
   public PasientVinduTest()//konstruktør
   {
     super("PASIENT - REGISTERET");
+      try {
+          this.fNrformatter = new MaskFormatter("###### #####");
+      } catch (ParseException ex) {
+          Logger.getLogger(PasientVinduTest.class.getName()).log(Level.SEVERE, null, ex);
+      }
+
+
+    bibliotek  = new PasientRegister();
 
     try
     {
@@ -46,15 +63,21 @@ public class PasientVinduTest extends JFrame
       ex.printStackTrace();
     }
 
-    radioPasient  = new JRadioButton("Pasient");
-    radioFirma   = new JRadioButton("Firma");
+    radioMann  = new JRadioButton("Mann");
+    radioKvinne   = new JRadioButton("Kvinne");
     ButtonGroup radioGruppe = new ButtonGroup();
-    radioGruppe.add(radioPasient);
-    radioGruppe.add(radioFirma);
+    radioGruppe.add(radioMann);
+    radioGruppe.add(radioKvinne);
 
-    fDato      = new JTextField(14);
+    
+      //For å gjøre det mer oversiktelig i input så kommer det et blankt tegn etter de første 6 tallene
+    
+    fNr = new JFormattedTextField(fNrformatter);
+    fNr.setColumns(14);
+ 
     fNavn    = new JTextField(14);
     eNavn = new JTextField(14);
+    adresse = new JTextField(14);
 
     kNyPasient      = new JButton("Reg pasient");
     kSlettPasient   = new JButton("Slett pasient");
@@ -68,21 +91,26 @@ public class PasientVinduTest extends JFrame
 
 	Container c   = getContentPane();
     c.setLayout( new FlowLayout() );
-    c.add(radioPasient);
-    c.add(radioFirma);
-    c.add(new JLabel("Fodselsdato:"));
-    c.add(fDato);
+    c.add(radioMann);
+    c.add(radioKvinne);
+    c.add(new JLabel("Personnummer:"));
+    c.add(fNr);
     c.add(new JLabel("Fornavn:"));
     c.add(fNavn);
     c.add(new JLabel("Etternavn:"));
     c.add(eNavn);
+
+    c.add(new JLabel("Adresse:"));
+    c.add(adresse);
+
+
     c.add(kNyPasient);
     c.add(kSlettPasient);
     c.add(kVisEier);
     c.add(kVisAlt);
     c.add(rulle);
 
-    bibliotek  = new PasientRegister();
+
 
     setSize(850, 400);
     setVisible(true);
@@ -98,6 +126,7 @@ public class PasientVinduTest extends JFrame
     kVisEier.addActionListener(sensor);
     kVisAlt.addActionListener(sensor);
 
+  
     addWindowListener(new WindowAdapter()
     {
         @Override
@@ -116,8 +145,7 @@ public class PasientVinduTest extends JFrame
             System.exit(0);
          }
      });
-  }//slutt på konstruktør
-
+  }
   void lagreFil() throws IOException
   {
     try
@@ -171,11 +199,11 @@ public class PasientVinduTest extends JFrame
       }
       else if (e.getSource() == kSlettPasient)
       {
-        slettEier();
+        slettPasient();
       }
       else if (e.getSource() == kVisEier)
       {
-        visEier();
+        visPasient();
       }
       else if (e.getSource() == kVisAlt)
       {
@@ -184,34 +212,44 @@ public class PasientVinduTest extends JFrame
     }
   }
 
-/*  public int aktivRadio()
+public char aktivRadio()
   {
-    if(radioPasient.isSelected())
-      return _PERSON;
-    else if (radioFirma.isSelected())
-      return _FIRMA;
+    if(radioMann.isSelected())
+      return 'M';
+    else if (radioKvinne.isSelected())
+      return 'F';
 
-    tekstområde.setText("Huk av for Firma eller Pasient!");
+    tekstområde.setText("Huk av for Mann eller Kvinne!");
     return 0;
-  }*/
+  }
 
 
   public void nyPasient()
   {
     try
     {
-      int id = Integer.parseInt(fDato.getText());
-      String navn = fNavn.getText() + eNavn.getText();
+      String id = fNr.getText().replaceAll("\\s","");//får personnummer og fjerner blanke tegn
+      String fnavn = fNavn.getText();
+      String enavn = eNavn.getText();
+      char gen = aktivRadio();
+      String adr = adresse.getText();
 
 
-      if (!navn.equals("") && !fDato.getText().equals("") )
+      if (!fnavn.equals("") && !enavn.equals("") && !fNr.getText().equals("") && gen!=0 && !adresse.getText().equals("") )
       {
-        Pasient pasient = new Pasient(navn, id);
-        bibliotek.settInnNy(pasient);
-        tekstområde.setText("Pasient lagt til");
+        if (!bibliotek.finnes(id))
+        {          
+            Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
+            bibliotek.settInnNy(pasient);
+            tekstområde.setText("Pasient lagt til");
+        }
+        else
+            tekstområde.setText("Pasienten er allerede registrert");
+      
+        
       }
-      else
-        tekstområde.setText("Fyll ut alle feltene!");
+        else
+         tekstområde.setText("Fyll ut alle feltene!");
     }
     catch (NumberFormatException e)
     {
@@ -222,23 +260,28 @@ public class PasientVinduTest extends JFrame
 
 
 
-  public void slettEier()
+  public void slettPasient()
   {
     try
-    {System.out.println("6");
-      int id = Integer.parseInt(fDato.getText());
-      String navn = fNavn.getText() + eNavn.getText();
+    {
+      String id = fNr.getText().replaceAll("\\s","");
 
 
-      if (!navn.equals("") && !fDato.getText().equals("") )
-      {System.out.println("hergerherh");
-        Pasient pasient = new Pasient(navn, id);
-        if(bibliotek.fjern(pasient))
-            tekstområde.setText("Pasient fjernet!");
 
+      if (!fNr.getText().equals("") )
+      {
+        if (bibliotek.finnes(id))
+        {
+            Pasient pasient = bibliotek.finn(id);
+        
+            if(bibliotek.fjern(pasient))
+               tekstområde.setText("Pasient fjernet!");
+        }
+        else
+            tekstområde.setText("Pasienten finnes ikke i registeret");
       }
       else
-        tekstområde.setText("Fyll ut alle feltene!");
+        tekstområde.setText("Skriv inn Personnummeret på pasienten du ønsker å fjerne!");
     }
     catch (NumberFormatException e)
     {
@@ -248,22 +291,30 @@ public class PasientVinduTest extends JFrame
 
 
 
-  public void visEier()
+  public void visPasient()
   {
      try
     {
-      int id = Integer.parseInt(fDato.getText());
-      String navn = fNavn.getText() + eNavn.getText();
+      String id = fNr.getText().replaceAll("\\s","");//får personnummer og fjerner blanke tegn
+      String fnavn = fNavn.getText();
+      String enavn = eNavn.getText();
 
 
-      if (!navn.equals("") && !fDato.getText().equals("") )
+
+      if (!fNr.getText().equals("") )
       {
-        String temp = bibliotek.finn(navn, id).toString();
-  	  	 tekstområde.setText(temp);
+   
+        if (bibliotek.finnes(id))
+        {
+            String temp = bibliotek.finn(id).toString();
+  	  	 tekstområde.setText(temp); 
+        }
+        else
+            tekstområde.setText("Pasienten finnes ikke i registeret");
 
       }
       else
-        tekstområde.setText("Fyll ut alle feltene!");
+        tekstområde.setText("Skriv inn personnummer");
     }
     catch (NumberFormatException e)
     {
@@ -273,7 +324,7 @@ public class PasientVinduTest extends JFrame
 
   public void visAlt()
   {
-    tekstområde.setText(bibliotek.getText());
+    tekstområde.setText(bibliotek.toString());
   }
 }
 
