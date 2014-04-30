@@ -1,5 +1,3 @@
-package Lege;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -21,6 +19,28 @@ public class Lege implements Serializable {
 			reseptGruppe = rgruppe;
 
 		}
+		
+		public void setNavn(String n) {
+			navn = n;
+		}
+		
+		public void setEtternavn(String e) {
+			etternavn = e;
+		}
+		
+		public void setFNr(String nr) {
+			fNr = nr;
+		}
+		
+		public void setArbeidsSted(String s) {
+			arbeidsSted = s;
+		}
+		
+		public void setReseptGruppe(char [] r) {
+			reseptGruppe = r;
+		}
+
+
 
 		public String getNavn() {
 			return navn;
@@ -51,7 +71,7 @@ public class Lege implements Serializable {
 			{
 				teksten += x;
 			}
-			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nFï¿½dselsnummer: " + fNr +  "\nArbeidssted : " + arbeidsSted +
+			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nFødselsnummer: " + fNr +  "\nArbeidssted : " + arbeidsSted +
 					"\nBevilling: " + teksten + "\n";
 		}
 

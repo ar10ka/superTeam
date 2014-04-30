@@ -1,5 +1,3 @@
-package Lege;
-
 
 public class LegeTest {
 	
