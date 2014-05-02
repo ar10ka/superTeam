@@ -8,7 +8,6 @@ Klasse: Dataingenioer
 
 */
 
-package Program;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -34,8 +33,8 @@ public class MedisinVinduTest extends JFrame
   JRadioButton 	radioA, radioB,radioC;
   JTextArea		tekstområde,medInfo;
   JSpinner medKategori;
-  
-  
+
+
   MaskFormatter medIDformatter;
   private MedisinRegister bibliotek;
   private Lytter sensor;
@@ -43,20 +42,20 @@ public class MedisinVinduTest extends JFrame
   public static final int _B  = 2;
   public static final int _C  = 3;
   private Logg logg;
-	
+
 
   public MedisinVinduTest()//konstruktør
   {
     super("MEDISIN - REGISTERET");
-     
+
     try{
           this.medIDformatter = new MaskFormatter("U##U U##");
-    } 
+    }
     catch (ParseException ex) {
          ex.printStackTrace();
       }
-    
-    
+
+
     bibliotek  = new MedisinRegister();
     logg = new Logg();
     try
@@ -72,18 +71,18 @@ public class MedisinVinduTest extends JFrame
     radioA = new JRadioButton("A");
     radioB = new JRadioButton("B");
     radioC = new JRadioButton("C");
-    
+
     ButtonGroup radioGruppe = new ButtonGroup();
     radioGruppe.add(radioA);
     radioGruppe.add(radioB);
     radioGruppe.add(radioC);
-    
+
     //MEDISIN INPUT FORMATTERING
     medID = new JFormattedTextField(medIDformatter);
     medID.setColumns(14);
-    
+
     medNavn    = new JTextField(14);
-    
+
     // KATEGORI RULLEVINDU
     SpinnerListModel listModel = new SpinnerListModel(getKategori());
     medKategori    = new JSpinner(listModel);
@@ -91,7 +90,7 @@ public class MedisinVinduTest extends JFrame
     d.width = 100;
     medKategori.setPreferredSize(d);
     medKategori.setValue( getKategori().get(getKategori().size()-1));
-    
+
     medInfo    = new JTextArea(15,30);
     medInfo.setEditable(true);
     JScrollPane rulle2 = new JScrollPane(medInfo);
@@ -100,11 +99,11 @@ public class MedisinVinduTest extends JFrame
     kSlettMedisin   = new JButton("Slett medisin");
     kVisMedisin     = new JButton("Vis medisin");
     kVisAlt      = new JButton("Vis alle");
-    
+
     tekstområde  = new JTextArea(15, 55);
     tekstområde.setEditable(false);
     JScrollPane rulle = new JScrollPane(tekstområde);
-    
+
 
 	Container c   = getContentPane();
     c.setLayout( new FlowLayout() );
@@ -181,7 +180,7 @@ public class MedisinVinduTest extends JFrame
       ObjectInputStream in = new ObjectInputStream(fileHandle);
       bibliotek = (MedisinRegister) in.readObject();
       System.out.println(logg.toString("Lastet inn!"));
-  
+
     }
     catch (FileNotFoundException ex)
     {
@@ -224,20 +223,20 @@ public class MedisinVinduTest extends JFrame
 
 public static List<String> getKategori()
 {
-   String[] arr = 
+   String[] arr =
    {
        "Hypnotikum","Antibiotika","Sedativum",
        "Hemodialysekonsentrat","Glaukommiddel",
        "Adrenergikum","Progestogen"
-   
+
    };
    List<String> k = Arrays.asList(arr);
-   Collections.sort(k); 
+   Collections.sort(k);
    Collections.reverse(k);
    return k;
 }
-  
-  
+
+
 public char aktivRadio()
   {
     if(radioA.isSelected())
@@ -246,16 +245,16 @@ public char aktivRadio()
       return 'B';
      if (radioC.isSelected())
       return 'C';
-     
+
          tekstområde.setText("Huk av for Firma eller Medisin!");
          return 0;
-     
-        
+
+
   }
 
   public boolean feltFylt()
   {
-      return aktivRadio() != 0 
+      return aktivRadio() != 0
               && !medID.getText().equals("")
               && !medNavn.getText().equals("")
               && !medInfo.getText().equals("")

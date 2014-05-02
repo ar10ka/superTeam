@@ -1,4 +1,3 @@
-package Medisin;
 
 /*
 
@@ -16,5 +15,5 @@ public class test2 {
     MedisinVinduTest vindu = new MedisinVinduTest();
   }
 
- 
+
 }

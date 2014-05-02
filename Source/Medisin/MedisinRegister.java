@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-package Program;
 
 import java.io.Serializable;
 import java.util.*;
@@ -14,7 +13,7 @@ import java.util.*;
  *
  * @author Ole
  */
-public class MedisinRegister implements Serializable 
+public class MedisinRegister implements Serializable
 {
   private List<Medisin> reg = new ArrayList<>();
 
@@ -57,13 +56,13 @@ public class MedisinRegister implements Serializable
           {
             for( Medisin m : reg)
             {
-                
+
                  if( m.getNavn().equals( n.getNavn()) && m.getMedID() == n.getMedID())
                  {
                     reg.remove(m);
                     return true;
                  }
-                 
+
             }
           }
           return false;

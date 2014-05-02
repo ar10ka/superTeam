@@ -1,4 +1,3 @@
-package Program;
 
 
 /*
@@ -26,26 +25,26 @@ public class Pasient implements Serializable
 		fNr = fnr;
                 gender = g;
                 adresse = ordneString(a);
-		
+
 
 	}
-        public static String ordneString(String string) 
+        public static String ordneString(String string)
         {
             char[] chars = string.toLowerCase().toCharArray();
             boolean funnet = false;
-            for (int i = 0; i < chars.length; i++) 
+            for (int i = 0; i < chars.length; i++)
             {
-                if (!funnet && Character.isLetter(chars[i])) 
+                if (!funnet && Character.isLetter(chars[i]))
                 {
                     chars[i] = Character.toUpperCase(chars[i]);
                     funnet = true;
-                } 
-                else if (Character.isWhitespace(chars[i]) || chars[i]=='.')//aktiverer funnet når den har funnet et blankt tegn, punktum 
-                { 
+                }
+                else if (Character.isWhitespace(chars[i]) || chars[i]=='.')//aktiverer funnet når den har funnet et blankt tegn, punktum
+                {
                     funnet = false;
                 }
             }
-            
+
           return String.valueOf(chars).replaceAll("([^\\d-]?)(-?[\\d\\.]+)([^\\d]?)", "$1 $2 $3").replaceAll(" +", " ").trim();
         }
 
@@ -104,7 +103,7 @@ public class Pasient implements Serializable
 	@Override
 	public String toString()
 	  {
-		
+
               return "Navn:\t" + fnavn + " " + enavn
                         + "\nfNr:\t" + fNr
                         + "\nKjønn:\t" + gender

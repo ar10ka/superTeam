@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 
-package Program;
-
-
 import java.io.Serializable;
 import java.util.Date;
 import javax.swing.JTextArea;
@@ -15,7 +12,7 @@ import javax.swing.JTextArea;
  *
  * @author Ole
  */
-public class Resept implements Serializable 
+public class Resept implements Serializable
 {
     private int reseptID;
     private Logg logg;
@@ -25,8 +22,8 @@ public class Resept implements Serializable
     private String utskrevet;
     private String legeanvisning;
     private int mengdeMg;
-    
-    
+
+
     public Resept (int id, Lege l, Pasient p, Medisin m,int mengde, String la)
     {
         reseptID = id;
@@ -37,7 +34,7 @@ public class Resept implements Serializable
         mengdeMg = mengde;
         legeanvisning = la;
     }
-    
+
     public int getID()
     {
         return reseptID;

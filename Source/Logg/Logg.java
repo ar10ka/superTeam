@@ -1,5 +1,3 @@
-package Program;
-
 
 
 
@@ -12,10 +10,10 @@ public class Logg {
 
         private String logg = "";
         private String date = "";
-        
+
         public String toString (String tekst) {
-        	
-            
+
+
                 Date today = new Date();
                 SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[d MM yyyy 'kl.' HH:mm:ss]    ");
         	date = DATE_FORMAT.format(today);
@@ -23,27 +21,27 @@ public class Logg {
                 regLogg(output);
         	return output;
         }
-        
+
         public String getDate(String s)
         {
             toString(s);
             return date;
         }
-        
+
         private void regLogg(String output)
         {
             try
             {
                 lastInnFil();
             }
-            
+
 	    catch (IOException ex)
             {
                 ex.printStackTrace();
             }
-                
+
                     logg += output + "\n";
-            
+
             try
             {
                lagreFil();
@@ -54,7 +52,7 @@ public class Logg {
                ex.printStackTrace();
             }
         }
-       
+
         private void lastInnFil() throws IOException
 	  {
 	    try
@@ -68,7 +66,7 @@ public class Logg {
 	      System.out.println("Lager ny lagringsfil");
 	    }
 	    catch (ClassNotFoundException ex)
-	    { 
+	    {
 	    	 System.out.println("CLASS not found Exception");
 	      ex.printStackTrace();
 	    }
@@ -77,7 +75,7 @@ public class Logg {
 	      System.out.println("Ferdig lastet!");
 	    }
 	  }
-	
+
 	  private void lagreFil() throws IOException
 	  {
 	    try

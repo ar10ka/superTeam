@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-package Program;
 
 /**
  *
@@ -14,7 +13,7 @@ import java.io.Serializable;
 
 public class Medisin implements Serializable
 {
-	  
+
 	  private String navn, info, kategori,medID;
           private char reseptGruppe;
 
@@ -25,7 +24,7 @@ public class Medisin implements Serializable
                   navn = n;
                   info = i;
                   kategori = k;
-                  reseptGruppe = rGruppe;   
+                  reseptGruppe = rGruppe;
 		//liste over resepter skrevet ut paa pasienten.
 	  }
 

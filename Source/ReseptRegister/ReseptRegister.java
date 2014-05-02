@@ -1,8 +1,5 @@
 
 
-package Program;
-
-
 import java.text.*;
 import java.util.*;
 import javax.swing.*;
@@ -11,12 +8,12 @@ import javax.swing.*;
  *
  * @author Ole
  */
-public class ReseptRegister 
+public class ReseptRegister
 {
     private List<Resept> reseptReg = new ArrayList<>();
-    
-    
-    
+
+
+
     public boolean godkjentLege(Lege l, Medisin m)
     {
        for(char x :l.getReseptGruppe() )
@@ -28,16 +25,16 @@ public class ReseptRegister
     }
     public void nyResept(Lege l, Pasient p, Medisin m)
     {
-        
+
     }
-   
+
     public void nyResept(Resept r)
     {
-        
+
     }
-    
+
     //Oversikt
-    
+
     //MEDISIN:
     //Liste over alle leger som har skrevet ut denne medisinen
     public List<Lege> legerMedisin ( Medisin m  )
@@ -63,8 +60,8 @@ public class ReseptRegister
         else
             return "Ingen leger har skrevet ut denne medisinen!";
     }
-    
-    
+
+
     //Liste over alle pasienter som har blitt utskrevet denne medisinen
         public List<Pasient> pasienterMedisin ( Medisin m  )
     {
@@ -89,9 +86,9 @@ public class ReseptRegister
         else
             return "Ingen pasienter har blitt utskrevet denne medisinen!";
     }
-    
-    
-    
+
+
+
     //RESEPT;
     //Liste over resepter lege/leger med navn x har skrevet ut, i tillegg kategori, i tillegg reseptgruppe
     public List<Resept> getResepterLegeNavn( Lege l, String kat, char rgruppe)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
@@ -129,9 +126,9 @@ public class ReseptRegister
         else
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
-    
 
-    
+
+
     //Liste over resepter pasienter med navn og fnr har blitt forskrevet, i tillegg oversikt innen kategori og i tillegg oversikt innen reseptgruppe
     public List<Resept> getResepterPasientNavn( Pasient p, String kat, char rgruppe)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
     {
@@ -161,20 +158,20 @@ public class ReseptRegister
                 else if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getReseptGruppe()==rgruppe  )
                     s += x.getID();
                 else if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()))
-                    s += x.getID();                   
+                    s += x.getID();
         }
         if (!s.equals(""))
             return s;
         else
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
-    
 
 
-    
-} 
 
-    
+
+}
+
+
 
 //Dette skal lagres:
 //-dato for registrering av resept
@@ -192,8 +189,8 @@ public class ReseptRegister
 //-Mengde av medisin
 //-Medisinens kategori
 //-Legens anvisning (JTextArea) om bruk av medisinen.
-   
- 
+
+
 
 /*
 DETTE MÅ GJØRES (PROGRAM VINDUET)

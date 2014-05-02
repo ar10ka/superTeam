@@ -7,9 +7,6 @@ Navn: Ole Boee Andreassen
 Klasse: Dataingenioer
 
 */
-package Program;
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -30,7 +27,7 @@ public class PasientVinduTest extends JFrame
   JButton 		kNyPasient, kSlettPasient, kVisAlt, kVisPasient;
   JRadioButton 	radioMann, radioKvinne;
   JTextArea		tekstområde;
-  
+
   MaskFormatter fNrformatter;
 
   private PasientRegister bibliotek;
@@ -39,7 +36,7 @@ public class PasientVinduTest extends JFrame
   public static final int _PERSON = 1;
   public static final int _FIRMA  = 2;
   private final Logg logg;
-	
+
 
   public PasientVinduTest()//konstruktør
   {
@@ -69,12 +66,12 @@ public class PasientVinduTest extends JFrame
     radioGruppe.add(radioMann);
     radioGruppe.add(radioKvinne);
 
-    
+
       //For å gjøre det mer oversiktelig i input så kommer det et blankt tegn etter de første 6 tallene
-    
+
     fNr = new JFormattedTextField(fNrformatter);
     fNr.setColumns(14);
- 
+
     fNavn    = new JTextField(14);
     eNavn = new JTextField(14);
     adresse = new JTextField(14);
@@ -125,7 +122,7 @@ public class PasientVinduTest extends JFrame
     kVisPasient.addActionListener(sensor);
     kVisAlt.addActionListener(sensor);
 
-  
+
     addWindowListener(new WindowAdapter()
     {
         @Override
@@ -140,7 +137,7 @@ public class PasientVinduTest extends JFrame
             {
                ex.printStackTrace();
             }
-            
+
             System.exit(0);
          }
      });
@@ -167,7 +164,7 @@ public class PasientVinduTest extends JFrame
       ObjectInputStream in = new ObjectInputStream(fileHandle);
       bibliotek = (PasientRegister) in.readObject();
       System.out.println(logg.toString("Lastet inn!"));
-  
+
     }
     catch (FileNotFoundException ex)
     {
@@ -217,9 +214,9 @@ public class PasientVinduTest extends JFrame
 
   public void emptyInputField()
   {
-      
+
   }
-  
+
 public char aktivRadio()
   {
     if(radioMann.isSelected())
@@ -246,15 +243,15 @@ public char aktivRadio()
       if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )
       {
         if (!bibliotek.finnes(id))
-        {          
+        {
             Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
             bibliotek.settInnNy(pasient);
             tekstområde.setText(logg.toString("Pasient lagt til"));
         }
         else
             tekstområde.setText("Pasienten er allerede registrert");
-      
-        
+
+
       }
         else
          tekstområde.setText("Fyll ut alle feltene!");
@@ -281,7 +278,7 @@ public char aktivRadio()
         if (bibliotek.finnes(id))
         {
             Pasient pasient = bibliotek.finn(id);
-        
+
             if(bibliotek.fjern(pasient))
                tekstområde.setText(logg.toString("Pasient fjernet!"));
         }
@@ -311,11 +308,11 @@ public char aktivRadio()
 
       if (!id.equals("") )
       {
-   
+
         if (bibliotek.finnes(id))
         {
             String temp = "Viser pasient:\n" + bibliotek.finn(id).toString();
-  	  	 tekstområde.setText(logg.toString(temp)); 
+  	  	 tekstområde.setText(logg.toString(temp));
         }
         else
             tekstområde.setText("Pasienten finnes ikke i registeret");
