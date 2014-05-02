@@ -7,7 +7,7 @@ Navn: Ole Boee Andreassen
 Klasse: Dataingenioer
 
 */
-package pasient;
+package Program;
 
 
 import javax.swing.*;
@@ -21,15 +21,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.MaskFormatter;
 
 public class PasientVinduTest extends JFrame
 {
     JFormattedTextField fNr;
   JTextField 	 fNavn, eNavn, adresse;
-  JButton 		kNyPasient, kSlettPasient, kVisAlt, kVisEier;
+  JButton 		kNyPasient, kSlettPasient, kVisAlt, kVisPasient;
   JRadioButton 	radioMann, radioKvinne;
   JTextArea		tekstområde;
   
@@ -40,6 +38,8 @@ public class PasientVinduTest extends JFrame
   private Lytter sensor;
   public static final int _PERSON = 1;
   public static final int _FIRMA  = 2;
+  private final Logg logg;
+	
 
   public PasientVinduTest()//konstruktør
   {
@@ -47,10 +47,10 @@ public class PasientVinduTest extends JFrame
       try {
           this.fNrformatter = new MaskFormatter("###### #####");
       } catch (ParseException ex) {
-          Logger.getLogger(PasientVinduTest.class.getName()).log(Level.SEVERE, null, ex);
+         ex.printStackTrace();
       }
 
-
+    logg = new Logg();
     bibliotek  = new PasientRegister();
 
     try
@@ -81,7 +81,7 @@ public class PasientVinduTest extends JFrame
 
     kNyPasient      = new JButton("Reg pasient");
     kSlettPasient   = new JButton("Slett pasient");
-    kVisEier     = new JButton("Vis pasient");
+    kVisPasient     = new JButton("Vis pasient");
     kVisAlt      = new JButton("Vis alle");
 
 	tekstområde  = new JTextArea(15, 55);
@@ -99,14 +99,13 @@ public class PasientVinduTest extends JFrame
     c.add(fNavn);
     c.add(new JLabel("Etternavn:"));
     c.add(eNavn);
-
     c.add(new JLabel("Adresse:"));
     c.add(adresse);
 
 
     c.add(kNyPasient);
     c.add(kSlettPasient);
-    c.add(kVisEier);
+    c.add(kVisPasient);
     c.add(kVisAlt);
     c.add(rulle);
 
@@ -123,7 +122,7 @@ public class PasientVinduTest extends JFrame
 
     kSlettPasient.addActionListener(sensor);
 
-    kVisEier.addActionListener(sensor);
+    kVisPasient.addActionListener(sensor);
     kVisAlt.addActionListener(sensor);
 
   
@@ -132,26 +131,27 @@ public class PasientVinduTest extends JFrame
         @Override
         public void windowClosing(WindowEvent e)
         {
-        	try
-        	{
-               lagreFil();
-               System.out.println("Lagret!");
+            try
+            {
+              lagreFil();
             }
 
             catch (IOException ex)
             {
                ex.printStackTrace();
             }
+            
             System.exit(0);
          }
      });
   }
-  void lagreFil() throws IOException
+  private void lagreFil() throws IOException
   {
     try
     {
-      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("PasientLagring.dat"));
+      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("PasientLagring.txt"));
       out.writeObject(bibliotek);
+      System.out.println(logg.toString("Lagret!"));
     }
     catch (FileNotFoundException ex)
     {
@@ -163,21 +163,24 @@ public class PasientVinduTest extends JFrame
   {
     try
     {
-      FileInputStream fileHandle = new FileInputStream("PasientLagring.dat");
+      FileInputStream fileHandle = new FileInputStream("PasientLagring.txt");
       ObjectInputStream in = new ObjectInputStream(fileHandle);
       bibliotek = (PasientRegister) in.readObject();
+      System.out.println(logg.toString("Lastet inn!"));
+  
     }
     catch (FileNotFoundException ex)
     {
-      System.out.println("Lager ny lagringsfil");
+      System.out.println(logg.toString("Lager ny lagringsfil"));
     }
     catch (ClassNotFoundException ex)
     {
+      System.out.println("feilen");
       ex.printStackTrace();
     }
     catch (EOFException ex)
     {
-      System.out.println("Ferdig lastet!");
+      System.out.println(logg.toString("Ferdig lastet lagringsfil!"));
     }
   }
 
@@ -201,7 +204,7 @@ public class PasientVinduTest extends JFrame
       {
         slettPasient();
       }
-      else if (e.getSource() == kVisEier)
+      else if (e.getSource() == kVisPasient)
       {
         visPasient();
       }
@@ -212,6 +215,11 @@ public class PasientVinduTest extends JFrame
     }
   }
 
+  public void emptyInputField()
+  {
+      
+  }
+  
 public char aktivRadio()
   {
     if(radioMann.isSelected())
@@ -235,13 +243,13 @@ public char aktivRadio()
       String adr = adresse.getText();
 
 
-      if (!fnavn.equals("") && !enavn.equals("") && !fNr.getText().equals("") && gen!=0 && !adresse.getText().equals("") )
+      if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )
       {
         if (!bibliotek.finnes(id))
         {          
             Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
             bibliotek.settInnNy(pasient);
-            tekstområde.setText("Pasient lagt til");
+            tekstområde.setText(logg.toString("Pasient lagt til"));
         }
         else
             tekstområde.setText("Pasienten er allerede registrert");
@@ -268,14 +276,14 @@ public char aktivRadio()
 
 
 
-      if (!fNr.getText().equals("") )
+      if (!id.equals("") )
       {
         if (bibliotek.finnes(id))
         {
             Pasient pasient = bibliotek.finn(id);
         
             if(bibliotek.fjern(pasient))
-               tekstområde.setText("Pasient fjernet!");
+               tekstområde.setText(logg.toString("Pasient fjernet!"));
         }
         else
             tekstområde.setText("Pasienten finnes ikke i registeret");
@@ -301,13 +309,13 @@ public char aktivRadio()
 
 
 
-      if (!fNr.getText().equals("") )
+      if (!id.equals("") )
       {
    
         if (bibliotek.finnes(id))
         {
-            String temp = bibliotek.finn(id).toString();
-  	  	 tekstområde.setText(temp); 
+            String temp = "Viser pasient:\n" + bibliotek.finn(id).toString();
+  	  	 tekstområde.setText(logg.toString(temp)); 
         }
         else
             tekstområde.setText("Pasienten finnes ikke i registeret");
@@ -324,6 +332,7 @@ public char aktivRadio()
 
   public void visAlt()
   {
+      logg.toString("Viser alle pasienter");
     tekstområde.setText(bibliotek.toString());
   }
 }

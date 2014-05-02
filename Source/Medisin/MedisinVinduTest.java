@@ -8,10 +8,14 @@ Klasse: Dataingenioer
 
 */
 
-package Medisin;
+package Program;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import javax.swing.*;
-import java.awt.*;
+
 import java.awt.event.*;
+import java.util.*;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,24 +23,42 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
+import javax.swing.text.MaskFormatter;
 
 public class MedisinVinduTest extends JFrame
 {
-  JTextField 	medID, medNavn, medKategori;
-  JButton 		kNyMedisin, kSlettMedisin, kVisAlt, kVisEier;
+  JFormattedTextField medID;
+  JTextField 	medNavn;
+  JButton 		kNyMedisin, kSlettMedisin, kVisAlt, kVisMedisin;
   JRadioButton 	radioA, radioB,radioC;
   JTextArea		tekstområde,medInfo;
-
+  JSpinner medKategori;
+  
+  
+  MaskFormatter medIDformatter;
   private MedisinRegister bibliotek;
   private Lytter sensor;
   public static final int _A = 1;
   public static final int _B  = 2;
   public static final int _C  = 3;
+  private Logg logg;
+	
 
   public MedisinVinduTest()//konstruktør
   {
     super("MEDISIN - REGISTERET");
-
+     
+    try{
+          this.medIDformatter = new MaskFormatter("U##U U##");
+    } 
+    catch (ParseException ex) {
+         ex.printStackTrace();
+      }
+    
+    
+    bibliotek  = new MedisinRegister();
+    logg = new Logg();
     try
     {
       lastInnFil();
@@ -55,10 +77,20 @@ public class MedisinVinduTest extends JFrame
     radioGruppe.add(radioA);
     radioGruppe.add(radioB);
     radioGruppe.add(radioC);
-
-    medID      = new JTextField(14);
+    
+    //MEDISIN INPUT FORMATTERING
+    medID = new JFormattedTextField(medIDformatter);
+    medID.setColumns(14);
+    
     medNavn    = new JTextField(14);
-    medKategori    = new JTextField(14);
+    
+    // KATEGORI RULLEVINDU
+    SpinnerListModel listModel = new SpinnerListModel(getKategori());
+    medKategori    = new JSpinner(listModel);
+    Dimension d = medKategori.getPreferredSize();
+    d.width = 100;
+    medKategori.setPreferredSize(d);
+    medKategori.setValue( getKategori().get(getKategori().size()-1));
     
     medInfo    = new JTextArea(15,30);
     medInfo.setEditable(true);
@@ -66,7 +98,7 @@ public class MedisinVinduTest extends JFrame
 
     kNyMedisin      = new JButton("Reg medisin");
     kSlettMedisin   = new JButton("Slett medisin");
-    kVisEier     = new JButton("Vis medisin");
+    kVisMedisin     = new JButton("Vis medisin");
     kVisAlt      = new JButton("Vis alle");
     
     tekstområde  = new JTextArea(15, 55);
@@ -83,19 +115,17 @@ public class MedisinVinduTest extends JFrame
     c.add(medID);
     c.add(new JLabel("Medisin navn:"));
     c.add(medNavn);
-     c.add(new JLabel("Medisin kategori:"));
+    c.add(new JLabel("Medisin kategori:"));
     c.add(medKategori);
        c.add(new JLabel("Medisin info:"));
        c.add(rulle2);
     c.add(kNyMedisin);
     c.add(kSlettMedisin);
-    c.add(kVisEier);
+    c.add(kVisMedisin);
     c.add(kVisAlt);
     c.add(rulle);
 
-    bibliotek  = new MedisinRegister();
-
-    setSize(850, 400);
+    setSize(850, 500);
     setVisible(true);
 
 
@@ -106,7 +136,7 @@ public class MedisinVinduTest extends JFrame
 
     kSlettMedisin.addActionListener(sensor);
 
-    kVisEier.addActionListener(sensor);
+    kVisMedisin.addActionListener(sensor);
     kVisAlt.addActionListener(sensor);
 
     addWindowListener(new WindowAdapter()
@@ -117,7 +147,7 @@ public class MedisinVinduTest extends JFrame
         	try
         	{
                lagreFil();
-               System.out.println("Lagret!");
+               System.out.println(logg.toString("Lagret!"));
             }
 
             catch (IOException ex)
@@ -129,12 +159,13 @@ public class MedisinVinduTest extends JFrame
      });
   }//slutt på konstruktør
 
-  void lagreFil() throws IOException
+ private void lagreFil() throws IOException
   {
     try
     {
-      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("MedisinLagring.dat"));
+      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("MedisinLagring.txt"));
       out.writeObject(bibliotek);
+      System.out.println(logg.toString("Lagret!"));
     }
     catch (FileNotFoundException ex)
     {
@@ -146,21 +177,24 @@ public class MedisinVinduTest extends JFrame
   {
     try
     {
-      FileInputStream fileHandle = new FileInputStream("MedisinLagring.dat");
+      FileInputStream fileHandle = new FileInputStream("MedisinLagring.txt");
       ObjectInputStream in = new ObjectInputStream(fileHandle);
       bibliotek = (MedisinRegister) in.readObject();
+      System.out.println(logg.toString("Lastet inn!"));
+  
     }
     catch (FileNotFoundException ex)
     {
-      System.out.println("Lager ny lagringsfil");
+      System.out.println(logg.toString("Lager ny lagringsfil"));
     }
     catch (ClassNotFoundException ex)
     {
+      System.out.println("feilen");
       ex.printStackTrace();
     }
     catch (EOFException ex)
     {
-      System.out.println("Ferdig lastet!");
+      System.out.println(logg.toString("Ferdig lastet lagringsfil!"));
     }
   }
 
@@ -176,17 +210,34 @@ public class MedisinVinduTest extends JFrame
       {
         slettMedisin();
       }
-      else if (e.getSource() == kVisEier)
+      else if (e.getSource() == kVisMedisin)
       {
         visMedisin();
       }
       else if (e.getSource() == kVisAlt)
       {
+        System.out.print(medKategori.getValue().toString());
         visAlt();
       }
     }
   }
 
+public static List<String> getKategori()
+{
+   String[] arr = 
+   {
+       "Hypnotikum","Antibiotika","Sedativum",
+       "Hemodialysekonsentrat","Glaukommiddel",
+       "Adrenergikum","Progestogen"
+   
+   };
+   List<String> k = Arrays.asList(arr);
+   Collections.sort(k); 
+   Collections.reverse(k);
+   return k;
+}
+  
+  
 public char aktivRadio()
   {
     if(radioA.isSelected())
@@ -202,28 +253,33 @@ public char aktivRadio()
         
   }
 
+  public boolean feltFylt()
+  {
+      return aktivRadio() != 0 
+              && !medID.getText().equals("")
+              && !medNavn.getText().equals("")
+              && !medInfo.getText().equals("")
+              && !medKategori.getValue().toString().equals("");
+  }
 
   public void nyMedisin()
   {
     try
     {
-      int id = Integer.parseInt(medID.getText());
+      String id = medID.getText();
       String navn = medNavn.getText();
       char rbStatus = aktivRadio();
       String info = medInfo.getText();
-      String k = medKategori.getText();
-      
-        
+      String k = medKategori.getValue().toString();
 
-
-      if (!navn.equals("") && !medID.getText().equals("\\d+") )
+      if ( feltFylt() )
       {
         Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
         if (!bibliotek.finnes(medisin) )
         {
             System.out.print("Finnes medisin?");
             bibliotek.settInnNy(medisin);
-            tekstområde.setText("Medisin lagt til");
+            tekstområde.setText(logg.toString("Medisin lagt til"));
         }
         else
             tekstområde.setText("Medisin allerede lagt til");
@@ -244,26 +300,31 @@ public char aktivRadio()
   {
     try
     {
-      int id = Integer.parseInt(medID.getText());
+      String id = medID.getText();
       String navn = medNavn.getText();
       char rbStatus = aktivRadio();
       String info = medInfo.getText();
-      String k = medKategori.getText();
+      String k = medKategori.getValue().toString();
 
 
-      if (!navn.equals("") && !medID.getText().equals("") )
+      if ( !id.equals("") )
       {
         Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
-        if(bibliotek.fjern(medisin))
-            tekstområde.setText("Medisin fjernet!");
+        if (bibliotek.finnes(medisin) )
+            {
+                if(bibliotek.fjern(medisin))
+                    tekstområde.setText(logg.toString("Medisin fjernet!"));
+            }
+        else
+           tekstområde.setText("Medisin finnes ikke!");
 
       }
       else
-        tekstområde.setText("Fyll ut alle feltene!");
+        tekstområde.setText("Fyll ut medisin ID!");
     }
     catch (NumberFormatException e)
     {
-      tekstområde.setText("Fyll ut alle feltene!");
+      tekstområde.setText("Fyll ut medisin ID!");
     }
   }
 
@@ -273,18 +334,17 @@ public char aktivRadio()
   {
      try
     {
-      int id = Integer.parseInt(medID.getText());
+      String id = medID.getText();
       String navn = medNavn.getText();
 
 
-      if (!navn.equals("") && !medID.getText().equals("") )
+      if ( !id.equals(id) || !navn.equals(navn)  )
       {
-        String temp = bibliotek.finn(navn, id).toString();
-  	  	 tekstområde.setText(temp);
-
+        String temp = "Viser Medisin:\n" + bibliotek.finn(navn, id).toString();
+  	tekstområde.setText(logg.toString(temp));
       }
       else
-        tekstområde.setText("Fyll ut alle feltene!");
+        tekstområde.setText("Fyll ut feltene!");
     }
     catch (NumberFormatException e)
     {
@@ -294,7 +354,7 @@ public char aktivRadio()
 
   public void visAlt()
   {
-    tekstområde.setText(bibliotek.getText());
+    tekstområde.setText(logg.toString(bibliotek.toString()));
   }
 }
 

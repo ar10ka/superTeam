@@ -1,13 +1,13 @@
-package pasient;
+package Program;
 
 
 /*
 
 Studentnr: s188097
-Navn: Ole Boee Andreassen
+Navn: Ole Bøe Andreassen
 
 
-Klasse: Dataingenioer
+Klasse: Dataingeniør
 
 */
 
@@ -26,7 +26,7 @@ public class Pasient implements Serializable
 		fNr = fnr;
                 gender = g;
                 adresse = ordneString(a);
-		//liste over resepter skrevet ut paa pasienten.
+		
 
 	}
         public static String ordneString(String string) 
@@ -104,7 +104,8 @@ public class Pasient implements Serializable
 	@Override
 	public String toString()
 	  {
-		return "Navn:\t" + fnavn + " " + enavn
+		
+              return "Navn:\t" + fnavn + " " + enavn
                         + "\nfNr:\t" + fNr
                         + "\nKjønn:\t" + gender
                         + "\nAdresse:\t" + adresse

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Medisin;
+package Program;
 
 import java.io.Serializable;
 import java.util.*;
@@ -22,13 +22,13 @@ public class MedisinRegister implements Serializable
   {
   }
 
- public Medisin finn(String n, int id )//finner medisin
+ public Medisin finn(String n, String id )//finner medisin
   {
           if(!reg.isEmpty())
           {
             for( Medisin m : reg)
             {
-                 if( m.getNavn().equals(n) && m.getMedID() == id)
+                 if( m.getNavn().equals(n) || m.getMedID().equals(id))
                     return m;
             }
           }
@@ -79,7 +79,7 @@ public class MedisinRegister implements Serializable
 	 Collections.sort(reg,new ComparatorImpl());
   }
 
-  public String getText()
+  public String toString()
   {
     String tekst = "                MEDISINREGISTER:\n";
 

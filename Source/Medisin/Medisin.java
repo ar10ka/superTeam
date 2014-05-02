@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Medisin;
+package Program;
 
 /**
  *
@@ -14,12 +14,12 @@ import java.io.Serializable;
 
 public class Medisin implements Serializable
 {
-	  private int medID;
-	  private String navn, info, kategori;
+	  
+	  private String navn, info, kategori,medID;
           private char reseptGruppe;
 
 
-	  public Medisin( int id, String n, String i, String k, char rGruppe  )
+	  public Medisin( String id, String n, String i, String k, char rGruppe  )
 	  {
                   medID = id;
                   navn = n;
@@ -30,7 +30,7 @@ public class Medisin implements Serializable
 	  }
 
 
-	public int getMedID()
+	public String getMedID()
 	{
 		return medID;
 	}
@@ -60,7 +60,7 @@ public class Medisin implements Serializable
                         + "\nNavn:\t" + navn + "\n"
                         + "\nKategori:\t" + kategori + "\n"
                         + "\nReseptgruppe:\t" + reseptGruppe + "\n"
-                        + "\nInfo:\t" + info + "\n"
+                        + "\nInfo:\n\n" + info + "\n"
                         + "\n\t-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-\t\n\n";
 	  }
 }
