@@ -15,7 +15,7 @@ import java.util.List;
 
 public class LegeRegisterVinduTest extends JFrame {
 	
-	private JTextField  fNrFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
+	private JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
 	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege, search;
 	private JRadioButton ARadio;
 	private JRadioButton BRadio;
@@ -23,6 +23,7 @@ public class LegeRegisterVinduTest extends JFrame {
 	private JTextArea tekstomraade;
 	private JTextArea logomraade;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
+	private int legeID;
 	
 	private LegeRegister leger;
 	private Lytter sensor;
@@ -54,7 +55,7 @@ public class LegeRegisterVinduTest extends JFrame {
 		
 		
 		
-		fNrFelt = new JTextField(11);
+		legeIDFelt = new JTextField(11);
 		navnFelt = new JTextField(20);
 		etternavnFelt = new JTextField(20);
 		arbeidsStedFelt = new JTextField(20);
@@ -82,8 +83,8 @@ public class LegeRegisterVinduTest extends JFrame {
 	    c.add(ARadio);
 	    c.add(BRadio);
 	    c.add(CRadio);
-	    c.add(new JLabel("FødselsNR"));
-	    c.add(fNrFelt);
+	    c.add(new JLabel("Lege ID:"));
+	    c.add(legeIDFelt);
 	    c.add(new JLabel("Fornavn:"));
 	    c.add(navnFelt);
 	    c.add(new JLabel("Etternavn:"));
@@ -226,8 +227,8 @@ public class LegeRegisterVinduTest extends JFrame {
 		return reseptGruppe;
 	}
 	
-	public boolean validerNr() {
-		String fNr = fNrFelt.getText();
+	/*public boolean validerNr() {
+		String fNr = legeIDFelt.getText();
 		char[] array = fNr.toCharArray();
 		int antall = 0;
 		for(char x: array){
@@ -239,12 +240,12 @@ public class LegeRegisterVinduTest extends JFrame {
 		else 
 			logomraade.append("Feil i fødselsnummeret" + "\n");
 			return false;
-	}
+	} */
 	
 	
 	public void nyLege() {
+		
 		String utskrift = "";
-		String fNr = fNrFelt.getText();
 		String navn = navnFelt.getText();
 		String etternavn = etternavnFelt.getText();
 		String sted = arbeidsStedFelt.getText();
@@ -254,25 +255,26 @@ public class LegeRegisterVinduTest extends JFrame {
 			ActivRadio();
 			System.out.println("etter active");
 			
-			if(leger.finnes(fNr)) {
+			/*if(leger.finnes(fNr)) {
 				utskrift += ("Legen med fødselsnummeret [" + fNr + "] er allerede registrert fra før. \n");			
 				logomraade.append(logg.toString(utskrift) + "\n");
 				return;
-			}
+			} */
+			
 				
 			
-			if(validerNr() && !fNrFelt.getText().equals("")  && !navn.equals("") && !etternavn.equals("") && !sted.equals("")  && ActivRadio() != null ) {
-				Lege ny = new Lege(fNr, navn, etternavn, sted, reseptGruppe);
+			if(!navn.equals("") && !etternavn.equals("") && !sted.equals("")  && ActivRadio() != null ) {
+				Lege ny = new Lege(navn, etternavn, sted, reseptGruppe, 0);
 				System.out.println("Inne i ifen");
 				
 				leger.settInn(ny);
-				utskrift += (fNr + " " + navn + " " + etternavn + " er registrert i lege registert");
+				utskrift += (navn + " " + etternavn + " er registrert i lege registert");
 				
 				logomraade.append(logg.toString(utskrift) + "\n");
 
 				
 			}
-			else
+			else 
 				JOptionPane.showMessageDialog(null, "Legen er ikke registrert: sjekk logg!");
 			} catch (NumberFormatException e)
 			
@@ -284,14 +286,14 @@ public class LegeRegisterVinduTest extends JFrame {
 		}
 	
 	public void search() {
-		String fNr = fNrFelt.getText();
+		int legeID = Integer.parseInt(legeIDFelt.getText());
 		String navn = navnFelt.getText();
 		String etternavn = etternavnFelt.getText();
 		char [] grupper;
 		
-		if(leger.finnes(fNr)) {				
-			Lege l = leger.finn(fNr);						
-			fNrFelt.setText(l.getFNr());			
+		if(leger.finnes(legeID)) {
+			Lege l = leger.finn(legeID);
+			legeIDFelt.setText(""+l.getlegeID());			
 			navnFelt.setText(l.getNavn());
 			etternavnFelt.setText(l.getEtternavn());
 			arbeidsStedFelt.setText(l.getArbeidsSted());
@@ -321,9 +323,9 @@ public class LegeRegisterVinduTest extends JFrame {
 	}
 	
 	public void slettLege() {
-		String fNr = fNrFelt.getText();
-		if(leger.slettLege(fNr)) {
-			String utskrift = "Legen med fødselsnummeret: " + fNr + " Er fjernet \n"; 
+		int legeID = Integer.parseInt(legeIDFelt.getText());
+		if(leger.slettLege(legeID)) {
+			String utskrift = "Legen med legeID: " + legeID + " Er fjernet \n"; 
 			logomraade.append(Logg.toString(utskrift));
 			
 		}
@@ -333,14 +335,14 @@ public class LegeRegisterVinduTest extends JFrame {
 	
 	
 	public void visLege() {
-		String fNr = fNrFelt.getText();
+		int legeID = Integer.parseInt(legeIDFelt.getText());
 		String navn = navnFelt.getText();
 		String etternavn = etternavnFelt.getText();
 		
-		if(leger.finn(fNr)!=null) {
-			Lege l = leger.finn(fNr);
-			tekstomraade.append(l.getNavn() + " " + l.getEtternavn() + " " +l.getFNr() + "\n");
-			String utskrift = "Lege(er) med er funnet med forekommende fødselsnummeret \n";
+		if(leger.finnes(legeID)) {
+			Lege l = leger.finn(legeID);
+			tekstomraade.append(l.getNavn() + " " + l.getEtternavn() + " " +l.getlegeID() + "\n");
+			String utskrift = "Lege(er) med er funnet med forekommende lege id \n";
 			logomraade.append(Logg.toString(utskrift));
 			
 		}

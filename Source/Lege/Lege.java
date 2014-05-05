@@ -9,10 +9,12 @@ public class Lege implements Serializable {
 		private String arbeidsSted;
 		private char[] reseptGruppe;
 		private ArrayList<String> reseptList = new ArrayList<>();
-		private String fNr;
+		//private String legeID;
+		private int legeID;
 
-		public Lege ( String nr, String n, String enavn, String sted, char[] rgruppe ) {
-			fNr = nr;
+		public Lege (String n, String enavn, String sted, char[] rgruppe, int id ) {
+			
+			legeID = id;
 			navn = n;
 			etternavn = enavn;
 			arbeidsSted = sted;
@@ -28,8 +30,8 @@ public class Lege implements Serializable {
 			etternavn = e;
 		}
 		
-		public void setFNr(String nr) {
-			fNr = nr;
+		public void setlegeID(int nr) {
+			legeID = nr;
 		}
 		
 		public void setArbeidsSted(String s) {
@@ -51,10 +53,11 @@ public class Lege implements Serializable {
 		}
 
 		
-		public String getFNr() {
-			return fNr;
+		public int getlegeID() {
+			return legeID;
 
 		}
+		
 
 		public String getArbeidsSted() {
 			return arbeidsSted;
@@ -71,7 +74,7 @@ public class Lege implements Serializable {
 			{
 				teksten += x;
 			}
-			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nFødselsnummer: " + fNr +  "\nArbeidssted : " + arbeidsSted +
+			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nLegeID: " + legeID +  "\nArbeidssted : " + arbeidsSted +
 					"\nBevilling: " + teksten + "\n";
 		}
 

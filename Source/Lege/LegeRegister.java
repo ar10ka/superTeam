@@ -22,38 +22,28 @@ public class LegeRegister implements Serializable
 
 	private Lege lege;
 	private List<Lege> reg = new ArrayList<>();
+	private int legeID = 1000; 
 	
 	public LegeRegister() {
 		
 	}
 	
+	
 	public void settInn(Lege ny) {
+		//int nyttID = legeID++;
 		if(ny.getNavn() != null)
 		{
+			ny.setlegeID(legeID++);
 			reg.add(ny);
 		}
 	}
 	
-	public List<Lege> finn(String n, String e) {
-		List<Lege> LegeListe = new ArrayList<>();
-		if(!reg.isEmpty())
-		{
-			for( Lege l: reg) {
-				if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
-					LegeListe.add(l);
-					return LegeListe;
-					
-				}
-			}
-			
-		}
-		return null;
-	}
+
 	
-	public Lege finn (String f) {
+	public Lege finn (int id) {
 		if(!reg.isEmpty()) {
 			for( Lege l: reg) {
-				if(l.getFNr().equals(f)) {
+				if(l.getlegeID()==(id)) {
 					return l;
 				}
 			}
@@ -62,11 +52,11 @@ public class LegeRegister implements Serializable
 	}
 	
 	
-	public boolean slettLege(String f) {
+	public boolean slettLege(int id) {
 		if(!reg.isEmpty())
 		{
 			for(Lege l: reg) {
-				if(l.getFNr().equals(f)) {
+				if(l.getlegeID()==(id)) {
 					reg.remove(l);
 					return true;
 				}
@@ -80,22 +70,22 @@ public class LegeRegister implements Serializable
 	}
 	
 	public boolean finnes(String n, String e) {
-		return finn(n,e) != null;
+		return finnOgReturner(n, e) != null;
 	}
 	
 	public String finnOgReturner ( String n, String e) {
 		String utskrift = "";
 		for( Lege l: reg) {
 			if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
-				utskrift +=  l.getNavn() + " " + l.getEtternavn() +" " + l.getFNr() + "\n";
+				utskrift +=  l.getNavn() + " " + l.getEtternavn() +" " + l.getlegeID() + "\n";
 			}
 		}
 		return utskrift;
 	}
 	
-	public boolean finnes (String f) {
+	public boolean finnes (int f) {
 		for ( Lege l: reg) {
-			if(l.getFNr().equals(f))
+			if(l.getlegeID()==(f))
 				return true;		
 		}
 		return false;
