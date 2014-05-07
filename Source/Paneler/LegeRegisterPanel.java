@@ -1,6 +1,4 @@
-
-import Program.LegeRegister;
-import Program.Lege;
+package Program;
 import javax.swing.*;
 
 import java.awt.*;
@@ -15,7 +13,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 
-public class LegeRegisterVinduTest extends JPanel {
+public class LegeRegisterPanel extends JPanel {
 	
 	private JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
 	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege, search;
@@ -36,7 +34,7 @@ public class LegeRegisterVinduTest extends JPanel {
 	
 
 	
-	public LegeRegisterVinduTest() {
+	public LegeRegisterPanel() {
 		
 		
 		leger = new LegeRegister();
@@ -102,6 +100,9 @@ public class LegeRegisterVinduTest extends JPanel {
 		
 		
 		
+		setSize(850, 400);
+		setVisible(true);
+		
 		sensor = new Lytter();
 		
 	    kNyLege.addActionListener(sensor);
@@ -113,6 +114,7 @@ public class LegeRegisterVinduTest extends JPanel {
 	    search.addActionListener(sensor);
 	    logomraade.setText("");
 	    
+	
 	   
 		
 		
@@ -305,11 +307,11 @@ public class LegeRegisterVinduTest extends JPanel {
 		int legeID = Integer.parseInt(legeIDFelt.getText());
 		if(leger.slettLege(legeID)) {
 			String utskrift = "Legen med legeID: " + legeID + " Er fjernet \n"; 
-			logomraade.append(Logg.toString(utskrift));
+			logomraade.append(logg.toString(utskrift));
 			
 		}
 		else
-		logomraade.append(Logg.toString("Finnes ikke legen med forekommende f�dselsnummeret \n"));
+		logomraade.append(logg.toString("Finnes ikke legen med forekommende f�dselsnummeret \n"));
 	}
 	
 	
@@ -322,7 +324,7 @@ public class LegeRegisterVinduTest extends JPanel {
 			Lege l = leger.finn(legeID);
 			tekstomraade.append(l.getNavn() + " " + l.getEtternavn() + " " +l.getlegeID() + "\n");
 			String utskrift = "Lege(er) med er funnet med forekommende lege id \n";
-			logomraade.append(Logg.toString(utskrift));
+			logomraade.append(logg.toString(utskrift));
 			
 		}
 		
@@ -332,7 +334,7 @@ public class LegeRegisterVinduTest extends JPanel {
 			tekstomraade.append(leger.finnOgReturner(navn, etternavn) + "\n");
 			//}
 			String utskrift = "Lege(er) med er funnet med forekommende navn og etternavn \n";
-			logomraade.append(Logg.toString(utskrift));
+			logomraade.append(logg.toString(utskrift));
 			
 		}
 		
