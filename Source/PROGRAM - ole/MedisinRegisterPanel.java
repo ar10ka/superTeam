@@ -9,10 +9,7 @@ Klasse: Dataingenioer
 */
 
 package Program;
-import Program.Logg;
-import Program.Medisin;
-import Program.MedisinRegister;
-import java.awt.Container;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.*;
@@ -146,7 +143,7 @@ public class MedisinRegisterPanel extends JPanel
     {
       ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("MedisinLagring.txt"));
       out.writeObject(bibliotek);
-      System.out.println(logg.toString("Lagret!"));
+      System.out.println(logg.toString("MedisinRegister lagret!"));
     }
     catch (FileNotFoundException ex)
     {
@@ -161,7 +158,7 @@ public class MedisinRegisterPanel extends JPanel
       FileInputStream fileHandle = new FileInputStream("MedisinLagring.txt");
       ObjectInputStream in = new ObjectInputStream(fileHandle);
       bibliotek = (MedisinRegister) in.readObject();
-      System.out.println(logg.toString("Lastet inn!"));
+      System.out.println(logg.toString("MedisinRegister lastet inn!"));
   
     }
     catch (FileNotFoundException ex)

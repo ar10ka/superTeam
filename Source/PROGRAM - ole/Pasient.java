@@ -105,10 +105,16 @@ public class Pasient implements Serializable
 	public String toString()
 	  {
 		
+              return "Navn: " + fnavn + " " + enavn + " Fnr: " + fNr;
+	  }
+        public String getInfo()
+	  {
+		
               return "Navn:\t" + fnavn + " " + enavn
                         + "\nfNr:\t" + fNr
                         + "\nKjønn:\t" + gender
                         + "\nAdresse:\t" + adresse
                         + "\n\n";
 	  }
+
 }

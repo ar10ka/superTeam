@@ -82,6 +82,7 @@ public class DesignTest extends JFrame{
          
           panel2.setName("PasientRegister");
           panel3.setName("MedisinRegister");
+          //panel1.setBackground(Color.LIGHT_GRAY);
           panel4.setBackground(Color.ORANGE);
           panel5.setBackground(Color.pink);
           panel6.setBackground(Color.yellow);
@@ -105,7 +106,11 @@ public class DesignTest extends JFrame{
           f.setSize(1000,500);
           f.setVisible(true);
           f.getContentPane().add(hovedpanel,BorderLayout.CENTER);
-          f.add(new JLabel("gwrgwe"),BorderLayout.SOUTH);
+          
+          
+
+          
+          //f.add(new JList(new LegeRegister().returnObjekt()),BorderLayout.SOUTH);
           //f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);                
                 
           

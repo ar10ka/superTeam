@@ -36,6 +36,18 @@ public class PasientRegister implements Serializable
           }
           return null;
   }
+ public Pasient finn(Pasient f)//finner pasient
+  {
+          if(!reg.isEmpty())
+          {
+            for( Pasient p : reg)
+            {
+                 if( p == f)
+                    return p;
+            }
+          }
+          return null;
+   }
  public Pasient finn(String fNr)//finner pasient
   {
           if(!reg.isEmpty())
@@ -51,6 +63,10 @@ public class PasientRegister implements Serializable
   public boolean finnes ( String fnavn, String enavn ) // finnes pasienten?
   {
       return finn(fnavn,enavn) != null;
+  }
+  public boolean finnes (Pasient p)
+  {
+      return finn(p)!=null;
   }
   public boolean finnes ( String fnr ) // finnes pasienten?
   {
@@ -87,6 +103,32 @@ public class PasientRegister implements Serializable
     reg.add(ny);
 
   }
+  public boolean endre( Pasient n )
+  {
+            if(!tom())
+          {
+            for( Pasient p : reg)
+            {
+
+                 if(p.getFNr().equals( n.getFNr()))
+                 {
+                    p.setFNavn(n.getFNavn());
+                    p.setENavn(n.getENavn());
+                    p.setAdresse(n.getAdresse());
+                    p.setGender(n.getGender());
+
+                    return true;
+                 }
+
+            }
+          }
+          return false;
+  }
+  
+  public Object[] returnObjekt()
+  {
+    return reg.toArray();
+  }
 
   public void sorter()
   {
@@ -99,7 +141,7 @@ public class PasientRegister implements Serializable
     String tekst = "                PASIENTER:\n";
 
     for (Pasient x : reg)
-      tekst += x.toString() + "\n";
+      tekst += x.getInfo() + "\n";
     if (tekst.equals("") == false)
 	  return tekst;
     else

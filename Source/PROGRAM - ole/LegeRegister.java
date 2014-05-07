@@ -1,6 +1,4 @@
 package Program;
-
-import Program.Lege;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +51,18 @@ public class LegeRegister implements Serializable
 		}
 		return null;
 	}
+         public Lege finn(Lege l)//finner pasient
+  {
+          if(!reg.isEmpty())
+          {
+            for( Lege x : reg)
+            {
+                 if( x == l)
+                    return x;
+            }
+          }
+          return null;
+   }
 	
 	
 	public boolean slettLege(int id) {
@@ -75,6 +85,10 @@ public class LegeRegister implements Serializable
 	public boolean finnes(String n, String e) {
 		return finnOgReturner(n, e) != null;
 	}
+        public boolean finnes(Lege l)
+        {
+            return finn(l)!=null;
+        }
 	
 	public String finnOgReturner ( String n, String e) {
 		String utskrift = "";
@@ -90,6 +104,24 @@ public class LegeRegister implements Serializable
 		for ( Lege l: reg) {
 			if(l.getlegeID()==(f))
 				return true;		
+		}
+		return false;
+	}
+	
+	public boolean endreLege(Lege l) {
+		
+		if(!tomListe()) {
+			
+			for( Lege x: reg) {
+				if(x.getlegeID() == l.getlegeID()) {
+					x.setNavn(l.getNavn());
+					x.setEtternavn(l.getEtternavn());
+					x.setArbeidsSted(l.getArbeidsSted());
+					x.setReseptGruppe(l.getReseptGruppe());
+					return true;
+				}
+			}
+			
 		}
 		return false;
 	}

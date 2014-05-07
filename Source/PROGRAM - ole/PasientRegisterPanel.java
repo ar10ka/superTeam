@@ -30,12 +30,13 @@ public class PasientRegisterPanel extends JPanel
 {
   JFormattedTextField fNr;
   JTextField 	 fNavn, eNavn, adresse;
-  JButton 		kNyPasient, kSlettPasient, kVisAlt, kVisPasient;
+  JButton 		kNyPasient, kSlettPasient, kVisAlt, kVisPasient,kEndrePasient;
   JRadioButton 	radioMann, radioKvinne;
   JTextArea		tekstområde;
   
   MaskFormatter fNrformatter;
 
+  private JList list;
   private PasientRegister bibliotek;
   private char gender;
   private Lytter sensor;
@@ -81,6 +82,7 @@ public class PasientRegisterPanel extends JPanel
     eNavn = new JTextField(14);
     adresse = new JTextField(14);
 
+    kEndrePasient = new JButton("Endre pasient");
     kNyPasient      = new JButton("Reg pasient");
     kSlettPasient   = new JButton("Slett pasient");
     kVisPasient     = new JButton("Vis pasient");
@@ -104,12 +106,20 @@ public class PasientRegisterPanel extends JPanel
     add(new JLabel("Adresse:"));
     add(adresse);
 
-
+    add(kEndrePasient);
     add(kNyPasient);
     add(kSlettPasient);
     add(kVisPasient);
     add(kVisAlt);
     add(rulle);
+               
+    
+    
+    list = new JList( bibliotek.returnObjekt() ); //data has type Object[]
+    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+    list.setVisibleRowCount(5);
+    add(new JScrollPane(list));
 
 
 
@@ -119,7 +129,7 @@ public class PasientRegisterPanel extends JPanel
 
 
     kNyPasient.addActionListener(sensor);
-
+    kEndrePasient.addActionListener(sensor);
     kSlettPasient.addActionListener(sensor);
 
     kVisPasient.addActionListener(sensor);
@@ -134,7 +144,7 @@ public class PasientRegisterPanel extends JPanel
     {
       ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("PasientLagring.txt"));
       out.writeObject(bibliotek);
-      System.out.println(logg.toString("Lagret!"));
+      System.out.println(logg.toString("PasientRegister lagret!"));
     }
     catch (FileNotFoundException ex)
     {
@@ -149,7 +159,7 @@ public class PasientRegisterPanel extends JPanel
       FileInputStream fileHandle = new FileInputStream("PasientLagring.txt");
       ObjectInputStream in = new ObjectInputStream(fileHandle);
       bibliotek = (PasientRegister) in.readObject();
-      System.out.println(logg.toString("Lastet inn!"));
+      System.out.println(logg.toString("PasientRegister lastet inn!"));
   
     }
     catch (FileNotFoundException ex)
@@ -173,15 +183,7 @@ public class PasientRegisterPanel extends JPanel
     {
       if (e.getSource() == kNyPasient)
       {
-        //int rbStatus = aktivRadio();
-        //if(rbStatus == _PERSON)
-        //{
           nyPasient();
-        //}
-        /*else if (rbStatus == _FIRMA)
-        {
-          nyFirma();
-        }*/
       }
       else if (e.getSource() == kSlettPasient)
       {
@@ -190,6 +192,10 @@ public class PasientRegisterPanel extends JPanel
       else if (e.getSource() == kVisPasient)
       {
         visPasient();
+      }
+      else if (e.getSource() == kEndrePasient)
+      {
+        endrePasient();
       }
       else if (e.getSource() == kVisAlt)
       {
@@ -236,6 +242,62 @@ public char aktivRadio()
         }
         else
             tekstområde.setText("Pasienten er allerede registrert");
+      
+        
+      }
+        else
+         tekstområde.setText("Fyll ut alle feltene!");
+    }
+    catch (NumberFormatException e)
+    {
+      tekstområde.setText("Fyll ut alle feltene!");
+    }
+  }
+  
+  public void endrePasient()
+  {
+      try
+    {
+      String id = fNr.getText().replaceAll("\\s","");//får personnummer og fjerner blanke tegn
+      String fnavn = fNavn.getText();
+      String enavn = eNavn.getText();
+      char gen = aktivRadio();
+      String adr = adresse.getText();
+
+
+      if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )
+      {
+        if (bibliotek.finnes(id))
+        {          
+            Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
+            
+           
+                if(bibliotek.endre(pasient))
+                {
+                    fNr.setText(id);
+                    tekstområde.setText(logg.toString("Pasient endret"));
+                }
+                else
+                    tekstområde.setText(logg.toString("Kunne ikke endre pasient! Prøv igjen!"));
+  
+        }
+        else
+        {
+            tekstområde.setText("Pasienten finnes ikke");
+            
+            int n = JOptionPane.showConfirmDialog(null,
+                    "Pasienten finnes ikke!\nVil du legge til pasienten?",
+                    "Ny pasient!",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION)
+            {    
+                nyPasient();
+                tekstområde.setText(logg.toString("Pasient lagt til"));
+            }
+            else 
+                tekstområde.setText("Pasient er ikke lagt til");
+                
+        }
       
         
       }
@@ -295,9 +357,14 @@ public char aktivRadio()
       if (!id.equals("") )
       {
    
-        if (bibliotek.finnes(id))
+        if (bibliotek.finnes(id) )
         {
             String temp = "Viser pasient:\n" + bibliotek.finn(id).toString();
+  	  	 tekstområde.setText(logg.toString(temp)); 
+        }
+        else if( bibliotek.finnes(fnavn, enavn))
+        {
+            String temp = "Viser pasient:\n" + bibliotek.finn(fnavn,enavn).toString();
   	  	 tekstområde.setText(logg.toString(temp)); 
         }
         else
