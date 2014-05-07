@@ -91,6 +91,24 @@ public class LegeRegister implements Serializable
 		return false;
 	}
 	
+	public boolean endreLege(Lege l) {
+		
+		if(!tomListe()) {
+			
+			for( Lege x: reg) {
+				if(x.getlegeID() == l.getlegeID()) {
+					x.setNavn(l.getNavn());
+					x.setEtternavn(l.getEtternavn());
+					x.setArbeidsSted(l.getArbeidsSted());
+					x.setReseptGruppe(l.getReseptGruppe());
+					return true;
+				}
+			}
+			
+		}
+		return false;
+	}
+	
 	public void sorter() {
 		Collections.sort(reg,new ComparatorImpl());
 	}
