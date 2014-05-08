@@ -138,7 +138,7 @@ public class LegeRegister implements Serializable
 		
 		for (Lege x: reg){
 			if (!tomListe()) {
-				utskrift += x.toString() + "\n";
+				utskrift += x.getInfo() + "\n";
 			}
 		}
 		return utskrift;

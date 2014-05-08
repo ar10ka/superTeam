@@ -43,6 +43,7 @@ public class PasientRegisterPanel extends JPanel
   public static final int _PERSON = 1;
   public static final int _FIRMA  = 2;
   private final Logg logg;
+  private FilBehandler fil;
 	
 
   public PasientRegisterPanel()//konstruktør
@@ -55,10 +56,11 @@ public class PasientRegisterPanel extends JPanel
 
     logg = new Logg();
     bibliotek  = new PasientRegister();
+    fil = new FilBehandler();
 
     try
     {
-      lastInnFil();
+        lastInnFil();
     }
 
     catch (IOException ex)
@@ -142,8 +144,9 @@ public class PasientRegisterPanel extends JPanel
   {
     try
     {
-      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("PasientLagring.txt"));
-      out.writeObject(bibliotek);
+      fil.lagreFil(bibliotek, "PasientLagring");
+      /*ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("PasientLagring.txt"));
+      out.writeObject(bibliotek);*/
       System.out.println(logg.toString("PasientRegister lagret!"));
     }
     catch (FileNotFoundException ex)
@@ -156,20 +159,17 @@ public class PasientRegisterPanel extends JPanel
   {
     try
     {
-      FileInputStream fileHandle = new FileInputStream("PasientLagring.txt");
+      
+      bibliotek = fil.lastInnFilPasient("PasientLagring");
+      /*FileInputStream fileHandle = new FileInputStream("PasientLagring.txt");
       ObjectInputStream in = new ObjectInputStream(fileHandle);
-      bibliotek = (PasientRegister) in.readObject();
+      bibliotek = (PasientRegister) in.readObject();*/
       System.out.println(logg.toString("PasientRegister lastet inn!"));
   
     }
     catch (FileNotFoundException ex)
     {
       System.out.println(logg.toString("Lager ny lagringsfil"));
-    }
-    catch (ClassNotFoundException ex)
-    {
-      System.out.println("feilen");
-      ex.printStackTrace();
     }
     catch (EOFException ex)
     {

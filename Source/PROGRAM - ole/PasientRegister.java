@@ -129,7 +129,11 @@ public class PasientRegister implements Serializable
   
   public Object[] returnObjekt()
   {
-    return reg.toArray();
+      String[] emptyArray = {"Det er ingen pasienter registrert!"};
+      if(!reg.isEmpty())  
+        return reg.toArray();
+      else
+          return emptyArray;
   }
 
   public void sorter()

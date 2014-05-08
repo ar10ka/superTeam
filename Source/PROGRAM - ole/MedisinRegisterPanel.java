@@ -43,6 +43,7 @@ public class MedisinRegisterPanel extends JPanel
   public static final int _B  = 2;
   public static final int _C  = 3;
   private Logg logg;
+  private FilBehandler fil;
 	
 
   public MedisinRegisterPanel()//konstruktør
@@ -58,6 +59,7 @@ public class MedisinRegisterPanel extends JPanel
     
     bibliotek  = new MedisinRegister();
     logg = new Logg();
+    fil = new FilBehandler();
     try
     {
       lastInnFil();
@@ -140,9 +142,10 @@ public class MedisinRegisterPanel extends JPanel
  public void lagreFil() throws IOException
   {
     try
-    {
+    {/*
       ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("MedisinLagring.txt"));
-      out.writeObject(bibliotek);
+      out.writeObject(bibliotek);*/
+        fil.lagreFil(bibliotek, "MedisinLagring");
       System.out.println(logg.toString("MedisinRegister lagret!"));
     }
     catch (FileNotFoundException ex)
@@ -154,21 +157,17 @@ public class MedisinRegisterPanel extends JPanel
   private void lastInnFil() throws IOException
   {
     try
-    {
+    {/*
       FileInputStream fileHandle = new FileInputStream("MedisinLagring.txt");
       ObjectInputStream in = new ObjectInputStream(fileHandle);
-      bibliotek = (MedisinRegister) in.readObject();
+      bibliotek = (MedisinRegister) in.readObject();*/
+      bibliotek = fil.lastInnFilMedisin("MedisinLagring");
       System.out.println(logg.toString("MedisinRegister lastet inn!"));
   
     }
     catch (FileNotFoundException ex)
     {
       System.out.println(logg.toString("Lager ny lagringsfil"));
-    }
-    catch (ClassNotFoundException ex)
-    {
-      System.out.println("feilen");
-      ex.printStackTrace();
     }
     catch (EOFException ex)
     {

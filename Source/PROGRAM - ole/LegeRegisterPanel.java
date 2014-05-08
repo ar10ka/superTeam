@@ -1,6 +1,6 @@
 package Program;
 import javax.swing.*;
-
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 
+
 public class LegeRegisterPanel extends JPanel {
 	
 	private JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
@@ -23,14 +24,19 @@ public class LegeRegisterPanel extends JPanel {
 	private JTextArea tekstomraade;
 	private JTextArea logomraade;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
-	private static int feilLegeId = 0;
-        private int legeID;
+	private int legeID;
+	private JPanel feltPanel;
+	private JPanel listPanel;
+	private JPanel knappePanel;
+	
+        
 	
 	private LegeRegister leger;
 	private Lytter sensor;
 	private Logg logg;
-	
-	
+	private GridBagConstraints gbc;
+	private FilBehandler fil;
+	private static int feilLegeId = 0;
 	//private String reseptGruppe;
 	
 
@@ -38,7 +44,8 @@ public class LegeRegisterPanel extends JPanel {
 	public LegeRegisterPanel() {
 		
             logg = new Logg();
-		leger = new LegeRegister();
+            leger = new LegeRegister();
+            fil = new FilBehandler();
 		
 	    try
 	    {
@@ -55,56 +62,110 @@ public class LegeRegisterPanel extends JPanel {
 		
 		
 		legeID = feilLegeId;
+		setLayout(new BorderLayout());
+	    super.setBackground(Color.DARK_GRAY);
+	    feltPanel = new JPanel();
+	    listPanel = new JPanel();
+	    knappePanel = new JPanel();
 		legeIDFelt = new JTextField(11);
-		navnFelt = new JTextField(20);
-		etternavnFelt = new JTextField(20);
+		navnFelt = new JTextField(10);
+		etternavnFelt = new JTextField(10);
 		arbeidsStedFelt = new JTextField(20);
 		
-		ARadio = new JRadioButton("ReseptGruppe A");
-		BRadio = new JRadioButton("ReseptGruppe B");
-		CRadio = new JRadioButton("ReseptGruppe C");
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridy = 0;
+		gbc.gridx = 0;
+		ARadio = new JRadioButton("A");
+		BRadio = new JRadioButton("B");
+		CRadio = new JRadioButton("C");
 		
-                kEndreLege = new JButton("Endre Lege");
+        kEndreLege = new JButton("Endre Lege");
 		kNyLege = new JButton("Reg Lege");
 		kSlettLege = new JButton("Slett Lege");
 		kVisLege = new JButton("Vis Lege");
 		kVisAlt = new JButton("Vis Alt");
-		search = new JButton("S�k Lege");
+		search = new JButton("Søk Lege");
 		
-		tekstomraade  = new JTextArea(15, 55);
+		
+		tekstomraade  = new JTextArea(10,50);
 	    tekstomraade.setEditable(false);
+	    tekstomraade.setVisible(true);
 	    JScrollPane rulle = new JScrollPane(tekstomraade);
 	    
-		logomraade  = new JTextArea(15, 55);
+		logomraade  = new JTextArea(15, 30);
 	    logomraade.setEditable(false);
+	    logomraade.setVisible(true);
 	    JScrollPane rulle2 = new JScrollPane(logomraade);
 	    
-            setLayout( new FlowLayout() );
-	    add(ARadio);
-	    add(BRadio);
-	    add(CRadio);
-	    add(new JLabel("Lege ID:"));
-	    add(legeIDFelt);
-	    add(new JLabel("Fornavn:"));
-	    add(navnFelt);
-	    add(new JLabel("Etternavn:"));
-	    add(etternavnFelt);
-	    add(new JLabel("ArbeidsSted:"));
-	    add(arbeidsStedFelt);
-	    add(kNyLege);
-	    add(kSlettLege);
-	    add(kVisLege);
-	    add(kVisAlt);
-	    add(search);
-            add(kEndreLege);
-	    add(rulle);
-	    add(rulle2);
+	    Border rammer = BorderFactory.createEtchedBorder();
+	    
+	    feltPanel.setBorder(rammer);
+	    knappePanel.setBorder(rammer);
+	    listPanel.setBorder(rammer);
+	    
+	    
+	    
+        feltPanel.setLayout( new GridBagLayout() );
+        gbc.gridy++;
+        feltPanel.add(new JLabel("Velg Reseptgruppe(er)"),gbc);
+	    feltPanel.add(ARadio,gbc);
+	    feltPanel.add(BRadio,gbc);
+	    feltPanel.add(CRadio,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("Lege ID:"), gbc);
+	    feltPanel.add(legeIDFelt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("Fornavn:"), gbc);
+	    feltPanel.add(navnFelt,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("Etternavn:"), gbc);
+	    feltPanel.add(etternavnFelt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("ArbeidsSted:"), gbc);
+	    feltPanel.add(arbeidsStedFelt, gbc);
+	    gbc.gridy++;
+	    //feltPanel.add(new JLabel("HER!!"),gbc);
+	    feltPanel.add(tekstomraade,gbc);
+	    gbc.gridx++;
+        feltPanel.add(rulle,gbc);
+        gbc.gridy++;
+        feltPanel.add(kNyLege,gbc);
+	   // add(rulle2);
+	    
+	    /*
+	    feltPanel.add(kNyLege,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kSlettLege,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kVisLege, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kVisAlt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kEndreLege,gbc);
+	    gbc.gridy++;
+        feltPanel.add(search, gbc);
+        gbc.gridy++;
+        */
+	    feltPanel.setBackground(Color.green);
+	    knappePanel.setBackground(Color.red);
+	    listPanel.setBackground(Color.cyan);
+	    JSplitPane spr = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	    JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	    sp.setResizeWeight(0.6);
+	    sp.setEnabled(false);
+	    sp.setDividerSize(0);
+	    sp.add(listPanel);
+	    sp.add(knappePanel);
+	    spr.setEnabled(false);
+	    spr.setDividerSize(0);
+	    spr.setResizeWeight(0.6);
+	    spr.add(sp);
+	    spr.add(feltPanel);
+        
+	    add(spr, BorderLayout.CENTER);
 		
 		
-		
-		
-		setSize(850, 400);
-		setVisible(true);
+        feltPanel.setVisible(true);
 		
 		sensor = new Lytter();
 		
@@ -115,12 +176,8 @@ public class LegeRegisterPanel extends JPanel {
 	    kVisLege.addActionListener(sensor);
 	    kVisAlt.addActionListener(sensor);
 	    search.addActionListener(sensor);
-	    logomraade.setText("");
-	    
-	
-	   
-		
-		
+	   // logomraade.setText("");
+	    		
 	}
 	
 	/*private void groupButton() {
@@ -135,19 +192,17 @@ public class LegeRegisterPanel extends JPanel {
 	  private void lastInnFil() throws IOException
 	  {
 	    try
-	    {
+	    {/*
 	      FileInputStream fileHandle = new FileInputStream("LegeData.txt");
 	      ObjectInputStream in = new ObjectInputStream(fileHandle);
-	      leger = (LegeRegister) in.readObject();
+	      leger = (LegeRegister) in.readObject();*/
+	      leger = fil.lastInnFilLege("LegeLagring");
+              System.out.println(logg.toString("LegeRegister lastet inn!"));
+  
 	    }
 	    catch (FileNotFoundException ex)
 	    {
 	      System.out.println("Lager ny lagringsfil");
-	    }
-	    catch (ClassNotFoundException ex)
-	    { 
-	    	 System.out.println("CLASS not found Exception");
-	      ex.printStackTrace();
 	    }
 	    catch (EOFException ex)
 	    {
@@ -159,8 +214,10 @@ public class LegeRegisterPanel extends JPanel {
 	  {
 	    try
 	    {
-	      ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("LegeData.txt"));
-	      out.writeObject(leger);
+                fil.lagreFil(leger, "LegeLagring");
+	      /*ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("LegeData.txt"));
+	      out.writeObject(leger);*/
+                System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
 	    {
@@ -246,7 +303,7 @@ public class LegeRegisterPanel extends JPanel {
              Lege lege = new Lege(fnavn, enavn,arb, reseptGruppe, 0);
             leger.settInn(lege);
             logomraade.setText(logg.toString("Lege lagt til"));
-     
+            
       
         
       }
@@ -258,7 +315,11 @@ public class LegeRegisterPanel extends JPanel {
     catch (NumberFormatException e)
     {
       logomraade.setText("Fyll ut alle feltene!");
-    }			
+    }
+    catch (IndexOutOfBoundsException ex)
+    {
+        logomraade.setText("Fyll ut alle feltene!");
+    }
 			
 		}
         
@@ -318,7 +379,10 @@ public class LegeRegisterPanel extends JPanel {
     {
       logomraade.setText("Fyll ut alle feltene!");
     }
-            
+    catch (IndexOutOfBoundsException ex)
+    {
+        logomraade.setText("Fyll ut alle feltene!");
+    }
         }
         
         
