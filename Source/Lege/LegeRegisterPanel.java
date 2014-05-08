@@ -29,6 +29,8 @@ public class LegeRegisterPanel extends JPanel {
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
 	private int legeID;
 	private JPanel feltPanel;
+	private JPanel listPanel;
+	private JPanel knappePanel;
 	
 	private LegeRegister leger;
 	private Lytter sensor;
@@ -59,8 +61,11 @@ public class LegeRegisterPanel extends JPanel {
 	      ex.printStackTrace();
 	    }
 		
-		
+		setLayout(new BorderLayout());
 	    super.setBackground(Color.DARK_GRAY);
+	    feltPanel = new JPanel();
+	    listPanel = new JPanel();
+	    knappePanel = new JPanel();
 		legeIDFelt = new JTextField(11);
 		navnFelt = new JTextField(10);
 		etternavnFelt = new JTextField(10);
@@ -68,6 +73,7 @@ public class LegeRegisterPanel extends JPanel {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;
+		gbc.gridx = 0;
 		ARadio = new JRadioButton("A");
 		BRadio = new JRadioButton("B");
 		CRadio = new JRadioButton("C");
@@ -79,8 +85,8 @@ public class LegeRegisterPanel extends JPanel {
 		kVisAlt = new JButton("Vis Alt");
 		search = new JButton("Søk Lege");
 		
-		feltPanel = new JPanel();
-		tekstomraade  = new JTextArea(15, 15);
+		
+		tekstomraade  = new JTextArea(10,50);
 	    tekstomraade.setEditable(false);
 	    tekstomraade.setVisible(true);
 	    JScrollPane rulle = new JScrollPane(tekstomraade);
@@ -93,11 +99,14 @@ public class LegeRegisterPanel extends JPanel {
 	    Border rammer = BorderFactory.createEtchedBorder();
 	    
 	    feltPanel.setBorder(rammer);
+	    knappePanel.setBorder(rammer);
+	    listPanel.setBorder(rammer);
+	    
+	    
 	    
         feltPanel.setLayout( new GridBagLayout() );
         gbc.gridy++;
         feltPanel.add(new JLabel("Velg Reseptgruppe(er)"),gbc);
-        gbc.gridy++;
 	    feltPanel.add(ARadio,gbc);
 	    feltPanel.add(BRadio,gbc);
 	    feltPanel.add(CRadio,gbc);
@@ -114,12 +123,12 @@ public class LegeRegisterPanel extends JPanel {
 	    feltPanel.add(new JLabel("ArbeidsSted:"), gbc);
 	    feltPanel.add(arbeidsStedFelt, gbc);
 	    gbc.gridy++;
-	    feltPanel.add(new JLabel("HER!!"),gbc);
+	    //feltPanel.add(new JLabel("HER!!"),gbc);
 	    feltPanel.add(tekstomraade,gbc);
+	    gbc.gridx++;
         feltPanel.add(rulle,gbc);
         gbc.gridy++;
         feltPanel.add(kNyLege,gbc);
-        super.add(feltPanel);
 	   // add(rulle2);
 	    
 	    /*
@@ -136,7 +145,23 @@ public class LegeRegisterPanel extends JPanel {
         feltPanel.add(search, gbc);
         gbc.gridy++;
         */
-		
+	    feltPanel.setBackground(Color.green);
+	    knappePanel.setBackground(Color.red);
+	    listPanel.setBackground(Color.cyan);
+	    JSplitPane spr = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	    JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	    sp.setResizeWeight(0.6);
+	    sp.setEnabled(false);
+	    sp.setDividerSize(0);
+	    sp.add(listPanel);
+	    sp.add(knappePanel);
+	    spr.setEnabled(false);
+	    spr.setDividerSize(0);
+	    spr.setResizeWeight(0.6);
+	    spr.add(sp);
+	    spr.add(feltPanel);
+        
+	    add(spr, BorderLayout.CENTER);
 		
 		
         feltPanel.setVisible(true);
