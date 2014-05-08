@@ -1,4 +1,4 @@
-package Program;
+
 
 import java.awt.BorderLayout;
 import java.util.*;
@@ -26,7 +26,7 @@ public class DesignTest extends JFrame{
 	//private List<JButton> knappeListe = new ArrayList<>();
 	private JButton[] knappeListe;
 	private toolBarKnapper knapper;
-        
+        private Logg logg;
         private CardLayout card;
         private JPanel hovedpanel, panel4,panel5,panel6;
         private LegeRegisterPanel panel1;
@@ -43,6 +43,7 @@ public class DesignTest extends JFrame{
 
 	
 	public DesignTest() {
+                logg = new Logg();
 		f = new JFrame("Design-test");
 		knapper = new toolBarKnapper();
 		sensor = new Lytter();
@@ -87,6 +88,7 @@ public class DesignTest extends JFrame{
           panel5.setBackground(Color.pink);
           panel6.setBackground(Color.yellow);
           
+          
           hovedpanel.add(panel1, "1");
           hovedpanel.add(panel2, "2");
           hovedpanel.add(panel3, "3");
@@ -105,9 +107,8 @@ public class DesignTest extends JFrame{
           f.getContentPane().setBackground(toolbar.getBackground());
           f.setSize(1000,500);
           f.setVisible(true);
-          f.getContentPane().add(hovedpanel,BorderLayout.CENTER);
-          
-          
+          f.getContentPane().add(hovedpanel,BorderLayout.CENTER);          
+          f.getContentPane().add(logg,BorderLayout.SOUTH);          
 
           
           //f.add(new JList(new LegeRegister().returnObjekt()),BorderLayout.SOUTH);
@@ -137,6 +138,11 @@ public class DesignTest extends JFrame{
                 //ObjectList til venstre
                 //User Interface til høyre
 	}
+        public String toLogg(String s)
+        {
+            
+            return logg.toString(s);
+        }
 
 
 
@@ -165,7 +171,10 @@ public class DesignTest extends JFrame{
 		toolbar.setVisible(true);
 		
 	}
-	
+	public String test()
+        {
+            return "yes";
+        }
 	 private class Lytter implements ActionListener {
 		    @Override
 		    
@@ -257,14 +266,22 @@ class toolBarKnapper
                     knappen.setBorder(emptyBorder);
                     knappen.setFocusPainted(false);
             }
-
+/*
 	toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("../ikoner/lege.png")));
 	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("../ikoner/pasient.png")));
 	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("../ikoner/medisin.png")));
 	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("../ikoner/resept.png")));
 	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("../ikoner/statistikk.png")));
-	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("../ikoner/info.png")));
-	}
+	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("../ikoner/info.png")));*/
+	
+        toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("ikoner/lege.png")));
+	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("ikoner/pasient.png")));
+	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("ikoner/medisin.png")));
+	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("ikoner/resept.png")));
+	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("ikoner/statistikk.png")));
+	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("ikoner/info.png")));
+        
+        }
 	
 	public JButton[] returnerObjekter () 
         {

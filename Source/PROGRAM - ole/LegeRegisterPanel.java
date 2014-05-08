@@ -1,4 +1,4 @@
-package Program;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicBorders;
 
 
 
@@ -28,8 +30,7 @@ public class LegeRegisterPanel extends JPanel {
 	private JPanel feltPanel;
 	private JPanel listPanel;
 	private JPanel knappePanel;
-	
-        
+
 	
 	private LegeRegister leger;
 	private Lytter sensor;
@@ -42,7 +43,8 @@ public class LegeRegisterPanel extends JPanel {
 
 	
 	public LegeRegisterPanel() {
-		
+            
+            
             logg = new Logg();
             leger = new LegeRegister();
             fil = new FilBehandler();
@@ -72,19 +74,18 @@ public class LegeRegisterPanel extends JPanel {
 		etternavnFelt = new JTextField(10);
 		arbeidsStedFelt = new JTextField(20);
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridy = 0;
-		gbc.gridx = 0;
+
 		ARadio = new JRadioButton("A");
 		BRadio = new JRadioButton("B");
 		CRadio = new JRadioButton("C");
-		
+ 
         kEndreLege = new JButton("Endre Lege");
 		kNyLege = new JButton("Reg Lege");
 		kSlettLege = new JButton("Slett Lege");
 		kVisLege = new JButton("Vis Lege");
 		kVisAlt = new JButton("Vis Alt");
 		search = new JButton("Søk Lege");
+                
 		
 		
 		tekstomraade  = new JTextArea(10,50);
@@ -106,31 +107,86 @@ public class LegeRegisterPanel extends JPanel {
 	    
 	    
         feltPanel.setLayout( new GridBagLayout() );
-        gbc.gridy++;
-        feltPanel.add(new JLabel("Velg Reseptgruppe(er)"),gbc);
-	    feltPanel.add(ARadio,gbc);
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(5,10,5,15);
+            gbc.ipady = 20;
+            //reseptgrupper
+            gbc.weightx = 0.5;
+            gbc.gridx=0;
+            gbc.gridy=0;
+            
+            feltPanel.add(new JLabel("Velg Reseptgruppe(er)"),gbc);
+            
+            
+            gbc.gridx=1;
+    
+            
+            feltPanel.add(ARadio,gbc);
+              gbc.gridx=2;
+          
 	    feltPanel.add(BRadio,gbc);
+               gbc.gridx=3;
 	    feltPanel.add(CRadio,gbc);
+            
+            
 	    gbc.gridy++;
+            gbc.gridx=0;
 	    feltPanel.add(new JLabel("Lege ID:"), gbc);
+            
+            gbc.gridx++;
+            gbc.gridwidth = 3;
 	    feltPanel.add(legeIDFelt, gbc);
+            gbc.gridwidth=1;
 	    gbc.gridy++;
-	    feltPanel.add(new JLabel("Fornavn:"), gbc);
-	    feltPanel.add(navnFelt,gbc);
-	    gbc.gridy++;
-	    feltPanel.add(new JLabel("Etternavn:"), gbc);
-	    feltPanel.add(etternavnFelt, gbc);
-	    gbc.gridy++;
-	    feltPanel.add(new JLabel("ArbeidsSted:"), gbc);
-	    feltPanel.add(arbeidsStedFelt, gbc);
-	    gbc.gridy++;
-	    //feltPanel.add(new JLabel("HER!!"),gbc);
-	    feltPanel.add(tekstomraade,gbc);
+            gbc.gridx=0;
+            feltPanel.add(new JLabel("Fornavn:"), gbc);
 	    gbc.gridx++;
+            gbc.gridwidth=3;
+            feltPanel.add(navnFelt,gbc);
+            gbc.gridwidth=1;
+            
+	    gbc.gridy++;
+            gbc.gridx=0;
+	    feltPanel.add(new JLabel("Etternavn:"), gbc);
+            gbc.gridx++;
+            gbc.gridwidth=3;
+            
+	    feltPanel.add(etternavnFelt, gbc);
+            gbc.gridwidth=1;
+	    
+            gbc.gridy++;
+            gbc.gridx=0;
+	    feltPanel.add(new JLabel("ArbeidsSted:"), gbc);
+            gbc.gridx++;
+            gbc.gridwidth=3;
+	    feltPanel.add(arbeidsStedFelt, gbc);
+            gbc.gridwidth=1;
+	    gbc.gridy++;
+
+	 
+            gbc.gridx=0;
+            gbc.gridy++;
+            gbc.gridheight = 5;
+            gbc.gridwidth = 4;
         feltPanel.add(rulle,gbc);
-        gbc.gridy++;
+            gbc.gridheight = 1;
+            gbc.gridwidth = 1;
+        gbc.gridy+=6;
+        gbc.gridx=3;
+        gbc.ipady=1;
         feltPanel.add(kNyLege,gbc);
-	   // add(rulle2);
+        
+        
+        //listPanel.add(new JLabel("GEGRREGAERGAEqwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwRGAEGRAEG"));
+        knappePanel.setLayout(new GridLayout(5, 1,200,20));
+        knappePanel.add(kVisAlt);
+        knappePanel.add(kNyLege);
+        knappePanel.add(kSlettLege);
+        knappePanel.add(kEndreLege);
+        knappePanel.add(search);
+        
+// add(rulle2);
 	    
 	    /*
 	    feltPanel.add(kNyLege,gbc);
@@ -146,12 +202,13 @@ public class LegeRegisterPanel extends JPanel {
         feltPanel.add(search, gbc);
         gbc.gridy++;
         */
-	    feltPanel.setBackground(Color.green);
+	    //feltPanel.setBackground(Color.green);
 	    knappePanel.setBackground(Color.red);
 	    listPanel.setBackground(Color.cyan);
+            JPanel bernt = feltPanel;
 	    JSplitPane spr = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	    JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-	    sp.setResizeWeight(0.6);
+	    sp.setResizeWeight(0.8);
 	    sp.setEnabled(false);
 	    sp.setDividerSize(0);
 	    sp.add(listPanel);
@@ -163,7 +220,7 @@ public class LegeRegisterPanel extends JPanel {
 	    spr.add(feltPanel);
         
 	    add(spr, BorderLayout.CENTER);
-		
+	
 		
         feltPanel.setVisible(true);
 		
@@ -180,22 +237,11 @@ public class LegeRegisterPanel extends JPanel {
 	    		
 	}
 	
-	/*private void groupButton() {
-		ButtonGroup bg1 = new ButtonGroup();
-		bg1.add(ARadio);
-		bg1.add(BRadio);
-		bg1.add(CRadio);
-		
-	} */
-	
 	
 	  private void lastInnFil() throws IOException
 	  {
 	    try
-	    {/*
-	      FileInputStream fileHandle = new FileInputStream("LegeData.txt");
-	      ObjectInputStream in = new ObjectInputStream(fileHandle);
-	      leger = (LegeRegister) in.readObject();*/
+	    {
 	      leger = fil.lastInnFilLege("LegeLagring");
               System.out.println(logg.toString("LegeRegister lastet inn!"));
   
@@ -215,8 +261,6 @@ public class LegeRegisterPanel extends JPanel {
 	    try
 	    {
                 fil.lagreFil(leger, "LegeLagring");
-	      /*ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("LegeData.txt"));
-	      out.writeObject(leger);*/
                 System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -228,42 +272,21 @@ public class LegeRegisterPanel extends JPanel {
 	
 	
 	
-	public char[]  ActivRadio() {
-				
-		
-		if(ARadio.isSelected() && !BRadio.isSelected() && !CRadio.isSelected()) {
+	public char[]  ActivRadio() {				
+		if(ARadio.isSelected() && !BRadio.isSelected() && !CRadio.isSelected()) 
 			reseptGruppe = new char [] {'A'};
-
-		}
-		if(!ARadio.isSelected() && BRadio.isSelected() && !CRadio.isSelected()) {
+		if(!ARadio.isSelected() && BRadio.isSelected() && !CRadio.isSelected()) 
 			reseptGruppe = new char [] {'B'};
-
-		}
-		
-		if(!ARadio.isSelected() && !BRadio.isSelected() && CRadio.isSelected()) {
+		if(!ARadio.isSelected() && !BRadio.isSelected() && CRadio.isSelected()) 
 			reseptGruppe = new char [] {'C'};
-
-		}
-		
-		 if(ARadio.isSelected() && BRadio.isSelected() && !CRadio.isSelected()){
+		 if(ARadio.isSelected() && BRadio.isSelected() && !CRadio.isSelected())
 			reseptGruppe = new char [] {'A', 'B'};
-
-		}
-		
-		
-		if(ARadio.isSelected() && !BRadio.isSelected() && CRadio.isSelected()) {
+		if(ARadio.isSelected() && !BRadio.isSelected() && CRadio.isSelected()) 
 			reseptGruppe = new char [] {'A', 'C'};
-
-		}
-		
-		if(!ARadio.isSelected() && BRadio.isSelected() && CRadio.isSelected()){
-			reseptGruppe = new char [] {'B', 'C'};
-
-		}
-		
-		if(ARadio.isSelected() && BRadio.isSelected() && CRadio.isSelected()) {
-			reseptGruppe = new char [] {'A', 'B', 'C'};	
-		}
+		if(!ARadio.isSelected() && BRadio.isSelected() && CRadio.isSelected())
+			reseptGruppe = new char [] {'B', 'C'};		
+		if(ARadio.isSelected() && BRadio.isSelected() && CRadio.isSelected()) 
+			reseptGruppe = new char [] {'A', 'B', 'C'};		
                 if(!ARadio.isSelected() && !BRadio.isSelected() && !CRadio.isSelected())
                     reseptGruppe = null;
 		
@@ -286,42 +309,43 @@ public class LegeRegisterPanel extends JPanel {
 	} */
 	
 	
-	public void nyLege() {
-		
-   try
-    {
-      
-     String fnavn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
-		String enavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
-    String arb = arbeidsStedFelt.getText();
-      
+        public void nyLege() 
+        {
+
+            try
+             {
+
+                     String fnavn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
+                     String enavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
+                     String arb = arbeidsStedFelt.getText();
 
 
 
-      if (!fnavn.equals("") && !enavn.equals("")&& ActivRadio()!=null && !arb.equals("") )
-      {
-             Lege lege = new Lege(fnavn, enavn,arb, reseptGruppe, 0);
-            leger.settInn(lege);
-            logomraade.setText(logg.toString("Lege lagt til"));
-            
-      
-        
-      }
-            if (fnavn.equals("") || enavn.equals("")|| ActivRadio()==null || arb.equals("") )
-      {
-         logomraade.setText("Fyll ut alle feltene!");
-      }
-    }
-    catch (NumberFormatException e)
-    {
-      logomraade.setText("Fyll ut alle feltene!");
-    }
-    catch (IndexOutOfBoundsException ex)
-    {
-        logomraade.setText("Fyll ut alle feltene!");
-    }
-			
-		}
+
+              if (!fnavn.equals("") && !enavn.equals("")&& ActivRadio()!=null && !arb.equals("") )
+              {
+                     Lege lege = new Lege(fnavn, enavn,arb, reseptGruppe, 0);
+                    leger.settInn(lege);
+                    logomraade.setText(logg.toString("Lege lagt til"));
+
+
+
+              }
+                    if (fnavn.equals("") || enavn.equals("")|| ActivRadio()==null || arb.equals("") )
+              {
+                 logomraade.setText("Fyll ut alle feltene!");
+              }
+            }
+            catch (NumberFormatException e)
+            {
+              logomraade.setText("Fyll ut alle feltene!");
+            }
+            catch (IndexOutOfBoundsException ex)
+            {
+                logomraade.setText("Fyll ut alle feltene!");
+            }
+
+        }
         
         public void endreLege()
         {

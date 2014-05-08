@@ -7,12 +7,6 @@ Navn: Ole Boee Andreassen
 Klasse: Dataingenioer
 
 */
-package Program;
-
-
-import Program.Logg;
-import Program.Pasient;
-import Program.PasientRegister;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

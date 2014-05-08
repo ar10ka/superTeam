@@ -8,7 +8,7 @@ Klasse: Dataingenioer
 
 */
 
-package Program;
+
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

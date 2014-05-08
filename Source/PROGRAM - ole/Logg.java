@@ -1,4 +1,4 @@
-package Program;
+
 
 
 
@@ -6,21 +6,33 @@ package Program;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 
-public class Logg {
+public class Logg extends JPanel{
 
         private String logg = "";
         private String date = "";
-        
+        private JTextArea t;
+        public Logg(){
+            t = new JTextArea(10,50);
+            JScrollPane sp = new JScrollPane(t);
+
+           add(sp);
+        }
+                
         public String toString (String tekst) {
         	
             
                 Date today = new Date();
-                SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[d MM yyyy 'kl.' HH:mm:ss]    ");
+                SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd MM yyyy 'kl.' HH:mm:ss]    ");
         	date = DATE_FORMAT.format(today);
                 String output = date + " " + tekst;
                 regLogg(output);
+                t.setText(output);
         	return output;
         }
         
