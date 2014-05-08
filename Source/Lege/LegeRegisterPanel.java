@@ -1,5 +1,9 @@
-package Program;
+
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -16,7 +20,7 @@ import java.util.List;
 public class LegeRegisterPanel extends JPanel {
 	
 	private JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
-	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege, search;
+	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege, search,kEndreLege;
 	private JRadioButton ARadio;
 	private JRadioButton BRadio;
 	private JRadioButton CRadio;
@@ -24,10 +28,12 @@ public class LegeRegisterPanel extends JPanel {
 	private JTextArea logomraade;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
 	private int legeID;
+	private JPanel feltPanel;
 	
 	private LegeRegister leger;
 	private Lytter sensor;
 	private Logg logg;
+	private GridBagConstraints gbc;
 	
 	
 	//private String reseptGruppe;
@@ -36,6 +42,7 @@ public class LegeRegisterPanel extends JPanel {
 	
 	public LegeRegisterPanel() {
 		
+            logg = new Logg();
 		
 		leger = new LegeRegister();
 		
@@ -53,66 +60,97 @@ public class LegeRegisterPanel extends JPanel {
 	    }
 		
 		
-		
+	    super.setBackground(Color.DARK_GRAY);
 		legeIDFelt = new JTextField(11);
-		navnFelt = new JTextField(20);
-		etternavnFelt = new JTextField(20);
+		navnFelt = new JTextField(10);
+		etternavnFelt = new JTextField(10);
 		arbeidsStedFelt = new JTextField(20);
 		
-		ARadio = new JRadioButton("ReseptGruppe A");
-		BRadio = new JRadioButton("ReseptGruppe B");
-		CRadio = new JRadioButton("ReseptGruppe C");
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridy = 0;
+		ARadio = new JRadioButton("A");
+		BRadio = new JRadioButton("B");
+		CRadio = new JRadioButton("C");
 		
+        kEndreLege = new JButton("Endre Lege");
 		kNyLege = new JButton("Reg Lege");
 		kSlettLege = new JButton("Slett Lege");
 		kVisLege = new JButton("Vis Lege");
 		kVisAlt = new JButton("Vis Alt");
-		search = new JButton("Sï¿½k Lege");
+		search = new JButton("Søk Lege");
 		
-		tekstomraade  = new JTextArea(15, 55);
+		feltPanel = new JPanel();
+		tekstomraade  = new JTextArea(15, 15);
 	    tekstomraade.setEditable(false);
+	    tekstomraade.setVisible(true);
 	    JScrollPane rulle = new JScrollPane(tekstomraade);
 	    
-		logomraade  = new JTextArea(15, 55);
+		logomraade  = new JTextArea(15, 30);
 	    logomraade.setEditable(false);
+	    logomraade.setVisible(true);
 	    JScrollPane rulle2 = new JScrollPane(logomraade);
 	    
-            setLayout( new FlowLayout() );
-	    add(ARadio);
-	    add(BRadio);
-	    add(CRadio);
-	    add(new JLabel("Lege ID:"));
-	    add(legeIDFelt);
-	    add(new JLabel("Fornavn:"));
-	    add(navnFelt);
-	    add(new JLabel("Etternavn:"));
-	    add(etternavnFelt);
-	    add(new JLabel("ArbeidsSted:"));
-	    add(arbeidsStedFelt);
-	    add(kNyLege);
-	    add(kSlettLege);
-	    add(kVisLege);
-	    add(kVisAlt);
-	    add(search);
-	    add(rulle);
-	    add(rulle2);
+	    Border rammer = BorderFactory.createEtchedBorder();
+	    
+	    feltPanel.setBorder(rammer);
+	    
+        feltPanel.setLayout( new GridBagLayout() );
+        gbc.gridy++;
+        feltPanel.add(new JLabel("Velg Reseptgruppe(er)"),gbc);
+        gbc.gridy++;
+	    feltPanel.add(ARadio,gbc);
+	    feltPanel.add(BRadio,gbc);
+	    feltPanel.add(CRadio,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("Lege ID:"), gbc);
+	    feltPanel.add(legeIDFelt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("Fornavn:"), gbc);
+	    feltPanel.add(navnFelt,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("Etternavn:"), gbc);
+	    feltPanel.add(etternavnFelt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("ArbeidsSted:"), gbc);
+	    feltPanel.add(arbeidsStedFelt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(new JLabel("HER!!"),gbc);
+	    feltPanel.add(tekstomraade,gbc);
+        feltPanel.add(rulle,gbc);
+        gbc.gridy++;
+        feltPanel.add(kNyLege,gbc);
+        super.add(feltPanel);
+	   // add(rulle2);
+	    
+	    /*
+	    feltPanel.add(kNyLege,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kSlettLege,gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kVisLege, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kVisAlt, gbc);
+	    gbc.gridy++;
+	    feltPanel.add(kEndreLege,gbc);
+	    gbc.gridy++;
+        feltPanel.add(search, gbc);
+        gbc.gridy++;
+        */
 		
 		
 		
-		
-		setSize(850, 400);
-		setVisible(true);
+        feltPanel.setVisible(true);
 		
 		sensor = new Lytter();
 		
 	    kNyLege.addActionListener(sensor);
-
+            kEndreLege.addActionListener(sensor);
 	    kSlettLege.addActionListener(sensor);
 
 	    kVisLege.addActionListener(sensor);
 	    kVisAlt.addActionListener(sensor);
 	    search.addActionListener(sensor);
-	    logomraade.setText("");
+	   // logomraade.setText("");
 	    
 	
 	   
@@ -203,7 +241,9 @@ public class LegeRegisterPanel extends JPanel {
 		
 		if(ARadio.isSelected() && BRadio.isSelected() && CRadio.isSelected()) {
 			reseptGruppe = new char [] {'A', 'B', 'C'};	
-		} 
+		}
+                if(!ARadio.isSelected() && !BRadio.isSelected() && !CRadio.isSelected())
+                    reseptGruppe = null;
 		
 		return reseptGruppe;
 	}
@@ -226,45 +266,96 @@ public class LegeRegisterPanel extends JPanel {
 	
 	public void nyLege() {
 		
-		String utskrift = "";
-		String navn = navnFelt.getText();
-		String etternavn = etternavnFelt.getText();
-		String sted = arbeidsStedFelt.getText();
-		try {
-			System.out.println("Inne i try");
-			System.out.println("etter id");
-			ActivRadio();
-			System.out.println("etter active");
-			
-			/*if(leger.finnes(fNr)) {
-				utskrift += ("Legen med fï¿½dselsnummeret [" + fNr + "] er allerede registrert fra fï¿½r. \n");			
-				logomraade.append(logg.toString(utskrift) + "\n");
-				return;
-			} */
-			
-				
-			
-			if(!navn.equals("") && !etternavn.equals("") && !sted.equals("")  && ActivRadio() != null ) {
-				Lege ny = new Lege(navn, etternavn, sted, reseptGruppe, 0);
-				System.out.println("Inne i ifen");
-				
-				leger.settInn(ny);
-				utskrift += (navn + " " + etternavn + " er registrert i lege registert");
-				
-				logomraade.append(logg.toString(utskrift) + "\n");
+   try
+    {
+      
+      String fnavn = navnFelt.getText();
+      String enavn = etternavnFelt.getText();
+      String arb = arbeidsStedFelt.getText();
+      
 
-				
-			}
-			else 
-				JOptionPane.showMessageDialog(null, "Legen er ikke registrert: sjekk logg!");
-			} catch (NumberFormatException e)
-			
-			{
-				
-			}
-				
+
+
+      if (!fnavn.equals("") && !enavn.equals("")&& ActivRadio()!=null && !arb.equals("") )
+      {
+             Lege lege = new Lege(fnavn, enavn,arb, reseptGruppe, 0);
+            leger.settInn(lege);
+            logomraade.setText(logg.toString("Lege lagt til"));
+     
+      
+        
+      }
+            if (fnavn.equals("") || enavn.equals("")|| ActivRadio()==null || arb.equals("") )
+      {
+         logomraade.setText("Fyll ut alle feltene!");
+      }
+    }
+    catch (NumberFormatException e)
+    {
+      logomraade.setText("Fyll ut alle feltene!");
+    }			
 			
 		}
+        
+        public void endreLege()
+        {
+            try
+    {
+      int id = Integer.parseInt(legeIDFelt.getText());
+      String fnavn = navnFelt.getText();
+      String enavn = etternavnFelt.getText();
+      String arb = arbeidsStedFelt.getText();
+      
+
+
+      if (!fnavn.equals("") && !enavn.equals("") && !legeIDFelt.equals("") && !arb.equals("") )
+      {
+        if (leger.finnes(id))
+        {          
+            Lege lege = new Lege(fnavn, enavn,arb, ActivRadio(), id);
+            
+            
+                if(leger.endreLege(lege))
+                {
+                    legeIDFelt.setText(""+id);
+                    logomraade.setText(logg.toString("Lege informasjon er endret"));
+                }
+                else
+                    logomraade.setText(logg.toString("Kunne ikke endre pasient! Prøv igjen!"));
+            
+      
+        }
+        else
+        {
+            logomraade.setText("Pasienten finnes ikke");
+            
+            int n = JOptionPane.showConfirmDialog(null,
+                    "Pasienten finnes ikke!\nVil du legge til pasienten?",
+                    "Ny pasient!",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION)
+            {    
+                nyLege();
+                logomraade.setText(logg.toString("Pasient lagt til"));
+            }
+            else 
+                logomraade.setText("Pasient er ikke lagt til");
+                
+        }
+      
+        
+      }
+        else
+         logomraade.setText("Fyll ut alle feltene!");
+    }
+    catch (NumberFormatException e)
+    {
+      logomraade.setText("Fyll ut alle feltene!");
+    }
+            
+        }
+        
+        
 	
 	public void search() {
 		int legeID = Integer.parseInt(legeIDFelt.getText());
@@ -296,6 +387,7 @@ public class LegeRegisterPanel extends JPanel {
 				
 				
 			}
+                        
 			
 		}
 		
@@ -374,6 +466,10 @@ public class LegeRegisterPanel extends JPanel {
 		    {
 		       visAlt();
 		    }
+                    else if (e.getSource() == kEndreLege)
+                    {
+                        endreLege();
+                    }
 		     else if ( e.getSource() == search ) {
 		    	search();
 		     }
