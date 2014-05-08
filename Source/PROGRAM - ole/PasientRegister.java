@@ -24,15 +24,17 @@ public class PasientRegister implements Serializable
   {
   }
 
- public Pasient finn(String fn, String en )//finner pasient
+ public List<Pasient> finn(String fn, String en )//finner pasient
   {
+     List<Pasient> pas = new ArrayList<>();
           if(!reg.isEmpty())
           {
             for( Pasient p : reg)
             {
                  if( p.getFNavn().equals(fn) && p.getENavn().equals(en))
-                    return p;
+                    pas.add(p);
             }
+            return pas;
           }
           return null;
   }

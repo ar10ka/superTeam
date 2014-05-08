@@ -46,7 +46,7 @@ public class DesignTest extends JFrame{
 		f = new JFrame("Design-test");
 		knapper = new toolBarKnapper();
 		sensor = new Lytter();
-		knappeListe = knapper.returnerObjektet();
+		knappeListe = knapper.returnerObjekter();
 		toolbar();
                 
 
@@ -181,15 +181,9 @@ public class DesignTest extends JFrame{
 
 		    		if(e.getSource() == knappeListe[i]) {
 		    			if(i == 0)
-                                        {
 		    				card.show(hovedpanel, ""+(i+1));
-                                                
-                                        }
 		    			if(i == 1)
-                                        {
 	    					card.show(hovedpanel,  ""+(i+1));
-                                               
-                                        }
 		    			if(i == 2)
 	    					card.show(hovedpanel,  ""+(i+1));
 		    			if(i == 3)
@@ -200,8 +194,6 @@ public class DesignTest extends JFrame{
 	    					card.show(hovedpanel,  ""+(i+1));
 		    			
 		    			knappeListe[i].setBackground(null);
-		    			//knappeListe[i].setBorder(sidelinjer);
-
 		    		}
 		    		else  { knappeListe[i].setBackground(new Color(128,128,128));
 		    				knappeListe[i].setBorder(utenlinjer); }
@@ -214,29 +206,8 @@ public class DesignTest extends JFrame{
 	  
 private void lagreFilJPanel()
 {
-
-//now we want to get the String identifier of the top card:
-//JPanel card = null;
-    try
-    {/* 
-        for (Component comp : hovedpanel.getComponents()) {
-            if (comp.isVisible() == true) {
-                if(comp.getName() == panel1.getName())
-                   panel1.lagreFil();
-               /* if(comp.getName() == panel2.getName())
-                   panel2.lagreFil();
-                if(comp.getName() == panel3.getName())
-                   panel3.lagreFil();
-                if(comp.getName() == panel4.getName())
-                   panel4.lagreFil();
-                if(comp.getName() == panel5.getName())
-                   panel5.lagreFil();
-                if(comp.getName() == panel6.getName())
-                   panel6.lagreFil();
-              
-            }
-        }*/
-
+   try
+    {
                 panel1.lagreFil();
                 panel2.lagreFil();
                 panel3.lagreFil();
@@ -260,56 +231,44 @@ private void lagreFilJPanel()
 }
 
 
-class toolBarKnapper {
-	
-	
-	//private JButton legeKnappen, medisinKnappen, reseptKnappen, statistikkKnappen, infoKnappen, pasientKnappen;
+class toolBarKnapper 
+{
 	private int antallKnapper = 6;
-	
-
 	private JButton toolbarKnappen [];
 	Border emptyBorder = BorderFactory.createEmptyBorder();
 	
 
 	
-	public toolBarKnapper() {
+	public toolBarKnapper() 
+        {
+            toolbarKnappen = new JButton[antallKnapper];
 
-		toolbarKnappen = new JButton[antallKnapper];
 
-	
-	toolbarKnappen[0] = new JButton(" Lege Register");
-	toolbarKnappen[1] = new JButton(" Pasient Register");
-	toolbarKnappen[2] = new JButton(" Medisin Register");
-	toolbarKnappen[3] = new JButton(" Resept Register");
-	toolbarKnappen[4] = new JButton(" Statistikk");
-	toolbarKnappen[5] = new JButton(" Informasjon");
-	
+            toolbarKnappen[0] = new JButton(" Lege Register");
+            toolbarKnappen[1] = new JButton(" Pasient Register");
+            toolbarKnappen[2] = new JButton(" Medisin Register");
+            toolbarKnappen[3] = new JButton(" Resept Register");
+            toolbarKnappen[4] = new JButton(" Statistikk");
+            toolbarKnappen[5] = new JButton(" Informasjon");
 
-	
-	//
-	for(JButton knappen: toolbarKnappen) {
-		knappen.setBackground((new Color(128,128,128)));
-		knappen.setBorder(emptyBorder);
-		knappen.setFocusPainted(false);
-		
+            for(JButton knappen: toolbarKnappen) 
+            {
+                    knappen.setBackground((new Color(128,128,128)));
+                    knappen.setBorder(emptyBorder);
+                    knappen.setFocusPainted(false);
+            }
 
-		
-	}
-
-	
 	toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("../ikoner/lege.png")));
 	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("../ikoner/pasient.png")));
 	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("../ikoner/medisin.png")));
 	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("../ikoner/resept.png")));
 	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("../ikoner/statistikk.png")));
 	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("../ikoner/info.png")));
-
 	}
 	
-	public JButton[] returnerObjektet () {
-
-		return toolbarKnappen;
-		
+	public JButton[] returnerObjekter () 
+        {
+		return toolbarKnappen;	
 	}
 	
 	

@@ -63,6 +63,20 @@ public class LegeRegister implements Serializable
           }
           return null;
    }
+         
+	public List<Lege> finn ( String n, String e) {
+		List<Lege> leger = new ArrayList<>();
+		if(!reg.isEmpty())
+                {
+                    for( Lege l: reg) {
+                            if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
+                                    leger.add(l);
+                            }
+                    }
+                    return leger;
+                }
+             return null;
+	}         
 	
 	
 	public boolean slettLege(int id) {
@@ -83,23 +97,12 @@ public class LegeRegister implements Serializable
 	}
 	
 	public boolean finnes(String n, String e) {
-		return finnOgReturner(n, e) != null;
+		return finn(n, e) != null;
 	}
         public boolean finnes(Lege l)
         {
             return finn(l)!=null;
         }
-	
-	public String finnOgReturner ( String n, String e) {
-		String utskrift = "";
-		for( Lege l: reg) {
-			if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
-				utskrift +=  l.getNavn() + " " + l.getEtternavn() +" " + l.getlegeID() + "\n";
-			}
-		}
-		return utskrift;
-	}
-	
 	public boolean finnes (int f) {
 		for ( Lege l: reg) {
 			if(l.getlegeID()==(f))

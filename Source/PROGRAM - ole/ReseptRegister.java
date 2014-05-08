@@ -3,6 +3,7 @@
 package Program;
 
 
+import java.io.Serializable;
 import java.text.*;
 import java.util.*;
 import javax.swing.*;
@@ -11,7 +12,7 @@ import javax.swing.*;
  *
  * @author Ole
  */
-public class ReseptRegister 
+public class ReseptRegister implements Serializable
 {
     private List<Resept> reseptReg = new ArrayList<>();
     
@@ -139,7 +140,7 @@ public class ReseptRegister
         List<Resept> r = new ArrayList<>();
         for ( Resept x: reseptReg)
         {
-                if(x.getLege().getFNr().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getKategori().equals(kat) && x.getMedisin().getReseptGruppe()==rgruppe  )
+                if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getKategori().equals(kat) && x.getMedisin().getReseptGruppe()==rgruppe  )
                     r.add(x);
                 else if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getKategori().equals(kat))
                     r.add(x);
@@ -155,7 +156,7 @@ public class ReseptRegister
         String s = "";
         for ( Resept x: reseptReg)
         {
-                if(x.getLege().getFNr().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getKategori().equals(kat) && x.getMedisin().getReseptGruppe()==rgruppe  )
+                if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getKategori().equals(kat) && x.getMedisin().getReseptGruppe()==rgruppe  )
                     s += x.getID();
                 else if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()) && x.getMedisin().getKategori().equals(kat))
                     s += x.getID();

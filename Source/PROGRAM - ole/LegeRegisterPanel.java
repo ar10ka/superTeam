@@ -23,7 +23,8 @@ public class LegeRegisterPanel extends JPanel {
 	private JTextArea tekstomraade;
 	private JTextArea logomraade;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
-	private int legeID;
+	private static int feilLegeId = 0;
+        private int legeID;
 	
 	private LegeRegister leger;
 	private Lytter sensor;
@@ -37,7 +38,6 @@ public class LegeRegisterPanel extends JPanel {
 	public LegeRegisterPanel() {
 		
             logg = new Logg();
-		
 		leger = new LegeRegister();
 		
 	    try
@@ -54,7 +54,7 @@ public class LegeRegisterPanel extends JPanel {
 	    }
 		
 		
-		
+		legeID = feilLegeId;
 		legeIDFelt = new JTextField(11);
 		navnFelt = new JTextField(20);
 		etternavnFelt = new JTextField(20);
@@ -234,9 +234,9 @@ public class LegeRegisterPanel extends JPanel {
    try
     {
       
-      String fnavn = navnFelt.getText();
-      String enavn = etternavnFelt.getText();
-      String arb = arbeidsStedFelt.getText();
+     String fnavn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
+		String enavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
+    String arb = arbeidsStedFelt.getText();
       
 
 
@@ -265,54 +265,55 @@ public class LegeRegisterPanel extends JPanel {
         public void endreLege()
         {
             try
-    {
-      int id = Integer.parseInt(legeIDFelt.getText());
-      String fnavn = navnFelt.getText();
-      String enavn = etternavnFelt.getText();
-      String arb = arbeidsStedFelt.getText();
-      
-
-
-      if (!fnavn.equals("") && !enavn.equals("") && !legeIDFelt.equals("") && !arb.equals("") )
-      {
-        if (leger.finnes(id))
-        {          
-            Lege lege = new Lege(fnavn, enavn,arb, ActivRadio(), id);
-            
-            
-                if(leger.endreLege(lege))
                 {
-                    legeIDFelt.setText(""+id);
-                    logomraade.setText(logg.toString("Pasient endret"));
+                 int id = Integer.parseInt(legeIDFelt.getText());
+                 //Gjør at første bokstav i navnene blir stor og resten små bokstaver
+                String fnavn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
+                String enavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
+                String arb = arbeidsStedFelt.getText();
+
+
+
+              if (!fnavn.equals("") && !enavn.equals("") && !legeIDFelt.equals("") && !arb.equals("") )
+              {
+                if (leger.finnes(id))
+                {          
+                    Lege lege = new Lege(fnavn, enavn,arb, ActivRadio(), id);
+
+
+                        if(leger.endreLege(lege))
+                        {
+                            legeIDFelt.setText(""+id);
+                            logomraade.setText(logg.toString("Lege endret"));
+                        }
+                        else
+                            logomraade.setText(logg.toString("Kunne ikke endre lege! Prøv igjen!"));
+
+
                 }
                 else
-                    logomraade.setText(logg.toString("Kunne ikke endre pasient! Prøv igjen!"));
-            
-      
-        }
-        else
-        {
-            logomraade.setText("Pasienten finnes ikke");
-            
-            int n = JOptionPane.showConfirmDialog(null,
-                    "Pasienten finnes ikke!\nVil du legge til pasienten?",
-                    "Ny pasient!",
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION)
-            {    
-                nyLege();
-                logomraade.setText(logg.toString("Pasient lagt til"));
+                {
+                    logomraade.setText("Legen finnes ikke");
+
+                    int n = JOptionPane.showConfirmDialog(null,
+                            "Legen finnes ikke!\nVil du legge til legen?",
+                            "Ny Lege!",
+                            JOptionPane.YES_NO_OPTION);
+                    if (n == JOptionPane.YES_OPTION)
+                    {    
+                        nyLege();
+                        logomraade.setText(logg.toString("Lege lagt til"));
+                    }
+                    else 
+                        logomraade.setText("Lege er ikke lagt til");
+
+                }
+
+
+              }
+                else
+                 logomraade.setText("Fyll ut alle feltene!");
             }
-            else 
-                logomraade.setText("Pasient er ikke lagt til");
-                
-        }
-      
-        
-      }
-        else
-         logomraade.setText("Fyll ut alle feltene!");
-    }
     catch (NumberFormatException e)
     {
       logomraade.setText("Fyll ut alle feltene!");
@@ -322,46 +323,42 @@ public class LegeRegisterPanel extends JPanel {
         
         
 	
-	public void search() {
-		int legeID = Integer.parseInt(legeIDFelt.getText());
-		String navn = navnFelt.getText();
-		String etternavn = etternavnFelt.getText();
-		char [] grupper;
-		
-		if(leger.finnes(legeID)) {
+	public void search() 
+        {   
+                if(!legeIDFelt.getText().equals(""))
+                    legeID = Integer.parseInt(legeIDFelt.getText());
+               
+                if(legeID == feilLegeId)
+                    logomraade.setText("Skriv inn legeID");
+                
+                else if(leger.finnes(legeID)) 
+                {
 			Lege l = leger.finn(legeID);
 			legeIDFelt.setText(""+l.getlegeID());			
 			navnFelt.setText(l.getNavn());
 			etternavnFelt.setText(l.getEtternavn());
 			arbeidsStedFelt.setText(l.getArbeidsSted());
-			grupper = l.getReseptGruppe();
-			
-			for(char x : grupper ){
-				if(x == 'A') {
-					ARadio.setSelected(true);
-				}
-				
-				
-				if(x == 'B') {
-					BRadio.setSelected(true);
-				}
-				
-				if(x == 'C') {
-					CRadio.setSelected(true);
-				}
-				
-				
-			}
                         
-			
-		}
-		
-		
-		
-	}
+			for(char x : l.getReseptGruppe() )
+                        {
+				if(x == 'A') 
+					ARadio.setSelected(true);		
+				if(x == 'B') 
+					BRadio.setSelected(true);
+				if(x == 'C')
+					CRadio.setSelected(true);
+			}
+                        logomraade.setText(logg.toString("Fant lege:\n" + l.toString()));
+		}		
+                else
+                    logomraade.setText("Legen finnes ikke");
+        }
 	
 	public void slettLege() {
-		int legeID = Integer.parseInt(legeIDFelt.getText());
+		
+                if(!legeIDFelt.getText().equals(""))
+                    legeID = Integer.parseInt(legeIDFelt.getText());
+                
 		if(leger.slettLege(legeID)) {
 			String utskrift = "Legen med legeID: " + legeID + " Er fjernet \n"; 
 			logomraade.append(logg.toString(utskrift));
@@ -373,61 +370,69 @@ public class LegeRegisterPanel extends JPanel {
 	
 	
 	public void visLege() {
-		int legeID = Integer.parseInt(legeIDFelt.getText());
-		String navn = navnFelt.getText();
-		String etternavn = etternavnFelt.getText();
+            
+                //Gjør at første bokstav i navnene blir stor og resten små bokstaver
+                String navn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
+		String etternavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
 		
-		if(leger.finnes(legeID)) {
-			Lege l = leger.finn(legeID);
-			tekstomraade.append(l.getNavn() + " " + l.getEtternavn() + " " +l.getlegeID() + "\n");
-			String utskrift = "Lege(er) med er funnet med forekommende lege id \n";
-			logomraade.append(logg.toString(utskrift));
-			
+                if(!legeIDFelt.getText().equals(""))
+                {
+                    legeID = Integer.parseInt(legeIDFelt.getText());
+                        
+                    if(leger.finnes(legeID)) 
+                    {
+                        Lege l = leger.finn(legeID);
+                        tekstomraade.append(l.getNavn() + " " + l.getEtternavn() + " " +l.getlegeID() + "\n");
+                        String utskrift = "Lege(er) med er funnet med forekommende lege id \n";
+                        logomraade.append(logg.toString(utskrift));
+                    }                    
+                    else
+                        logomraade.append(logg.toString("Feil legeID. Prøv igjen!"));
+                }
+
+                if(!navn.equals("") && !etternavn.equals(""))
+                {
+                    if(leger.finnes(navn, etternavn)) {
+                        String temp ="";
+
+                        for (Lege x: leger.finn(navn, etternavn))
+                            temp += x.getInfo()+"\n";
+                        
+                        tekstomraade.append(logg.toString(temp) + "\n");
+                        logomraade.append(logg.toString("Lege(er) med er funnet med forekommende navn og etternavn \n"));
+                    }
+                    else
+                        logomraade.append(logg.toString("Feil navn. Prøv igjen!"));
 		}
-		
-		else if(leger.finnes(navn, etternavn)) {
-			/*List<Lege> l = leger.finn(navn, etternavn); */
-			//for( Lege x: l) {
-			tekstomraade.append(leger.finnOgReturner(navn, etternavn) + "\n");
-			//}
-			String utskrift = "Lege(er) med er funnet med forekommende navn og etternavn \n";
-			logomraade.append(logg.toString(utskrift));
-			
-		}
-		
+                
+                if (navn.equals("") && etternavn.equals("") && legeIDFelt.getText().equals(""))
+                    logomraade.append(logg.toString("Skriv inn enten legeID eller navn for å søke på legen!"));
+                    
+                
 	}
-		
-	
-	
+        
 	public void visAlt() {
-	 
 		  tekstomraade.setText(leger.getText());
 	}
-		
-	
-	
 	
 	private class Lytter implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if (e.getSource() == kNyLege)
-			{
-				nyLege();
-			}
-			
+                    if (e.getSource() == kNyLege)
+                    {
+                            nyLege();
+                    }			
 		    else if (e.getSource() == kSlettLege)
 		    {
 		        slettLege();
-		    }
-			
+		    }			
 		    else if (e.getSource() == kVisLege)
 		    {
 		      visLege();
-		    }
-			
-		     else if (e.getSource() == kVisAlt)
+		    }			
+        	    else if (e.getSource() == kVisAlt)
 		    {
 		       visAlt();
 		    }
@@ -435,14 +440,10 @@ public class LegeRegisterPanel extends JPanel {
                     {
                         endreLege();
                     }
-		     else if ( e.getSource() == search ) {
+		    else if ( e.getSource() == search ) 
+                    {
 		    	search();
-		     }
+		    }
 		}
-
 	}
-	
-	
-	
-
 }

@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
  *
  * @author Ole
  */
-public class Resept implements Serializable 
+public class Resept implements Serializable
 {
     private int reseptID;
     private Logg logg;

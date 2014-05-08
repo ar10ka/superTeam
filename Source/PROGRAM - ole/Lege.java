@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 
 
-public class Lege implements Serializable {
+public class Lege implements Serializable 
+{
 		private String navn;
 		private String etternavn;
 		private String arbeidsSted;
@@ -69,15 +70,18 @@ public class Lege implements Serializable {
 			return reseptGruppe;
 		}
 
-		@Override
-		public String toString() {
-			String teksten ="";
+                public String getInfo(){
+                    String rgrupper ="";
 			for (char x : reseptGruppe)
 			{
-				teksten += x;
+				rgrupper += x;
 			}
 			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nLegeID: " + legeID +  "\nArbeidssted : " + arbeidsSted +
-					"\nBevilling: " + teksten + "\n";
+					"\nBevilling: " + rgrupper + "\n";
+                }
+		@Override
+		public String toString() {
+			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nLegeID: " + legeID + "\n";
 		}
 
 }

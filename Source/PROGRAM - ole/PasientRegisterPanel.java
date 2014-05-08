@@ -354,17 +354,23 @@ public char aktivRadio()
 
 
 
-      if (!id.equals("") )
+      if (!id.equals("") || (!fnavn.equals("") && !enavn.equals("")) )
       {
    
         if (bibliotek.finnes(id) )
         {
-            String temp = "Viser pasient:\n" + bibliotek.finn(id).toString();
+            String temp = "Viser pasient:\n" + bibliotek.finn(id).getInfo();
   	  	 tekstområde.setText(logg.toString(temp)); 
         }
         else if( bibliotek.finnes(fnavn, enavn))
         {
-            String temp = "Viser pasient:\n" + bibliotek.finn(fnavn,enavn).toString();
+            String temp = "Viser pasient(er) med navn:\n";
+            for (Pasient x: bibliotek.finn(fnavn,enavn))
+            {
+                temp += x.getInfo()+"\n";
+            }
+                    
+                    
   	  	 tekstområde.setText(logg.toString(temp)); 
         }
         else

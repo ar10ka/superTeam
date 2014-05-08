@@ -14,7 +14,7 @@ import java.util.*;
  *
  * @author Ole
  */
-public class MedisinRegister implements Serializable 
+public class MedisinRegister implements Serializable
 {
   private List<Medisin> reg = new ArrayList<>();
 
