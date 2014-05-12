@@ -20,7 +20,7 @@ import javax.swing.plaf.basic.BasicBorders;
 
 public class LegeRegisterPanel extends JPanel {
 	
-	private JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
+	private JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt, searchFelt;
 	private JButton kNyLege, kSlettLege, kVisAlt, kVisLege, search,kEndreLege;
 	private JRadioButton ARadio;
 	private JRadioButton BRadio;
@@ -29,11 +29,9 @@ public class LegeRegisterPanel extends JPanel {
 	private JTextArea logomraade;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
 	private int legeID;
-	private JPanel feltPanel;
-	private JPanel listPanel;
-	private JPanel knappePanel;
+	private JPanel feltPanel, listPanel, searchPanel, knappePanel;
 	private JList list = new JList();
-	private JLabel legeListe;
+	private JLabel sLabel;
 	private JList nyListe;
 
 	
@@ -45,15 +43,18 @@ public class LegeRegisterPanel extends JPanel {
 	private static int feilLegeId = 0;
 	//private String reseptGruppe;
 	
+	Border feltBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
 
 	
 	public LegeRegisterPanel() {
             
+			searchPanel = new JPanel();
+			searchFelt= new JTextField(15);
             logg = new Logg();
             leger = new LegeRegister();
             fil = new FilBehandler();
-            legeListe = new JLabel("Lege Liste");
-            legeListe.setHorizontalAlignment( SwingConstants.CENTER );
+            sLabel = new JLabel("Søk Her");
+            
 		
 	    try
 	    {
@@ -89,8 +90,8 @@ public class LegeRegisterPanel extends JPanel {
 		kNyLege = new JButton("Reg Lege");
 		kSlettLege = new JButton("Slett Lege");
 		kVisLege = new JButton("Vis Lege");
-		kVisAlt = new JButton("Vis Alt");
-		search = new JButton("SÃ¸k Lege");
+		//kVisAlt = new JButton("Vis Alt");
+		search = new JButton("Vis Mer Info");
          
 		
 		list = new JList(leger.returnObjekt()); //data has type Object[]
@@ -101,15 +102,22 @@ public class LegeRegisterPanel extends JPanel {
 	    //listPanel.add(new JScrollPane(list));
 	    //list.add(new JScrollPane());
 	    //listPanel.add(list);
+	    //searchPanel.setLayout( new GridLayout());
+	    searchPanel.add(sLabel);
+	    sLabel.setHorizontalAlignment( SwingConstants.LEFT );
+	    searchPanel.add(searchFelt, BorderLayout.AFTER_LAST_LINE);
+	    
 	    
 	    listPanel.setLayout(new BorderLayout());
-	    listPanel.add(legeListe, BorderLayout.PAGE_START);
+	    listPanel.add(searchPanel, BorderLayout.PAGE_START);
 	    listPanel.add(scrollpane, BorderLayout.CENTER);
+
+	    
 		
-		tekstomraade  = new JTextArea(10,40);
+		/*tekstomraade  = new JTextArea(10,40);
 	    tekstomraade.setEditable(false);
 	    tekstomraade.setVisible(true);
-	    JScrollPane rulle = new JScrollPane(tekstomraade);
+	    JScrollPane rulle = new JScrollPane(tekstomraade); */
 	    
 		logomraade  = new JTextArea(15, 30);
 	    logomraade.setEditable(false);
@@ -154,6 +162,7 @@ public class LegeRegisterPanel extends JPanel {
             gbc.gridx++;
             gbc.gridwidth = 3;
 	    feltPanel.add(legeIDFelt, gbc);
+	    legeIDFelt.setBorder(feltBorder);
             gbc.gridwidth=1;
 	    gbc.gridy++;
             gbc.gridx=0;
@@ -161,6 +170,7 @@ public class LegeRegisterPanel extends JPanel {
 	    gbc.gridx++;
             gbc.gridwidth=3;
             feltPanel.add(navnFelt,gbc);
+            navnFelt.setBorder(feltBorder);
             gbc.gridwidth=1;
             
 	    gbc.gridy++;
@@ -170,6 +180,7 @@ public class LegeRegisterPanel extends JPanel {
             gbc.gridwidth=3;
             
 	    feltPanel.add(etternavnFelt, gbc);
+	    etternavnFelt.setBorder(feltBorder);
             gbc.gridwidth=1;
 	    
             gbc.gridy++;
@@ -178,6 +189,7 @@ public class LegeRegisterPanel extends JPanel {
             gbc.gridx++;
             gbc.gridwidth=3;
 	    feltPanel.add(arbeidsStedFelt, gbc);
+	    arbeidsStedFelt.setBorder(feltBorder);
             gbc.gridwidth=1;
 	    gbc.gridy++;
 
@@ -186,7 +198,7 @@ public class LegeRegisterPanel extends JPanel {
             gbc.gridy++;
             gbc.gridheight = 5;
             gbc.gridwidth = 4;
-        feltPanel.add(rulle,gbc);
+       // feltPanel.add(rulle,gbc);
             gbc.gridheight = 1;
             gbc.gridwidth = 1;
         gbc.gridy+=6;
@@ -196,12 +208,14 @@ public class LegeRegisterPanel extends JPanel {
         
         
         //listPanel.add(new JLabel("GEGRREGAERGAEqwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwRGAEGRAEG"));
-        knappePanel.setLayout(new GridLayout(5, 1,200,20));
-        knappePanel.add(kVisAlt);
+        //knappePanel.setLayout(new GridLayout(5, 1,200,20));
+        //knappePanel.add(kVisAlt);
         knappePanel.add(kNyLege);
         knappePanel.add(kSlettLege);
         knappePanel.add(kEndreLege);
         knappePanel.add(search);
+        
+ 
         
 // add(rulle2);
 	    
@@ -220,23 +234,19 @@ public class LegeRegisterPanel extends JPanel {
         gbc.gridy++;
         */
 	    //feltPanel.setBackground(Color.green);
-	    knappePanel.setBackground(Color.red);
+	   // knappePanel.setBackground(Color.red);
 	    listPanel.setBackground(Color.cyan);
-            JPanel bernt = feltPanel;
-	    JSplitPane spr = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        //JPanel bernt = feltPanel;
 	    JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-	    sp.setResizeWeight(0.8);
-	    sp.setEnabled(false);
-	    sp.setDividerSize(0);
+	    sp.setResizeWeight(0.9);
+	    sp.setEnabled(true);
+	    //sp.setDividerSize(0);
+	    listPanel.add(knappePanel, BorderLayout.SOUTH);
 	    sp.add(listPanel);
-	    sp.add(knappePanel);
-	    spr.setEnabled(false);
-	    spr.setDividerSize(0);
-	    spr.setResizeWeight(0.6);
-	    spr.add(sp);
-	    spr.add(feltPanel);
+	    sp.add(feltPanel);
+	    
         
-	    add(spr, BorderLayout.CENTER);
+	    add(sp, BorderLayout.CENTER);
 	
 		
         feltPanel.setVisible(true);
@@ -248,7 +258,7 @@ public class LegeRegisterPanel extends JPanel {
 	    kSlettLege.addActionListener(sensor);
 
 	    kVisLege.addActionListener(sensor);
-	    kVisAlt.addActionListener(sensor);
+	   // kVisAlt.addActionListener(sensor);
 	    search.addActionListener(sensor);
 	   // logomraade.setText("");
 	    		
@@ -555,10 +565,10 @@ public class LegeRegisterPanel extends JPanel {
 		    {
 		      visLege();
 		    }			
-        	    else if (e.getSource() == kVisAlt)
+        	    /*else if (e.getSource() == kVisAlt)
 		    {
 		       visAlt();
-		    }
+		    } */
                     else if (e.getSource() == kEndreLege)
                     {
                         endreLege();
