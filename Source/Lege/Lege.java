@@ -1,9 +1,12 @@
+
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 
 
-public class Lege implements Serializable {
+public class Lege implements Serializable 
+{
 		private String navn;
 		private String etternavn;
 		private String arbeidsSted;
@@ -67,15 +70,18 @@ public class Lege implements Serializable {
 			return reseptGruppe;
 		}
 
+       public String getInfo(){
+          String rgrupper ="";
+          for (char x : reseptGruppe)
+          {
+			rgrupper += x;
+          }
+		return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nLegeID: " + legeID +  "\nArbeidssted : " + arbeidsSted +
+				"\nBevilling: " + rgrupper + "\n";
+                }
 		@Override
 		public String toString() {
-			String teksten ="";
-			for (char x : reseptGruppe)
-			{
-				teksten += x;
-			}
-			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nLegeID: " + legeID +  "\nArbeidssted : " + arbeidsSted +
-					"\nBevilling: " + teksten + "\n";
+			return etternavn  + ", " + navn  + ", " + legeID + "\n";
 		}
 
 }

@@ -1,3 +1,4 @@
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +13,7 @@ Studentnr: s198757
 Navn: Marius Baltramaitis
 
 
-Klasse: Dataingeniør
+Klasse: Dataingeniï¿½r
 
 */
 
@@ -50,6 +51,41 @@ public class LegeRegister implements Serializable
 		}
 		return null;
 	}
+         public Lege finn(Lege l)//finner pasient
+  {
+          if(!reg.isEmpty())
+          {
+            for( Lege x : reg)
+            {
+                 if( x == l)
+                    return x;
+            }
+          }
+          return null;
+   }
+         
+   public Object[] returnObjekt()
+    {
+       String[] emptyArray = {"Det er ingen lege registrert ennå"};
+       if(!reg.isEmpty())  
+          return reg.toArray();
+         else
+          return emptyArray;
+    }
+         
+	public List<Lege> finn ( String n, String e) {
+		List<Lege> leger = new ArrayList<>();
+		if(!reg.isEmpty())
+                {
+                    for( Lege l: reg) {
+                            if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
+                                    leger.add(l);
+                            }
+                    }
+                    return leger;
+                }
+             return null;
+	}         
 	
 	
 	public boolean slettLege(int id) {
@@ -70,19 +106,12 @@ public class LegeRegister implements Serializable
 	}
 	
 	public boolean finnes(String n, String e) {
-		return finnOgReturner(n, e) != null;
+		return finn(n, e) != null;
 	}
-	
-	public String finnOgReturner ( String n, String e) {
-		String utskrift = "";
-		for( Lege l: reg) {
-			if(l.getNavn().equals(n) && l.getEtternavn().equals(e)) {
-				utskrift +=  l.getNavn() + " " + l.getEtternavn() +" " + l.getlegeID() + "\n";
-			}
-		}
-		return utskrift;
-	}
-	
+        public boolean finnes(Lege l)
+        {
+            return finn(l)!=null;
+        }
 	public boolean finnes (int f) {
 		for ( Lege l: reg) {
 			if(l.getlegeID()==(f))
@@ -118,7 +147,7 @@ public class LegeRegister implements Serializable
 		
 		for (Lege x: reg){
 			if (!tomListe()) {
-				utskrift += x.toString() + "\n";
+				utskrift += x.getInfo() + "\n";
 			}
 		}
 		return utskrift;
@@ -144,9 +173,13 @@ class ComparatorImpl implements Comparator<Lege> {
     }
 
     @Override
-    public int compare(Lege o1, Lege o2) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int compare(Lege l1, Lege l2) {
+        if(l1.getEtternavn().compareTo(l2.getEtternavn()) == 0) {
+        	return 0;
+        }
+        return 1;
     }
+ 
 }
 	
 
