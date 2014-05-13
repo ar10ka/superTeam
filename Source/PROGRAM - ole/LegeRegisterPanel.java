@@ -22,7 +22,7 @@ import javax.swing.text.Document;
 
 public class LegeRegisterPanel extends panelSuper {
 	
-	private final JTextField  searchFNavn,searchENavn,searchID,legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
+	private final JTextField  searchAdr,searchFNavn,searchENavn,searchID,legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
 	private final JButton kRegLege, kSlettLege, kVisLege,kEndreLege;
         private JButton kNyLege;
         private JButton search;
@@ -74,6 +74,7 @@ public class LegeRegisterPanel extends panelSuper {
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
+                searchAdr = new JTextField(11);
                 searchFNavn = new JTextField(11);
                 searchENavn = new JTextField(11);
                 searchID = new JTextField(11);
@@ -162,16 +163,17 @@ addSearchPanel();
          String idfelt = searchID.getText();
          String fnavn = searchFNavn.getText();
          String enavn = searchENavn.getText();
+         String adr = searchAdr.getText();
          
           Document source = documentEvent.getDocument();
-          String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt};
+          String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
           int length = source.getLength();
           boolean b = false;
            
-            if(leger.finnObjekt(fnavn, enavn)!=null)
+            if(leger.finnObjekt(fnavn, enavn, adr)!=null)
             {
                 b = true;
-                list.setListData(leger.finnObjekt(fnavn, enavn));
+                list.setListData(leger.finnObjekt(fnavn, enavn, adr));
             }
    
             if(idfelt.matches("-?\\d+(\\.\\d+)?") && leger.finn(Integer.parseInt(idfelt))!=null)
@@ -192,54 +194,37 @@ addSearchPanel();
      
       
     };
-  searchFNavn.getDocument().addDocumentListener(documentListener);
-  searchENavn.getDocument().addDocumentListener(documentListener);
-  searchID.getDocument().addDocumentListener(documentListener);
- 
-		
-
-            
-            
-			
+        searchAdr.getDocument().addDocumentListener(documentListener);
+        searchFNavn.getDocument().addDocumentListener(documentListener);
+        searchENavn.getDocument().addDocumentListener(documentListener);
+        searchID.getDocument().addDocumentListener(documentListener);		
 	}
             
         private void addSearchPanel()
-        {
-                
+        {  
                  gbc.anchor = GridBagConstraints.NORTH;
-                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                 //gbc.insets = new Insets(5,10,5,15);
-                 //gbc.ipady = 20;
-                 
+                 gbc.fill = GridBagConstraints.HORIZONTAL;        
                  gbc.gridwidth=1;
                  gbc.weightx = 1;
                  gbc.weighty=1;
                  gbc.gridx=0;
-                 gbc.gridy=0;
-
-        
-                 
-                 
+                 gbc.gridy=0;      
                  searchPanel.add(new JLabel("Etternavn:"),gbc);
                  gbc.gridx++;
                  searchPanel.add(new JLabel("Fornavn:"),gbc);
                  gbc.gridx++;
+                 searchPanel.add(new JLabel("Arbeidsplass:"),gbc);
+                 gbc.gridx++;
                  searchPanel.add(new JLabel("LegeID:"),gbc);
-                 gbc.gridx++;
-
-                 gbc.gridx++;
                  gbc.gridy=1;
-                 
-                 
-                 
-                 
-                 
-            gbc.gridx=0;     
-            searchPanel.add(searchENavn, gbc);
-            gbc.gridx++;
-	    searchPanel.add(searchFNavn, gbc);
-            gbc.gridx++;
-	    searchPanel.add(searchID, gbc);
+                 gbc.gridx=0;     
+                 searchPanel.add(searchENavn, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchFNavn, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchAdr, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchID, gbc);
         }
         
         private void addFeltPanel()
@@ -279,7 +264,7 @@ addSearchPanel();
                  feltPanel.add(new JLabel("Lege ID:"), gbc);
 
                  gbc.gridx++;
-                 gbc.gridwidth = 3;
+                 gbc.gridwidth = 4;
                  feltPanel.add(legeIDFelt, gbc);
                  gbc.gridwidth=1;
                  gbc.gridy++;
@@ -287,7 +272,7 @@ addSearchPanel();
 
                  feltPanel.add(new JLabel("Fornavn:"), gbc);
                  gbc.gridx++;
-                 gbc.gridwidth=3;
+                 gbc.gridwidth=4;
                  feltPanel.add(navnFelt,gbc);
                  gbc.gridwidth=1;
 
@@ -295,7 +280,7 @@ addSearchPanel();
                  gbc.gridx=0;
                  feltPanel.add(new JLabel("Etternavn:"), gbc);
                  gbc.gridx++;
-                 gbc.gridwidth=3;
+                 gbc.gridwidth=4;
 
                  feltPanel.add(etternavnFelt, gbc);
                  gbc.gridwidth=1;
@@ -304,33 +289,29 @@ addSearchPanel();
                  gbc.gridx=0;
                  feltPanel.add(new JLabel("ArbeidsSted:"), gbc);
                  gbc.gridx++;
-                 gbc.gridwidth=3;
+                 gbc.gridwidth=4;
                  feltPanel.add(arbeidsStedFelt, gbc);
                  gbc.gridwidth=1;
-                 gbc.gridy++;
+                 //gbc.gridy++;
                  gbc.gridx=0;
-                 feltPanel.add(new JLabel("KNAPPER"), gbc);
+                 //feltPanel.add(new JLabel("KNAPPER"), gbc);
 
-                 gbc.gridx=0;
+      
+                 
                  gbc.gridy++;
-                 gbc.gridheight = 1;
-                 gbc.gridwidth = 4;
 
 
                  gbc.gridheight = 1;
-                 gbc.gridwidth = 1;
-             gbc.gridy+=6;
+ 
+             gbc.gridy=12;
              
              gbc.ipady=1;
              
              
-             gbc.gridx=1;
-             feltPanel.add(kEndreLege,gbc);
-             
-             gbc.gridx=2;
-             feltPanel.add(new JButton("knapp her"),gbc);
              
              gbc.gridx=3;
+             feltPanel.add(kEndreLege,gbc);
+             gbc.gridx=4;
              feltPanel.add(kRegLege,gbc);
              		
             feltPanel.setVisible(true);
@@ -553,7 +534,7 @@ addSearchPanel();
 
                         if(leger.slettLege(l.getlegeID())) {
                                 String utskrift = "Legen " + l.getNavn() + " " + l.getEtternavn() +" "+ l.getlegeID() + " er fjernet \n"; 
-                                logomraade.append(logg.toString(utskrift)+"\n");
+                                logomraade.append(logg.toString(utskrift));
 
                         }
                         else

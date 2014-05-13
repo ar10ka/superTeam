@@ -89,13 +89,13 @@ public class LegeRegister implements Serializable
              return null;
 	}    
                  
-	public Object[] finnObjekt ( String n, String e) {
+	public Object[] finnObjekt ( String n, String e, String adr) {
 		Set<Lege> leger = new HashSet<>();
 		if(!reg.isEmpty())
                 {
                     
                     for( Lege l: reg) {
-                        if(l.getNavn().toLowerCase().contains(n.toLowerCase()) && l.getEtternavn().toLowerCase().contains(e.toLowerCase()) )
+                        if(l.getNavn().toLowerCase().contains(n.toLowerCase()) && l.getEtternavn().toLowerCase().contains(e.toLowerCase())&& l.getArbeidsSted().toLowerCase().contains(adr.toLowerCase()) )
                             leger.add(l);
                             
                     }
