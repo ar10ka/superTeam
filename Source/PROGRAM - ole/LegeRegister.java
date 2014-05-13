@@ -3,7 +3,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JTextArea;
 
@@ -13,7 +15,7 @@ Studentnr: s198757
 Navn: Marius Baltramaitis
 
 
-Klasse: Dataingeni�r
+Klasse: Dataingeniï¿½r
 
 */
 
@@ -64,6 +66,15 @@ public class LegeRegister implements Serializable
           return null;
    }
          
+   public Object[] returnObjekt()
+    {
+       String[] emptyArray = {"Det er ingen lege registrert ennå"};
+       if(!reg.isEmpty())  
+          return reg.toArray();
+         else
+          return emptyArray;
+    }
+         
 	public List<Lege> finn ( String n, String e) {
 		List<Lege> leger = new ArrayList<>();
 		if(!reg.isEmpty())
@@ -76,8 +87,25 @@ public class LegeRegister implements Serializable
                     return leger;
                 }
              return null;
-	}         
-	
+	}    
+                 
+	public Object[] finnObjekt ( String n, String e) {
+		Set<Lege> leger = new HashSet<>();
+		if(!reg.isEmpty())
+                {
+                    
+                    for( Lege l: reg) {
+                        if(l.getNavn().toLowerCase().contains(n.toLowerCase()) && l.getEtternavn().toLowerCase().contains(e.toLowerCase()) )
+                            leger.add(l);
+                            
+                    }
+                    if (!leger.isEmpty())
+                        return leger.toArray();
+                    else
+                        return null;
+                }
+             return null;
+	}   
 	
 	public boolean slettLege(int id) {
 		if(!reg.isEmpty())
@@ -164,9 +192,13 @@ class ComparatorImpl implements Comparator<Lege> {
     }
 
     @Override
-    public int compare(Lege o1, Lege o2) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int compare(Lege l1, Lege l2) {
+        if(l1.getEtternavn().compareTo(l2.getEtternavn()) == 0) {
+        	return 0;
+        }
+        return 1;
     }
+ 
 }
 	
 

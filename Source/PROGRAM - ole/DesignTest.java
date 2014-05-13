@@ -105,10 +105,10 @@ public class DesignTest extends JFrame{
           
             //JFRAME egenskaper
           f.getContentPane().setBackground(toolbar.getBackground());
-          f.setSize(1000,500);
+          f.setSize(1000,900);
           f.setVisible(true);
           f.getContentPane().add(hovedpanel,BorderLayout.CENTER);          
-          f.getContentPane().add(logg,BorderLayout.SOUTH);          
+         // f.getContentPane().add(logg,BorderLayout.SOUTH);          
 
           
           //f.add(new JList(new LegeRegister().returnObjekt()),BorderLayout.SOUTH);
@@ -138,12 +138,6 @@ public class DesignTest extends JFrame{
                 //ObjectList til venstre
                 //User Interface til høyre
 	}
-        public String toLogg(String s)
-        {
-            
-            return logg.toString(s);
-        }
-
 
 
 	public void toolbar() {
@@ -167,14 +161,11 @@ public class DesignTest extends JFrame{
 		//toolbar.setBackground(new Color(128,128,228));
 		
 		toolbar.setFloatable(false);
-		
+		knappeListe[0].setBackground(null);
 		toolbar.setVisible(true);
 		
 	}
-	public String test()
-        {
-            return "yes";
-        }
+
 	 private class Lytter implements ActionListener {
 		    @Override
 		    

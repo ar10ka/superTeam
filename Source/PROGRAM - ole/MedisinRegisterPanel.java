@@ -26,7 +26,7 @@ import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import javax.swing.text.MaskFormatter;
 
-public class MedisinRegisterPanel extends JPanel
+public class MedisinRegisterPanel extends panelSuper
 {
   JFormattedTextField medID;
   JTextField 	medNavn;
@@ -119,12 +119,12 @@ public class MedisinRegisterPanel extends JPanel
     add(new JLabel("Medisin kategori:"));
     add(medKategori);
     add(new JLabel("Medisin info:"));
-    add(rulle2);
+    //add(rulle2);
     add(kNyMedisin);
     add(kSlettMedisin);
     add(kVisMedisin);
     add(kVisAlt);
-    add(rulle);
+    //add(rulle);
 
 
     sensor = new Lytter();

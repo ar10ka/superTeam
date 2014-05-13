@@ -18,12 +18,31 @@ public class Lege implements Serializable
 		public Lege (String n, String enavn, String sted, char[] rgruppe, int id ) {
 			
 			legeID = id;
-			navn = n;
-			etternavn = enavn;
-			arbeidsSted = sted;
+			navn = ordneString(n);
+			etternavn = ordneString(enavn);
+			arbeidsSted = ordneString(sted);
 			reseptGruppe = rgruppe;
 
 		}
+                public static String ordneString(String string) 
+                {
+                    char[] chars = string.toLowerCase().toCharArray();
+                    boolean funnet = false;
+                    for (int i = 0; i < chars.length; i++) 
+                    {
+                        if (!funnet && Character.isLetter(chars[i])) 
+                        {
+                            chars[i] = Character.toUpperCase(chars[i]);
+                            funnet = true;
+                        } 
+                        else if (Character.isWhitespace(chars[i]) || chars[i]=='.')//aktiverer funnet når den har funnet et blankt tegn, punktum 
+                        { 
+                            funnet = false;
+                        }
+                    }
+
+                  return String.valueOf(chars).replaceAll("([^\\d-]?)(-?[\\d\\.]+)([^\\d]?)", "$1 $2 $3").replaceAll(" +", " ").trim();
+                }
 		
 		public void setNavn(String n) {
 			navn = n;
@@ -81,7 +100,7 @@ public class Lege implements Serializable
                 }
 		@Override
 		public String toString() {
-			return "Navn: " + navn  + "\nEtternavn: " + etternavn + "\nLegeID: " + legeID + "\n";
+			return etternavn  + ", " + navn + "  " + legeID + "\n";
 		}
 
 }

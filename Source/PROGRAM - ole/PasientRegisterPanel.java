@@ -20,7 +20,7 @@ import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import javax.swing.text.MaskFormatter;
 
-public class PasientRegisterPanel extends JPanel
+public class PasientRegisterPanel extends panelSuper
 {
   JFormattedTextField fNr;
   JTextField 	 fNavn, eNavn, adresse;
@@ -84,9 +84,7 @@ public class PasientRegisterPanel extends JPanel
     kVisPasient     = new JButton("Vis pasient");
     kVisAlt      = new JButton("Vis alle");
 
-	tekstområde  = new JTextArea(15, 55);
-    tekstområde.setEditable(false);
-    JScrollPane rulle = new JScrollPane(tekstområde);
+
 
 
 
@@ -107,7 +105,8 @@ public class PasientRegisterPanel extends JPanel
     add(kSlettPasient);
     add(kVisPasient);
     add(kVisAlt);
-    add(rulle);
+    
+    
                
     
     
@@ -117,7 +116,7 @@ public class PasientRegisterPanel extends JPanel
     list.setVisibleRowCount(5);
     add(new JScrollPane(list));
 
-
+    
 
 
 
