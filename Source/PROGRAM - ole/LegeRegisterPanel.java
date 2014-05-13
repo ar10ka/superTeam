@@ -1,4 +1,6 @@
 
+
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -22,50 +24,34 @@ import javax.swing.text.Document;
 
 public class LegeRegisterPanel extends panelSuper {
 	
-	private final JTextField  searchAdr,searchFNavn,searchENavn,searchID,legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
-	private final JButton kRegLege, kSlettLege, kVisLege,kEndreLege;
-        private JButton kNyLege;
-        private JButton search;
-	private JRadioButton ARadio, BRadio, CRadio;
-	//private JTextArea tekstomraade;
-
+	private final JTextField  searchAdr,searchFNavn,searchENavn,searchID;
+        private final JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
+	private final JButton kRegLege, kSlettLege, kVisLege,kEndreLege,kNyLege;
+        private final JButton search;
+	private final JRadioButton ARadio, BRadio, CRadio;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
-	private int legeID;
-        
-        	private JList list = new JList();
-	private JLabel legeListe, sLabel;
-	private JList nyListe;
-        private GridBagConstraints gbc ;
 
-	
+
 	private LegeRegister leger;
-	private Lytter sensor;
-	
-	private FilBehandler fil;
-	private static int feilLegeId = 0;
-	//private String reseptGruppe;
-	
+	private final Lytter sensor;
+	private final FilBehandler fil;
+        
+        private int legeID;
+	private static final int feilLegeId = 0;
 
 	
+        //KONSTRUKTØR
 	public LegeRegisterPanel() {
             
-            
-            gbc = new GridBagConstraints();
             leger = new LegeRegister();
             fil = new FilBehandler();
-            
-            sLabel = new JLabel("Søk Her: ");
-		
-	    try
+	    
+            try //LASTER INN LEGEREGISTERET
 	    {
-	    	System.out.println("INNN I TRY");
 	      lastInnFil();
-	      System.out.println("ETTER LAST FIL");
 	    }
-
 	    catch (IOException ex)
 	    {
-	    	System.out.println("CATCH P� KON");
 	      ex.printStackTrace();
 	    }
 		
@@ -98,107 +84,93 @@ public class LegeRegisterPanel extends panelSuper {
                 
 
 
-       knappePanel.add(kNyLege);
-        knappePanel.add(kRegLege);
-        knappePanel.add(kSlettLege);
-        knappePanel.add(kEndreLege);
-        knappePanel.add(search);
-       knappePanel.add(kVisLege);
-        
-        addFeltPanel();
-addSearchPanel();
-        
-	    knappePanel.setBackground(Color.red);
-	    listPanel.setBackground(Color.cyan);
-            
-            list = new JList(leger.returnObjekt()); //data has type Object[]
-	    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	    list.setLayoutOrientation(JList.VERTICAL);
-	    //list.setVisibleRowCount(5);
-	    JScrollPane scrollpane = new JScrollPane(list);
-	    //listPanel.add(new JScrollPane(list));
-	    //list.add(new JScrollPane());
-	    //listPanel.add(list);
-	    
-	    listPanel.setLayout(new BorderLayout());
+                knappePanel.add(kNyLege);
+                knappePanel.add(kRegLege);
+                knappePanel.add(kSlettLege);
+                knappePanel.add(kEndreLege);
+                knappePanel.add(search);
+                knappePanel.add(kVisLege);
 
-            listPanel.add(searchPanel, BorderLayout.PAGE_START);
-	    listPanel.add(scrollpane, BorderLayout.CENTER);
-            listPanel.add(knappePanel, BorderLayout.PAGE_END);
-	    sptop.add(listPanel);
-	    sptop.add(feltPanel);
-
-            
-            spbottom.add(sptop);
-            spbottom.add(loggPanel);
-        
-	    add(spbottom, BorderLayout.CENTER);
-	
-
-		sensor = new Lytter();
-		
-	    kRegLege.addActionListener(sensor);
-            kEndreLege.addActionListener(sensor);
-	    kSlettLege.addActionListener(sensor);
-	    kVisLege.addActionListener(sensor);
-	    kNyLege.addActionListener(sensor);
-	    search.addActionListener(sensor);
-            
-            kRegLege.setEnabled(false);
-            kEndreLege.setEnabled(false);
-                
- DocumentListener documentListener = new DocumentListener() {
-      public void changedUpdate(DocumentEvent documentEvent) {
-        printIt(documentEvent);
-      }
-      public void insertUpdate(DocumentEvent documentEvent) {
-       printIt(documentEvent);
-       
-      }
-      public void removeUpdate(DocumentEvent documentEvent) {
-        printIt(documentEvent);
-      }
-      private void printIt(DocumentEvent documentEvent) {
-
-         String idfelt = searchID.getText();
-         String fnavn = searchFNavn.getText();
-         String enavn = searchENavn.getText();
-         String adr = searchAdr.getText();
-         
-          Document source = documentEvent.getDocument();
-          String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
-          int length = source.getLength();
-          boolean b = false;
+                addFeltPanel();
+                addSearchPanel();
            
-            if(leger.finnObjekt(fnavn, enavn, adr)!=null)
-            {
-                b = true;
-                list.setListData(leger.finnObjekt(fnavn, enavn, adr));
-            }
-   
-            if(idfelt.matches("-?\\d+(\\.\\d+)?") && leger.finn(Integer.parseInt(idfelt))!=null)
-            {
-                b= true;
-                List<Lege> l = new ArrayList<>();
-                l.add(leger.finn(Integer.parseInt(idfelt)));
-                list.setListData(l.toArray());
-            }
-            if(!b)
-                list.setListData(emptyArray);
-         
-           if(length == 0)  
-            list.setListData(leger.returnObjekt());
-    
-                  
-        }
-     
-      
-    };
-        searchAdr.getDocument().addDocumentListener(documentListener);
-        searchFNavn.getDocument().addDocumentListener(documentListener);
-        searchENavn.getDocument().addDocumentListener(documentListener);
-        searchID.getDocument().addDocumentListener(documentListener);		
-	}
+                list = new JList(leger.returnObjekt()); //data has type Object[]
+                list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                list.setLayoutOrientation(JList.VERTICAL);
+                JScrollPane scrollpane = new JScrollPane(list);
+                listPanel.setLayout(new BorderLayout());
+                listPanel.add(searchPanel, BorderLayout.PAGE_START);
+                listPanel.add(scrollpane, BorderLayout.CENTER);
+                listPanel.add(knappePanel, BorderLayout.PAGE_END);
+                sptop.add(listPanel);
+                sptop.add(feltPanel);
+                spbottom.add(sptop);
+                spbottom.add(loggPanel);
+                add(spbottom, BorderLayout.CENTER);
+
+                sensor = new Lytter();	
+                kRegLege.addActionListener(sensor);
+                kEndreLege.addActionListener(sensor);
+                kSlettLege.addActionListener(sensor);
+                kVisLege.addActionListener(sensor);
+                kNyLege.addActionListener(sensor);
+                search.addActionListener(sensor);
+
+                kRegLege.setEnabled(false);
+                kEndreLege.setEnabled(false);
+
+                DocumentListener documentListener = new DocumentListener() {
+                     public void changedUpdate(DocumentEvent documentEvent) {
+                       findIt(documentEvent);
+                     }
+                     public void insertUpdate(DocumentEvent documentEvent) {
+                      findIt(documentEvent);
+
+                     }
+                     public void removeUpdate(DocumentEvent documentEvent) {
+                       findIt(documentEvent);
+                     }
+                     private void findIt(DocumentEvent documentEvent) {
+
+                        String idfelt = searchID.getText();
+                        String fnavn = searchFNavn.getText();
+                        String enavn = searchENavn.getText();
+                        String adr = searchAdr.getText();
+
+                         Document source = documentEvent.getDocument();
+                         String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
+                         int length = source.getLength();
+                         boolean b = false;
+
+                           if(leger.finnObjekt(fnavn, enavn, adr)!=null)
+                           {
+                               b = true;
+                               list.setListData(leger.finnObjekt(fnavn, enavn, adr));
+                           }
+
+                           if(idfelt.matches("-?\\d+(\\.\\d+)?") && leger.finn(Integer.parseInt(idfelt))!=null)
+                           {
+                               b= true;
+                               List<Lege> l = new ArrayList<>();
+                               l.add(leger.finn(Integer.parseInt(idfelt)));
+                               list.setListData(l.toArray());
+                           }
+                           if(!b)
+                               list.setListData(emptyArray);
+
+                          if(length == 0)  
+                           list.setListData(leger.returnObjekt());
+
+
+                       }
+
+
+                   };
+                       searchAdr.getDocument().addDocumentListener(documentListener);
+                       searchFNavn.getDocument().addDocumentListener(documentListener);
+                       searchENavn.getDocument().addDocumentListener(documentListener);
+                       searchID.getDocument().addDocumentListener(documentListener);		
+                   }
             
         private void addSearchPanel()
         {  
@@ -373,17 +345,15 @@ addSearchPanel();
 		return reseptGruppe;
 	}
 
-	public void error(String s)
+	private void error(String s)
         {
             JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
         }
 	
         public void regLege() 
         {
-            
             try
              {
-
                      String fnavn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
                      String enavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
                      String arb = arbeidsStedFelt.getText();
@@ -400,18 +370,28 @@ addSearchPanel();
 
 
               }
-                    if (fnavn.equals("") || enavn.equals("")|| ActivRadio()==null || arb.equals("") )
+              
+              if (fnavn.equals("") || enavn.equals("")|| ActivRadio()==null || arb.equals("") )
               {
                  error("Fyll ut alle feltene!");
+                 kRegLege.setEnabled(true);
+                 legeIDFelt.setEnabled(false);
+                 legeIDFelt.setBackground(Color.LIGHT_GRAY);
               }
             }
             catch (NumberFormatException e)
             {
-              error("Fyll ut alle feltene!");
+                 error("Fyll ut alle feltene!");
+                 kRegLege.setEnabled(true);
+                 legeIDFelt.setEnabled(false);
+                 legeIDFelt.setBackground(Color.LIGHT_GRAY);
             }
             catch (IndexOutOfBoundsException ex)
             {
-                error("Fyll ut alle feltene!");
+                 error("Fyll ut alle feltene!");
+                 kRegLege.setEnabled(true);
+                 legeIDFelt.setEnabled(false);
+                 legeIDFelt.setBackground(Color.LIGHT_GRAY);
             }
 
         }
@@ -427,10 +407,10 @@ addSearchPanel();
                 String enavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
                 String arb = arbeidsStedFelt.getText();
 
-              if(getSelectedObject() != null)
-               legeID = getSelectedObject().getlegeID();
+      //        if(getSelectedObject() != null)
+        //       legeID = getSelectedObject().getlegeID();
                 
-              else if (!fnavn.equals("") && !enavn.equals("") && !legeIDFelt.equals("") && !arb.equals("") )
+              if (!fnavn.equals("") && !enavn.equals("") && !legeIDFelt.equals("") && !arb.equals("") )
               {
                 if (leger.finnes(id))
                 {          
@@ -480,8 +460,6 @@ addSearchPanel();
     }
         }
         
-        
-	
 	public void visLege( Lege l ) 
         {
           /*  if(getSelectedObject() != null)
@@ -522,7 +500,6 @@ addSearchPanel();
                 else
                     error("Ingen lege er valgt");
         }
-	
 	public void slettLege( Lege l) {
             
              int n = JOptionPane.showConfirmDialog(null,
@@ -542,59 +519,6 @@ addSearchPanel();
                     }
                     else 
                         error("Lege er ikke fjernet til");
-	}
-	
-	
-	public void finn() {
-            /*
-                //Gjør at første bokstav i navnene blir stor og resten små bokstaver
-                String navn = Character.toUpperCase(navnFelt.getText().charAt(0)) + navnFelt.getText().substring(1).toLowerCase();
-		String etternavn = Character.toUpperCase(etternavnFelt.getText().charAt(0)) + etternavnFelt.getText().substring(1).toLowerCase();
-		
-               if(getSelectedObject() != null)
-               legeID = getSelectedObject().getlegeID();
-            else if(!legeIDFelt.getText().equals(""))
-                legeID = Integer.parseInt(legeIDFelt.getText());
-               
-                if(legeID == feilLegeId)
-                    error("Skriv inn legeID");
-                
-                else if(leger.finnes(legeID)) 
-                {  /*              
-                if(!legeIDFelt.getText().equals(""))
-                {
-                    legeID = Integer.parseInt(legeIDFelt.getText());
-                 */       
-                   /*
-                        Lege l = leger.finn(legeID);
-                        visLege(l);
-/*                     tekstomraade.append(l.getNavn() + " " + l.getEtternavn() + " " +l.getlegeID() + "\n");
-                        String utskrift = "Lege(er) med er funnet med forekommende lege id: "+ legeID +" \n";
-                        logomraade.append(logg.toString(utskrift)+"\n\n");*/
-                 /*   
-                }
-                else
-                        error(logg.toString("Feil legeID. Prøv igjen!"));
-
-                if(!navn.equals("") && !etternavn.equals(""))
-                {
-                    if(leger.finnes(navn, etternavn)) {
-                        String temp ="";
-
-                        for (Lege x: leger.finn(navn, etternavn))
-                            temp += x.getInfo()+"\n";
-                        
-                       // tekstomraade.append(logg.toString(temp) + "\n");
-                        logomraade.append(logg.toString("Lege(er) med er funnet med forekommende navn og etternavn \n"));
-                    }
-                    else
-                        error("Feil navn. Prøv igjen!");
-		}
-                
-                if (navn.equals("") && etternavn.equals("") && legeIDFelt.getText().equals(""))
-                    error(logg.toString("Skriv inn enten legeID eller navn for å søke på legen!"));
-                    */
-                
 	}
         
 	public void  emptyFields() {
@@ -619,6 +543,7 @@ addSearchPanel();
                 else 
                     return null;
 	}
+        
         public void oppdaterListe() {
 		
 		list.setListData(leger.returnObjekt());
@@ -699,7 +624,6 @@ addSearchPanel();
                
         	    else if (e.getSource() == kNyLege)
 		    {
-                        generateLeger();
                         kRegLege.setEnabled(true);
                         legeIDFelt.setEnabled(false);
                         legeIDFelt.setBackground(Color.LIGHT_GRAY);                        

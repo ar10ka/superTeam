@@ -1,5 +1,7 @@
 
 
+
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -15,6 +17,14 @@ public class Lege implements Serializable
 		//private String legeID;
 		private int legeID;
 
+                /**
+                 * Konstruktør som initialiserer alle datafeltene og oppretter en ny lege.
+                 * @param n Navn på legen
+                 * @param enavn Etternavn på legen
+                 * @param sted Arbeidssted for legen
+                 * @param rgruppe Reseptgruppe char Array for bevilling
+                 * @param id Legeid genereres automatisk i legeregiter klasse
+                 */
 		public Lege (String n, String enavn, String sted, char[] rgruppe, int id ) {
 			
 			legeID = id;

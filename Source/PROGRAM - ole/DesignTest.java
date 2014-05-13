@@ -1,5 +1,7 @@
 
 
+
+
 import java.awt.BorderLayout;
 import java.util.*;
 
@@ -28,12 +30,12 @@ public class DesignTest extends JFrame{
 	private toolBarKnapper knapper;
         private Logg logg;
         private CardLayout card;
-        private JPanel hovedpanel, panel4,panel5,panel6;
+        private JPanel hovedpanel,panel5,panel6;
         private LegeRegisterPanel panel1;
         private PasientRegisterPanel  panel2;
         private MedisinRegisterPanel  panel3;
-     /*   private ReseptRegisterPanel  panel4;
-        private StatistikkPanel  panel5;
+        private ReseptRegisterPanel  panel4;
+     /*   private StatistikkPanel  panel5;
         private InformasjonPanel  panel6;*/
         
         
@@ -66,7 +68,7 @@ public class DesignTest extends JFrame{
           panel1 = new LegeRegisterPanel();
           panel2= new PasientRegisterPanel();
           panel3= new MedisinRegisterPanel();
-          panel4= new JPanel(); //ReseptRegisterPanel();
+          panel4= new ReseptRegisterPanel();
           panel5= new JPanel();//StatestikkPanel();
           panel6= new JPanel();//InformasjonsPanel();
           
@@ -75,7 +77,7 @@ public class DesignTest extends JFrame{
           //panel1.setLayout(null);
          // panel2.setLayout(null);
          // panel3.setLayout(null);
-          panel4.setLayout(null);
+          //panel4.setLayout(null);
           panel5.setLayout(null);
           panel6.setLayout(null);
           
@@ -83,8 +85,8 @@ public class DesignTest extends JFrame{
          
           panel2.setName("PasientRegister");
           panel3.setName("MedisinRegister");
-          //panel1.setBackground(Color.LIGHT_GRAY);
-          panel4.setBackground(Color.ORANGE);
+          panel4.setName("ReseptRegister");
+          //panel4.setBackground(Color.ORANGE);
           panel5.setBackground(Color.pink);
           panel6.setBackground(Color.yellow);
           
@@ -211,7 +213,7 @@ private void lagreFilJPanel()
                 panel1.lagreFil();
                 panel2.lagreFil();
                 panel3.lagreFil();
-                //panel4.lagreFil();
+                panel4.lagreFil();
                 //panel5.lagreFil();
                 //panel6.lagreFil();
                 

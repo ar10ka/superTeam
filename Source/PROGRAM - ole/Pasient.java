@@ -1,6 +1,8 @@
 
 
 
+
+
 /*
 
 Studentnr: s188097
@@ -105,7 +107,7 @@ public class Pasient implements Serializable
 	public String toString()
 	  {
 		
-              return enavn + ", " + fnavn + "\t" + fNr;
+              return enavn + ", " + fnavn + "  " + fNr;
 	  }
         public String getInfo()
 	  {

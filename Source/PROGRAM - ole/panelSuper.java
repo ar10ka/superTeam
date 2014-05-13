@@ -1,4 +1,6 @@
 
+
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,7 +16,7 @@ import javax.swing.border.Border;
  * @author Ole
  */
 public class panelSuper extends JPanel{
-    
+   JList list;
     JSplitPane sptop,spbottom;
     JPanel loggPanel;
     Logg logg;
@@ -24,14 +26,16 @@ public class panelSuper extends JPanel{
 	 JPanel listPanel;
 	 JPanel knappePanel;
          JPanel searchPanel;
+     GridBagConstraints gbc ;
      Border feltBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
     
     public panelSuper(){
-        
+            
             feltPanel = new JPanel();
             listPanel = new JPanel();
             knappePanel = new JPanel();
            
+            gbc = new GridBagConstraints();
             searchPanel = new JPanel(new GridBagLayout());
 
 
@@ -66,6 +70,8 @@ public class panelSuper extends JPanel{
             loggPanel.setLayout(new BorderLayout());
             loggPanel.add(loggRull);
             
+                knappePanel.setBackground(Color.red);
+                listPanel.setBackground(Color.cyan);    
             
     }
     
