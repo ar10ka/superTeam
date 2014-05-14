@@ -28,10 +28,6 @@ public class panelSuper extends JPanel{
          JPanel searchPanel;
      GridBagConstraints gbc ;
      Border feltBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
-     Color blue = new Color(153,153,255);
-     
-     infoVindu infoVindu;
-     JFrame infoFrame;
     
     public panelSuper(){
             
@@ -41,10 +37,6 @@ public class panelSuper extends JPanel{
            
             gbc = new GridBagConstraints();
             searchPanel = new JPanel(new GridBagLayout());
-            
-            knappePanel.setBackground(blue);
-            listPanel.setBackground(blue);
-            searchPanel.setBackground(blue);
 
 
             logg = new Logg();
@@ -70,14 +62,16 @@ public class panelSuper extends JPanel{
 	    
             sptop.setEnabled(true);
 	    //sptop.setDividerSize(0);
-	    sptop.setResizeWeight(1);
+	    sptop.setResizeWeight(0.5);
             spbottom.setEnabled(false);
 	    spbottom.setDividerSize(0);
-	    spbottom.setResizeWeight(0.8);
+	    spbottom.setResizeWeight(0.7);
             loggPanel = new JPanel();
             loggPanel.setLayout(new BorderLayout());
             loggPanel.add(loggRull);
-              
+            
+                knappePanel.setBackground(Color.red);
+                listPanel.setBackground(Color.cyan);    
             
     }
     

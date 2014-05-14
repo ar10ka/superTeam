@@ -1,5 +1,4 @@
-/*
- 
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,19 +27,17 @@ public class Resept implements Serializable
     private String utskrevet;
     private String legeanvisning;
     private int mengdeMg;
-    private String setString;
     
     
-    public Resept (int id, Lege l, Pasient p, Medisin m,int mengde, String la, String dato)
+    public Resept (int id, Lege l, Pasient p, Medisin m,int mengde, String la)
     {
         reseptID = id;
         lege = l;
         pasient = p;
         medisin = m;
-        utskrevet = dato;
+        utskrevet = logg.getDate( "Resept " + reseptID + " er opprettet");
         mengdeMg = mengde;
         legeanvisning = la;
-        setString = reseptID + " " +  utskrevet + " " + p.getFNavn() + " " + p.getENavn();
     }
     
     public int getID()
@@ -70,14 +67,5 @@ public class Resept implements Serializable
     public String getLegeAnvisning()
     {
         return legeanvisning;
-    }
-    
-    public void setToString(String s) {
-    	setString = s;
-    }
-    
-    @Override
-    public String toString() {
-    	return setString;
     }
 }

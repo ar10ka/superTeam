@@ -34,7 +34,7 @@ public class LegeRegisterPanel extends panelSuper {
 	Color grey = new Color(128,128,128);
 	Border lineBorder = BorderFactory.createLineBorder(grey);
 
-
+        private ReseptRegister reg;
 	private LegeRegister leger;
 	private final Lytter sensor;
 	private final FilBehandler fil;
@@ -45,7 +45,7 @@ public class LegeRegisterPanel extends panelSuper {
 	
         //KONSTRUKTØR
 	public LegeRegisterPanel() {
-            
+            reg = new ReseptRegister();
             leger = new LegeRegister();
             fil = new FilBehandler();
 	    
@@ -318,6 +318,7 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
 	      leger = fil.lastInnFilLege("LegeLagring");
+	      reg = fil.lastInnFilResept("ReseptLagring");
               System.out.println(logg.toString("LegeRegister lastet inn!"));
   
 	    }
@@ -336,6 +337,7 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
                 fil.lagreFil(leger, "LegeLagring");
+                fil.lagreFil(reg, "ReseptLagring");
                 System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -485,19 +487,6 @@ public class LegeRegisterPanel extends panelSuper {
         
 	public void visLege( Lege l ) 
         {
-          /*  if(getSelectedObject() != null)
-               legeID = getSelectedObject().getlegeID();
-            else if(!legeIDFelt.getText().equals(""))
-                legeID = Integer.parseInt(legeIDFelt.getText());
-               
-                if(legeID == feilLegeId)
-                    error("Skriv inn legeID");
-                
-                else if(leger.finnes(legeID)) 
-                { */
-          
-     
-			//Lege l = leger.finn(legeID);
             if(getSelectedObject() != null)
             {
                 kEndreLege.setEnabled(true);
@@ -615,9 +604,31 @@ public class LegeRegisterPanel extends panelSuper {
                 
                 
             }
-            
         }
-
+            
+            
+      public void visInfoVindu( Lege l ) 
+        {
+            if(getSelectedObject() != null)
+            {
+                	System.out.println("Knappen er selected");
+		    	infoFrame = new JFrame("Info-vindu");
+		    	infoFrame.setLayout(new BorderLayout());
+		    	System.out.println("etter JFRAME");	
+                        
+                        infoVindu = new infoVindu(getSelectedObject());
+		    	infoFrame.add(infoVindu);
+		    	infoFrame.setVisible(true);
+		    	infoFrame.setSize(800,300);
+                
+                        logomraade.append(logg.toString("Fant lege: " + l.toString()));
+		}		
+                else
+                    error("Ingen lege er valgt");
+        }
+            
+        
+        
 	
 	
 	private class Lytter implements ActionListener {
@@ -641,7 +652,8 @@ public class LegeRegisterPanel extends panelSuper {
 		    }			
 		    else if (e.getSource() == kVisLege)
 		    {
-                       
+                       reg.nyResept(1000, getSelectedObject(), new Pasient("Arnt", "Henriksen", "20000000", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
+		
 		      visLege(getSelectedObject());
 		    }		
                
@@ -664,14 +676,7 @@ public class LegeRegisterPanel extends panelSuper {
 		    }
                     
 		    else if( e.getSource() == kResept) {
-		    	System.out.println("Knappen er selected");
-		    	infoFrame = new JFrame("Info-vindu");
-		    	infoFrame.setLayout(new BorderLayout());
-		    	System.out.println("etter JFRAME");		    	
-		    	infoVindu = new infoVindu(getSelectedObject());
-		    	infoFrame.add(infoVindu);
-		    	infoFrame.setVisible(true);
-		    	infoFrame.setSize(800,300);
+                        visInfoVindu(getSelectedObject());
 
 		    }
                     oppdaterListe();

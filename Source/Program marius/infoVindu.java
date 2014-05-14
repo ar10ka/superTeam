@@ -1,7 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.io.EOFException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -15,9 +20,10 @@ import javax.swing.ListSelectionModel;
 public class infoVindu extends panelSuper {
 	
 	private JFrame f;
-	private ReseptRegister resepter;
+	private ReseptRegister resepter = new ReseptRegister();
 
 	private JButton kVisInfo, kSlettResept;
+        FilBehandler fil = new FilBehandler();
 	
 	
 	public infoVindu( Object o) {
@@ -26,7 +32,7 @@ public class infoVindu extends panelSuper {
         setBackground(Color.DARK_GRAY);
 		kVisInfo = new JButton("Vis Info");
 		kSlettResept = new JButton("Fjern Resepten");
-		resepter = new ReseptRegister();
+		
 		list = new JList(visListe(o));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setLayoutOrientation(JList.VERTICAL);
@@ -39,6 +45,22 @@ public class infoVindu extends panelSuper {
         sptop.add(feltPanel);
         add(sptop, BorderLayout.CENTER);
         
+        try{
+        resepter = fil.lastInnFilResept("ReseptLagring");
+        System.out.println("ok??");
+        }	    
+	    catch (FileNotFoundException ex)
+	    {
+	      System.out.println("Lager ny lagringsfil");
+	    }
+	    catch (EOFException ex)
+	    {
+	      System.out.println("Ferdig lastet!");
+	    }
+        catch (IOException ex)
+        {
+            
+        }
 
 		
 	}
@@ -49,7 +71,7 @@ public class infoVindu extends panelSuper {
 		Pasient p;
 		String [] tomListe = {"Inger resepter er registrert"};
 		List<Object> reseptListe = new ArrayList<>();
-		System.out.println("Før instance of lege");
+		System.out.println("Fï¿½r instance of lege");
 		if (o instanceof Lege ) {
 			System.out.println("i ifen");
 			l = (Lege)o;
@@ -59,7 +81,7 @@ public class infoVindu extends panelSuper {
 				
 			
 			for(Resept x: resepter.getResepterLegeObject(l)) {
-				System.out.println("i for løkka");
+				System.out.println("i for lï¿½kka");
 				String s = x.getID() + " " + x.getPasient().getFNavn() + " " + x.getPasient().getENavn() + " " + x.getDato();
 				//reseptList.add(x.getID());
 				//reseptList.add(x.getPasient().getFNavn());

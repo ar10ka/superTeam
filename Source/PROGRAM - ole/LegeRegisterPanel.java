@@ -26,15 +26,12 @@ public class LegeRegisterPanel extends panelSuper {
 	
 	private final JTextField  searchAdr,searchFNavn,searchENavn,searchID;
         private final JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt;
-	private final JButton kRegLege, kSlettLege, kVisLege,kEndreLege,kNyLege, kGenerer, kResept;
-
+	private final JButton kRegLege, kSlettLege, kVisLege,kEndreLege,kNyLege;
+        private final JButton search;
 	private final JRadioButton ARadio, BRadio, CRadio;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
-	Color greyWhite = new Color(224,224,224);
-	Color grey = new Color(128,128,128);
-	Border lineBorder = BorderFactory.createLineBorder(grey);
 
-        private ReseptRegister reg;
+
 	private LegeRegister leger;
 	private final Lytter sensor;
 	private final FilBehandler fil;
@@ -45,7 +42,7 @@ public class LegeRegisterPanel extends panelSuper {
 	
         //KONSTRUKTØR
 	public LegeRegisterPanel() {
-            reg = new ReseptRegister();
+            
             leger = new LegeRegister();
             fil = new FilBehandler();
 	    
@@ -72,14 +69,6 @@ public class LegeRegisterPanel extends panelSuper {
 		etternavnFelt = new JTextField(10);
 		arbeidsStedFelt = new JTextField(20);
 		legeIDFelt.setEditable(false);
-		
-		searchAdr.setBorder(lineBorder);
-		searchFNavn.setBorder(lineBorder);
-		searchENavn.setBorder(lineBorder);
-		searchID.setBorder(lineBorder);
-        navnFelt.setBorder(lineBorder);  
-        etternavnFelt.setBorder(lineBorder);
-        arbeidsStedFelt.setBorder(lineBorder);
                        
 
 		ARadio = new JRadioButton("A");
@@ -91,16 +80,7 @@ public class LegeRegisterPanel extends panelSuper {
 		kSlettLege = new JButton("Slett Lege");
 		kVisLege = new JButton("Vis Lege");
 		kNyLege = new JButton("Ny Lege");
-		kGenerer = new JButton("Generer Nye Leger");
-		kResept = new JButton("Vis Reseptene");
-		
-		kSlettLege.setBackground(greyWhite);
-		kVisLege.setBackground(greyWhite);
-		kNyLege.setBackground(greyWhite);
-		kGenerer.setBackground(greyWhite);
-		kEndreLege.setBackground(greyWhite);
-		kRegLege.setBackground(greyWhite);
-		kResept.setBackground(greyWhite);
+		search = new JButton("Generer Nye Leger");
                 
 
 
@@ -108,9 +88,8 @@ public class LegeRegisterPanel extends panelSuper {
                 knappePanel.add(kRegLege);
                 knappePanel.add(kSlettLege);
                 knappePanel.add(kEndreLege);
-                knappePanel.add(kGenerer);
+                knappePanel.add(search);
                 knappePanel.add(kVisLege);
-                knappePanel.add(kResept);
 
                 addFeltPanel();
                 addSearchPanel();
@@ -135,9 +114,7 @@ public class LegeRegisterPanel extends panelSuper {
                 kSlettLege.addActionListener(sensor);
                 kVisLege.addActionListener(sensor);
                 kNyLege.addActionListener(sensor);
-                kGenerer.addActionListener(sensor);
-                kResept.addActionListener(sensor);
-
+                search.addActionListener(sensor);
 
                 kRegLege.setEnabled(false);
                 kEndreLege.setEnabled(false);
@@ -318,7 +295,6 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
 	      leger = fil.lastInnFilLege("LegeLagring");
-	      reg = fil.lastInnFilResept("ReseptLagring");
               System.out.println(logg.toString("LegeRegister lastet inn!"));
   
 	    }
@@ -337,7 +313,6 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
                 fil.lagreFil(leger, "LegeLagring");
-                fil.lagreFil(reg, "ReseptLagring");
                 System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -487,6 +462,19 @@ public class LegeRegisterPanel extends panelSuper {
         
 	public void visLege( Lege l ) 
         {
+          /*  if(getSelectedObject() != null)
+               legeID = getSelectedObject().getlegeID();
+            else if(!legeIDFelt.getText().equals(""))
+                legeID = Integer.parseInt(legeIDFelt.getText());
+               
+                if(legeID == feilLegeId)
+                    error("Skriv inn legeID");
+                
+                else if(leger.finnes(legeID)) 
+                { */
+          
+     
+			//Lege l = leger.finn(legeID);
             if(getSelectedObject() != null)
             {
                 kEndreLege.setEnabled(true);
@@ -604,31 +592,9 @@ public class LegeRegisterPanel extends panelSuper {
                 
                 
             }
+            
         }
-            
-            
-      public void visInfoVindu( Lege l ) 
-        {
-            if(getSelectedObject() != null)
-            {
-                	System.out.println("Knappen er selected");
-		    	infoFrame = new JFrame("Info-vindu");
-		    	infoFrame.setLayout(new BorderLayout());
-		    	System.out.println("etter JFRAME");	
-                        
-                        infoVindu = new infoVindu(getSelectedObject());
-		    	infoFrame.add(infoVindu);
-		    	infoFrame.setVisible(true);
-		    	infoFrame.setSize(800,300);
-                
-                        logomraade.append(logg.toString("Fant lege: " + l.toString()));
-		}		
-                else
-                    error("Ingen lege er valgt");
-        }
-            
-        
-        
+
 	
 	
 	private class Lytter implements ActionListener {
@@ -652,8 +618,7 @@ public class LegeRegisterPanel extends panelSuper {
 		    }			
 		    else if (e.getSource() == kVisLege)
 		    {
-                       reg.nyResept(1000, getSelectedObject(), new Pasient("Arnt", "Henriksen", "20000000", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
-		
+                       
 		      visLege(getSelectedObject());
 		    }		
                
@@ -670,15 +635,10 @@ public class LegeRegisterPanel extends panelSuper {
                         emptyFields();
                     }
                     
-		    else if ( e.getSource() == kGenerer ) 
+		    else if ( e.getSource() == search ) 
                     {
 		    	generateLeger();
-		    }
-                    
-		    else if( e.getSource() == kResept) {
-                        visInfoVindu(getSelectedObject());
-
-		    }
+		    }                    
                     oppdaterListe();
 		}
 	}

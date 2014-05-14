@@ -256,7 +256,7 @@ class toolBarKnapper
                     knappen.setBorder(emptyBorder);
                     knappen.setFocusPainted(false);
             }
-
+/*
 	toolbarKnappen[0].setIcon(new ImageIcon("ikoner/lege.png"));
 	toolbarKnappen[1].setIcon(new ImageIcon("ikoner/pasient.png"));
 	toolbarKnappen[2].setIcon(new ImageIcon("ikoner/medisin.png"));
@@ -264,13 +264,13 @@ class toolBarKnapper
 	toolbarKnappen[4].setIcon(new ImageIcon("ikoner/statistikk.png"));
 	toolbarKnappen[5].setIcon(new ImageIcon("ikoner/info.png"));
 	
-/*
+*/
     toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("ikoner/lege.png")));
 	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("ikoner/pasient.png")));
 	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("ikoner/medisin.png")));
 	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("ikoner/resept.png")));
 	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("ikoner/statistikk.png")));
-	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("ikoner/info.png"))); */
+	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("ikoner/info.png"))); 
         
         }
 	
