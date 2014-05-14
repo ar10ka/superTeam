@@ -106,7 +106,6 @@ public class Pasient implements Serializable
 	@Override
 	public String toString()
 	  {
-		
               return enavn + ", " + fnavn + "  " + fNr;
 	  }
         public String getInfo()

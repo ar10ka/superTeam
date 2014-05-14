@@ -542,7 +542,7 @@ private char aktivRadio()
 		list.setListData(bibliotek.returnObjekt());
 	}
         
-        private void generatePasientr()
+        private void generatePasienter()
         {
             int Min=0;
             int Max;
@@ -679,7 +679,7 @@ private char aktivRadio()
                     
 		    else if ( e.getSource() == search ) 
                     {
-		    	generatePasientr();
+		    	generatePasienter();
 		    }                    
                     oppdaterListe();
 		}

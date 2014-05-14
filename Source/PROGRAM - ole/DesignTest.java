@@ -107,7 +107,7 @@ public class DesignTest extends JFrame{
           
             //JFRAME egenskaper
           f.getContentPane().setBackground(toolbar.getBackground());
-          f.setSize(1000,900);
+          f.setSize(1200,900);
           f.setVisible(true);
           f.getContentPane().add(hovedpanel,BorderLayout.CENTER);          
          // f.getContentPane().add(logg,BorderLayout.SOUTH);          

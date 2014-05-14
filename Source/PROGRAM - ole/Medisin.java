@@ -40,7 +40,7 @@ public class Medisin implements Serializable
 	{
 		return navn;
 	}
-        public String getInfo()
+        public String getInformasjon()
         {
             return info;
         }
@@ -52,10 +52,35 @@ public class Medisin implements Serializable
         {
             return reseptGruppe;
         }
+	public void setMedID(String id)
+	{
+		 medID = id;
+	}
+	public void setNavn(String n)
+	{
+                navn = n;
+	}
+        public void setInformasjon(String i)
+        {
+                info = i;
+        }
+        public void setKategori(String k)
+        {
+                kategori = k;
+        }
+        public void setReseptGruppe(char rGruppe)
+        {
+                reseptGruppe = rGruppe;
+        }
 
 
 	@Override
-	public String toString()
+        public String toString(){
+            return navn + ", " + reseptGruppe + "  " + medID;
+        }
+        
+        
+	public String getInfo()
 	  {
 		return "Medisin info:"
                         + "\nID:\t" + medID + "\n"

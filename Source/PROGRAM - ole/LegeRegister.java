@@ -55,7 +55,7 @@ public class LegeRegister implements Serializable
 		}
 		return null;
 	}
-         public Lege finn(Lege l)//finner pasient
+         public Lege finn(Lege l)//finner lege
   {
           if(!reg.isEmpty())
           {
