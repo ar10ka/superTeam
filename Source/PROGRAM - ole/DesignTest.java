@@ -1,7 +1,3 @@
-
-
-
-
 import java.awt.BorderLayout;
 import java.util.*;
 
@@ -30,11 +26,11 @@ public class DesignTest extends JFrame{
 	private toolBarKnapper knapper;
         private Logg logg;
         private CardLayout card;
-        private JPanel hovedpanel,panel5,panel6, panel4;
+        private JPanel hovedpanel, panel4,panel5,panel6;
         private LegeRegisterPanel panel1;
         private PasientRegisterPanel  panel2;
         private MedisinRegisterPanel  panel3;
-        //private ReseptRegisterPanel  panel4;
+       // private ReseptRegisterPanel  panel4;
      /*   private StatistikkPanel  panel5;
         private InformasjonPanel  panel6;*/
         
@@ -68,7 +64,7 @@ public class DesignTest extends JFrame{
           panel1 = new LegeRegisterPanel();
           panel2= new PasientRegisterPanel();
           panel3= new MedisinRegisterPanel();
-          panel4= new JPanel();//new ReseptRegisterPanel();
+          panel4= new ReseptRegisterPanel();
           panel5= new JPanel();//StatestikkPanel();
           panel6= new JPanel();//InformasjonsPanel();
           
@@ -107,7 +103,8 @@ public class DesignTest extends JFrame{
           
             //JFRAME egenskaper
           f.getContentPane().setBackground(toolbar.getBackground());
-          f.setSize(1200,900);
+          f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+          f.setSize(1000,900);
           f.setVisible(true);
           f.getContentPane().add(hovedpanel,BorderLayout.CENTER);          
          // f.getContentPane().add(logg,BorderLayout.SOUTH);          
@@ -260,19 +257,20 @@ class toolBarKnapper
                     knappen.setFocusPainted(false);
             }
 /*
-	toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("../ikoner/lege.png")));
-	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("../ikoner/pasient.png")));
-	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("../ikoner/medisin.png")));
-	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("../ikoner/resept.png")));
-	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("../ikoner/statistikk.png")));
-	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("../ikoner/info.png")));*/
+	toolbarKnappen[0].setIcon(new ImageIcon("ikoner/lege.png"));
+	toolbarKnappen[1].setIcon(new ImageIcon("ikoner/pasient.png"));
+	toolbarKnappen[2].setIcon(new ImageIcon("ikoner/medisin.png"));
+	toolbarKnappen[3].setIcon(new ImageIcon("ikoner/resept.png"));
+	toolbarKnappen[4].setIcon(new ImageIcon("ikoner/statistikk.png"));
+	toolbarKnappen[5].setIcon(new ImageIcon("ikoner/info.png"));
 	
-        toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("ikoner/lege.png")));
+*/
+    toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("ikoner/lege.png")));
 	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("ikoner/pasient.png")));
 	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("ikoner/medisin.png")));
 	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("ikoner/resept.png")));
 	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("ikoner/statistikk.png")));
-	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("ikoner/info.png")));
+	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("ikoner/info.png"))); 
         
         }
 	

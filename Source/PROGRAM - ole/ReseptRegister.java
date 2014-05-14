@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 import java.io.Serializable;
 import java.text.*;
 import java.util.*;
@@ -17,6 +10,7 @@ import javax.swing.*;
 public class ReseptRegister implements Serializable
 {
     private List<Resept> reseptReg = new ArrayList<>();
+    private Logg logg = new Logg();
     
     
     
@@ -31,7 +25,8 @@ public class ReseptRegister implements Serializable
     }
     public void nyResept(int id, Lege l, Pasient p, Medisin m,int mengde, String la)
     {
-        Resept r = new Resept(id,l,p,m,mengde,la);
+    	String utskrevet = logg.getDate( "Resept " + id + " er opprettet");
+        Resept r = new Resept(id,l,p,m,mengde,la, utskrevet);
         reseptReg.add(r);
     }
    
@@ -133,6 +128,28 @@ public class ReseptRegister implements Serializable
         else
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
+        
+        
+        public List<Resept> getResepterLegeObject( Lege l)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
+        { System.out.println("I getResepterLege..");
+        	List<Resept> r = new ArrayList<>();
+        	
+        	if(!reseptReg.isEmpty()) {
+        		
+        
+            for ( Resept x: reseptReg)
+            {
+            	System.out.println("I for l�kka getResepterLege..");
+                   
+               if(x.getLege().getNavn().equals(l.getNavn()) && x.getLege().getEtternavn().equals(l.getEtternavn()))
+                        r.add(x);
+            }
+            	return r;
+        	}
+        	System.out.println("Lista er tom.");
+        	return null;
+
+        }
     
 
     
@@ -172,6 +189,18 @@ public class ReseptRegister implements Serializable
         else
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
+        
+        
+        public List<Resept> getResepterPasientObject( Pasient p)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
+        {
+            List<Resept> r = new ArrayList<>();
+            for ( Resept x: reseptReg)
+            {
+                if(x.getLege().getNavn().equals(p.getFNavn()) && x.getLege().getEtternavn().equals(p.getENavn()))
+                	r.add(x);
+            }
+            return r;
+        }
     
 
 
@@ -209,4 +238,3 @@ hvis ikke skal brukeren få melding om hva som var grunnen til dette.
 
 
 */
-
