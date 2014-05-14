@@ -83,7 +83,7 @@ public class MedisinRegisterPanel extends panelSuper {
 		
 		navnFelt = new JTextField(10);
 		medKategori = new JTextField(10);
-                medInfo    = new JTextArea(15,30);
+                medInfo    = new JTextArea(6,10);
                 medInfo.setEditable(true);
                 JScrollPane rulle2 = new JScrollPane(medInfo);		
                 //arbeidsStedFelt = new JTextField(20);
@@ -111,10 +111,10 @@ public class MedisinRegisterPanel extends panelSuper {
                 searchRadioGruppe.add(searchRadioB);
                 searchRadioGruppe.add(searchRadioC);
                 searchRadioGruppe.add(searchAny);
- /*               
+
                 
                  // KATEGORI RULLEVINDU
-                SpinnerListModel listModel = new SpinnerListModel(getKategori());
+/*                SpinnerListModel listModel = new SpinnerListModel(getKategori());
                 medKategori    = new JSpinner(listModel);
                 Dimension d = medKategori.getPreferredSize();
                 d.width = 100;
@@ -161,6 +161,12 @@ public class MedisinRegisterPanel extends panelSuper {
                 kVisMedisin.addActionListener(sensor);
                 kNyMedisin.addActionListener(sensor);
                 search.addActionListener(sensor);
+                                
+                searchRadioA.addActionListener(sensor);
+                searchRadioB.addActionListener(sensor);
+                searchRadioC.addActionListener(sensor);
+                searchAny.addActionListener(sensor);
+                
 
                 kRegMedisin.setEnabled(false);
                 kEndreMedisin.setEnabled(false);
@@ -176,7 +182,47 @@ public class MedisinRegisterPanel extends panelSuper {
                      public void removeUpdate(DocumentEvent documentEvent) {
                        findIt(documentEvent);
                      }
-                     private void findIt(DocumentEvent documentEvent) {
+                   };
+                       searchNavn.getDocument().addDocumentListener(documentListener);
+                       searchKategori.getDocument().addDocumentListener(documentListener);
+                       searchID.getDocument().addDocumentListener(documentListener);		
+                   }
+            
+        private void addSearchPanel()
+        {  
+                 gbc.anchor = GridBagConstraints.NORTH;
+                 gbc.fill = GridBagConstraints.HORIZONTAL;        
+                 gbc.gridwidth=1;
+                 gbc.weightx = 0.6;
+                 gbc.weighty= 0.6;
+                 gbc.gridx=0;
+                 gbc.gridy=1;      
+                 searchPanel.add(new JLabel("Navn:"),gbc);
+                 gbc.gridx++;
+                 searchPanel.add(new JLabel("ID:"),gbc);
+                 gbc.gridx++;
+                 searchPanel.add(new JLabel("Kategori:"),gbc);
+                 gbc.gridy=2;
+                 gbc.gridx=0;     
+                 searchPanel.add(searchNavn, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchID, gbc);
+                 gbc.gridx++;
+                 gbc.gridwidth = 2;
+                 searchPanel.add(searchKategori, gbc);
+                 gbc.gridwidth = 1;
+                 gbc.gridx++;
+                 gbc.gridy = 0;
+                 searchPanel.add(searchRadioA);
+                 gbc.gridy = 1;
+                 searchPanel.add(searchRadioB);
+                 gbc.gridy = 2;
+                 searchPanel.add(searchRadioC);
+                 gbc.gridy = 3;
+                 searchPanel.add(searchAny);
+        }
+        
+        private void findIt(DocumentEvent documentEvent) {
 
                         String idfelt = searchID.getText();
                         String navn = searchNavn.getText();
@@ -209,48 +255,47 @@ public class MedisinRegisterPanel extends panelSuper {
 
 
                        }
-
-
-                   };
-                       searchNavn.getDocument().addDocumentListener(documentListener);
-                       searchKategori.getDocument().addDocumentListener(documentListener);
-                       searchID.getDocument().addDocumentListener(documentListener);		
-                   }
-            
-        private void addSearchPanel()
-        {  
-                 gbc.anchor = GridBagConstraints.NORTH;
-                 gbc.fill = GridBagConstraints.HORIZONTAL;        
-                 gbc.gridwidth=1;
-                 gbc.weightx = 0.6;
-                 gbc.weighty=0.6;
-                 gbc.gridx=0;
-                 gbc.gridy=1;      
-                 searchPanel.add(new JLabel("Navn:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("ID:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Kategori:"),gbc);
-                 gbc.gridy=2;
-                 gbc.gridx=0;     
-                 searchPanel.add(searchNavn, gbc);
-                 gbc.gridx++;
-                 searchPanel.add(searchID, gbc);
-                 gbc.gridx++;
-                 gbc.gridwidth = 2;
-                 searchPanel.add(searchKategori, gbc);
-                 gbc.gridwidth = 1;
-                 gbc.gridx++;
-                 gbc.gridy = 0;
-                 searchPanel.add(searchRadioA);
-                 gbc.gridy = 1;
-                 searchPanel.add(searchRadioB);
-                 gbc.gridy = 2;
-                 searchPanel.add(searchRadioC);
-                 gbc.gridy = 3;
-                 searchPanel.add(searchAny);
-        }
         
+        private void findIt() {
+
+                        //System.out.println("0");
+                        String idfelt = searchID.getText();
+                        String navn = searchNavn.getText();
+                        String kat = searchKategori.getText();
+                        char cha = searchaktivRadio();
+
+                         //Document source = documentEvent.getDocument();
+                         String[] emptyArray = {"Ingen medisin som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
+                         //int length = source.getLength();
+                         boolean b = true;
+
+                           if(bibliotek.finnObjekt(navn, idfelt, cha, kat)!=null)
+                           {
+                        System.out.println(bibliotek.finnRandom().getReseptGruppe());
+                               b = false;
+                               list.setListData(bibliotek.finnObjekt(navn, idfelt, cha, kat));
+                               
+                           }
+                           /*
+                           if(idfelt.matches("-?\\d+(\\.\\d+)?") && bibliotek.finn(Integer.parseInt(idfelt))!=null)
+                           {
+                               b= false;
+                               List<Medisin> l = new ArrayList<>();
+                               l.add(bibliotek.finn(Integer.parseInt(idfelt)));
+                               list.setListData(l.toArray());
+                           }*/
+                           if(b)
+                           {
+                        //System.out.println("2");
+                               list.setListData(emptyArray);
+                               
+                           }
+                           
+                        //System.out.println("3");
+                           //list.setListData(bibliotek.returnObjekt());
+                           return;
+
+                       }
         private void addFeltPanel()
         {
            
@@ -732,7 +777,12 @@ public static String[] getKategoriString(){
 		    else if ( e.getSource() == search ) 
                     {
 		    	generateMedisiner();
-		    }                    
+		    }
+                    
+                    else if ( e.getSource() == searchRadioA || e.getSource() == searchRadioB || e.getSource() == searchRadioC || e.getSource() == searchAny )
+                    {
+                        findIt();
+                    }
                     oppdaterListe();
 		}
 	}

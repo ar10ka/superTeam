@@ -62,10 +62,10 @@ public class panelSuper extends JPanel{
 	    
             sptop.setEnabled(true);
 	    //sptop.setDividerSize(0);
-	    sptop.setResizeWeight(1);
+	    sptop.setResizeWeight(0.5);
             spbottom.setEnabled(false);
 	    spbottom.setDividerSize(0);
-	    spbottom.setResizeWeight(0.8);
+	    spbottom.setResizeWeight(0.7);
             loggPanel = new JPanel();
             loggPanel.setLayout(new BorderLayout());
             loggPanel.add(loggRull);
