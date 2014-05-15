@@ -27,9 +27,18 @@ public class LegeRegister implements Serializable
 
 	private Lege lege;
 	private List<Lege> reg = new ArrayList<>();
-	private int legeID = 1000; 
+	private int legeID = 1000;
+	private int antall;
+
+
 	
 	public LegeRegister() {
+		antall = 0;
+		/*String Marius = "Marius";
+		String A = "A";
+		String Sted = "Oslo";
+		char[] a = {'A'};
+		Lege l = new Lege(Marius, A, Sted, a, 7777); */
 		
 	}
 	
@@ -76,6 +85,69 @@ public class LegeRegister implements Serializable
          else
           return emptyArray;
     }
+   
+   public int getAntall() {
+	   return antall;
+   }
+   
+   public Object [] [] finnFraByen(String by) { // metoden som returnerer leger utifra byen
+	   //String[] emptyArray = {"Ingen Leger er registrert i denne byen"};
+	   
+	   List<Lege> leger = new ArrayList<>();
+	   
+	   if(!reg.isEmpty() ) {
+		   for(Lege lege: reg) {
+		   if(by.equals(lege.getArbeidsSted())) {
+			   
+			   leger.add(lege);
+		   }
+		  }
+		   Object[][] felter = new Object[leger.size()][];
+			   System.out.println("Stedet " + by);
+			antall = leger.size();  
+			   
+			   
+			   
+			  for (int i = 0; i < leger.size(); i++) {
+				   lege = leger.get(i);
+				   
+				   felter[i] = new Object[] {
+						   lege.getlegeID(),
+						   lege.getNavn(),
+						   lege.getEtternavn(),
+						   lege.getArbeidsSted()
+						   
+				   } ;
+				  System.out.println("ID: " + lege.getlegeID());
+				  //return felter;
+			   }
+			  return felter;
+			   
+		   }
+	   System.out.println("returnerer null I legeRegister");
+	   	return null;
+	   }
+	   /*if(!reg.isEmpty() &&  by.equals(lege.getArbeidsSted())) {
+		   for(int i = 0; i <= tellOppLeger(); i++) {
+			   
+			   reg.add(x); 
+			   
+		   
+			   
+		   }
+		   return r;
+		   
+	   }*/
+	   	/*if(!reg.isEmpty()) {
+			for( Lege l: reg) {
+				if(l.getArbeidsSted()==(by)) {
+					reg.add(l);
+				}
+			}
+			return reg;
+		} */
+
+	   
          
 	public List<Lege> finn ( String n, String e) {
 		List<Lege> leger = new ArrayList<>();
@@ -123,7 +195,10 @@ public class LegeRegister implements Serializable
 	}
 	
 	public boolean tomListe() {
-		return reg.isEmpty();
+		if(reg.isEmpty()) {
+		return true;
+		}
+		return false;
 	}
 	
 	public boolean finnes(String n, String e) {

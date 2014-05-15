@@ -2,25 +2,14 @@
 
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.text.Document;
 import javax.swing.text.MaskFormatter;
 
@@ -32,20 +21,14 @@ public class PasientRegisterPanel extends panelSuper {
         private final JFormattedTextField fNr;
         private final JTextField  navnFelt, etternavnFelt, adresseFelt;
 	private final JButton kRegPasient, kSlettPasient, kVisPasient,kEndrePasient,kNyPasient;
-        private final JButton search;
-	private final JRadioButton radioMann, radioKvinne;//, CRadio;
-        private static final int _PERSON = 1;
-        private static final int _FIRMA  = 2;        
+        private final JButton kGenerer,kResept;
+	private final JRadioButton radioMann, radioKvinne;  
         private MaskFormatter fNrformatter;
-	//private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
+        private final ButtonGroup radioGruppe;
 
-          private char gender;
+       
 	private PasientRegister bibliotek;
 	private final Lytter sensor;
-	private final FilBehandler fil;
-        
-//      private int legeID;
-//	private static final int feilPasientId = 0;
 
 	
         //KONSTRUKTØR
@@ -59,15 +42,13 @@ public class PasientRegisterPanel extends panelSuper {
 	      lastInnFil();
               this.fNrformatter = new MaskFormatter("###### #####");
              } 
-	    catch (IOException ex)
+	    catch (IOException | ParseException ex)
 	    {
 	      ex.printStackTrace();
-	    } catch (ParseException ex) {
-                ex.printStackTrace(); 
-            }
+	    }
 		
 		
-		//legeID = feilPasientId;
+		//pasientID = feilPasientId;
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
@@ -86,7 +67,7 @@ public class PasientRegisterPanel extends panelSuper {
 
                 radioMann  = new JRadioButton("Mann");
                 radioKvinne   = new JRadioButton("Kvinne");
-                ButtonGroup radioGruppe = new ButtonGroup();
+                radioGruppe = new ButtonGroup();
                 radioGruppe.add(radioMann);
                 radioGruppe.add(radioKvinne);
 
@@ -95,16 +76,18 @@ public class PasientRegisterPanel extends panelSuper {
 		kSlettPasient = new JButton("Slett Pasient");
 		kVisPasient = new JButton("Vis Pasient");
 		kNyPasient = new JButton("Ny Pasient");
-		search = new JButton("Generer Nye Pasienter");
+		kGenerer = new JButton("Generer Nye Pasienter");
+                kResept = new JButton("Vis Resepter");
                 
 
 
                 knappePanel.add(kNyPasient);
-                knappePanel.add(kRegPasient);
+               // knappePanel.add(kRegPasient);
                 knappePanel.add(kSlettPasient);
-                knappePanel.add(kEndrePasient);
-                knappePanel.add(search);
+               // knappePanel.add(kEndrePasient);
+                knappePanel.add(kGenerer);
                 knappePanel.add(kVisPasient);
+                knappePanel.add(kResept);
 
                 addFeltPanel();
                 addSearchPanel();
@@ -129,63 +112,60 @@ public class PasientRegisterPanel extends panelSuper {
                 kSlettPasient.addActionListener(sensor);
                 kVisPasient.addActionListener(sensor);
                 kNyPasient.addActionListener(sensor);
-                search.addActionListener(sensor);
+                kGenerer.addActionListener(sensor);
+                kResept.addActionListener(sensor);
 
                 kRegPasient.setEnabled(false);
                 kEndrePasient.setEnabled(false);
 
-                DocumentListener documentListener = new DocumentListener() {
-                     public void changedUpdate(DocumentEvent documentEvent) {
-                       findIt(documentEvent);
-                     }
-                     public void insertUpdate(DocumentEvent documentEvent) {
-                      findIt(documentEvent);
+                        documentListener = new DocumentListener() 
+                        {
+                            @Override
+                            public void changedUpdate(DocumentEvent documentEvent) {
+                                findIt(documentEvent);
+                            }
+                            @Override
+                            public void insertUpdate(DocumentEvent documentEvent) {
+                                findIt(documentEvent);
 
-                     }
-                     public void removeUpdate(DocumentEvent documentEvent) {
-                       findIt(documentEvent);
-                     }
-                     private void findIt(DocumentEvent documentEvent) {
+                            }
+                            @Override
+                            public void removeUpdate(DocumentEvent documentEvent) {
+                                findIt(documentEvent);
+                            }
+                            };
+                               searchAdr.getDocument().addDocumentListener(documentListener);
+                               searchFNavn.getDocument().addDocumentListener(documentListener);
+                               searchENavn.getDocument().addDocumentListener(documentListener);
+                               searchID.getDocument().addDocumentListener(documentListener);		
+                }
 
-                        String idfelt = searchID.getText();
-                        String fnavn = searchFNavn.getText();
-                        String enavn = searchENavn.getText();
-                        String adr = searchAdr.getText();
+            private void findIt(DocumentEvent documentEvent) {
+                    
+                    String idfelt = searchID.getText();
+                    String fnavn = searchFNavn.getText();
+                    String enavn = searchENavn.getText();
+                    String adr = searchAdr.getText();
+                    
+                    Document source = documentEvent.getDocument();
+                    String[] emptyArray = {"Ingen pasient som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
+                    int length = source.getLength();
+                    boolean b = false;
+                    
+                    if(bibliotek.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
+                    {
+                        b = true;
+                        list.setListData(bibliotek.finnObjekt(fnavn, enavn, adr,idfelt));
+                    }
 
-                         Document source = documentEvent.getDocument();
-                         String[] emptyArray = {"Ingen pasient som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
-                         int length = source.getLength();
-                         boolean b = false;
-
-                           if(bibliotek.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
-                           {
-                               b = true;
-                               list.setListData(bibliotek.finnObjekt(fnavn, enavn, adr,idfelt));
-                           }
-                            /*
-                           if(bibliotek.finnObjekt(idfelt)!=null)//idfelt.matches("-?\\d+(\\.\\d+)?") && 
-                           {
-                               b= true;
-                               List<Pasient> l = new ArrayList<>();
-                               l.add(bibliotek.finn(idfelt));
-                               list.setListData(l.toArray());
-                           }*/
-                           if(!b)
-                               list.setListData(emptyArray);
-
-                          if(length == 0)  
-                           list.setListData(bibliotek.returnObjekt());
-
-
-                       }
-
-
-                   };
-                       searchAdr.getDocument().addDocumentListener(documentListener);
-                       searchFNavn.getDocument().addDocumentListener(documentListener);
-                       searchENavn.getDocument().addDocumentListener(documentListener);
-                       searchID.getDocument().addDocumentListener(documentListener);		
-                   }
+                    if(!b)
+                        list.setListData(emptyArray);
+                    
+                    if(length == 0)
+                        list.setListData(bibliotek.returnObjekt());
+                    
+                    
+                }
             
         private void addSearchPanel()
         {  
@@ -312,6 +292,7 @@ public class PasientRegisterPanel extends panelSuper {
             {
               try
               {
+                resepter = fil.lastInnFilResept("ReseptLagring");
                 bibliotek = fil.lastInnFilPasient("PasientLagring");
                 System.out.println(logg.toString("PasientRegister lastet inn!"));
               }
@@ -329,6 +310,7 @@ public class PasientRegisterPanel extends panelSuper {
             {
               try
               {
+                fil.lagreFil(resepter,"ReseptLagring");
                 fil.lagreFil(bibliotek, "PasientLagring");
                 System.out.println(logg.toString("PasientRegister lagret!"));
               }
@@ -341,23 +323,19 @@ public class PasientRegisterPanel extends panelSuper {
 	
 	
 	
-private char aktivRadio()
-  {
-    if(radioMann.isSelected())
-      return 'M';
-    else if (radioKvinne.isSelected())
-      return 'F';
+        private char aktivRadio()
+          {
+            if(radioMann.isSelected())
+              return 'M';
+            else if (radioKvinne.isSelected())
+              return 'F';
 
-        error("Huk av for Mann eller Kvinne!");
-    return 0;
-  
-  }
+                error("Huk av for Mann eller Kvinne!");
+            return 0;
+
+          }
 
       
-        private void error(String s)
-        {
-            JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
-        }
         
 	
         private void regPasient() 
@@ -391,14 +369,7 @@ private char aktivRadio()
                  fNr.setBackground(Color.LIGHT_GRAY);
               }
             }
-            catch (NumberFormatException e)
-            {
-                 error("Fyll ut alle feltene!");
-                 kRegPasient.setEnabled(true);
-                 fNr.setEnabled(false);
-                 fNr.setBackground(Color.LIGHT_GRAY);
-            }
-            catch (IndexOutOfBoundsException ex)
+            catch (NumberFormatException | IndexOutOfBoundsException e)
             {
                  error("Fyll ut alle feltene!");
                  kRegPasient.setEnabled(true);
@@ -459,13 +430,9 @@ private char aktivRadio()
                 else
                  error("Fyll ut alle feltene!");
             }
-    catch (NumberFormatException e)
+    catch ( NumberFormatException | IndexOutOfBoundsException e)
     {
       error("Fyll ut alle feltene!");
-    }
-    catch (IndexOutOfBoundsException ex)
-    {
-        error("Fyll ut alle feltene!");
     }
         }
         
@@ -475,6 +442,8 @@ private char aktivRadio()
             {
                 kEndrePasient.setEnabled(true);
                 fNr.setEnabled(false);
+                radioMann.setEnabled(false);
+                radioKvinne.setEnabled(false); 
                         
                 
 			fNr.setText(""+p.getFNr());			
@@ -489,15 +458,15 @@ private char aktivRadio()
 					radioKvinne.setSelected(true);
 
 			
-                        logomraade.append(logg.toString("Fant lege: " + p.toString())+"\n");
+                        logomraade.append(logg.toString("Fant pasient: " + p.toString())+"\n");
 		}		
                 else
-                    error("Ingen lege er valgt");
+                    error("Ingen pasient er valgt");
         }
 	private void slettPasient( Pasient p ) {
             
              int n = JOptionPane.showConfirmDialog(null,
-                            "Vil du fjerne legen?",
+                            "Vil du fjerne pasientn?",
                             "Fjern Pasient!",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION)
@@ -521,17 +490,14 @@ private char aktivRadio()
             navnFelt.setText("");
             etternavnFelt.setText("");
             adresseFelt.setText("");
-            radioMann.setSelected(false);		
-            radioKvinne.setSelected(false);
+            radioGruppe.clearSelection();
 	}
         
         private Pasient getSelectedObject() {
 		
 		if(!list.isSelectionEmpty()) {
-			Pasient l = (Pasient)list.getSelectedValue();
-			
-			return l;
-			
+                    Pasient l = (Pasient)list.getSelectedValue();
+                    return l;
 		}
                 else 
                     return null;
@@ -544,7 +510,7 @@ private char aktivRadio()
         
         private void generatePasienter()
         {
-            int Min=0;
+            int Min;
             int Max;
             int index;
                     
@@ -557,7 +523,7 @@ private char aktivRadio()
             int[]jente = {0,2,4,6,8}; 
             int[]gutt  = {1,3,5,7,9};
             String navn, enavn,arb,fnr;
-            char gender;
+            char gen;
             
             for(int i = 0; i < 1000; i++)
             {
@@ -592,7 +558,7 @@ private char aktivRadio()
                 index = 0 + (int) (Math.random() * ((1-0)+1));
                 if(index == 1)
                 {//GUTT
-                    gender = gruppe[1];
+                    gen = gruppe[1];
                     Max=gfornavn.length-1;
                     index = Min + (int)(Math.random() * ((Max - Min) + 1));
                     navn = gfornavn[index];
@@ -602,7 +568,7 @@ private char aktivRadio()
                 }
                 else//JENTE
                 {
-                    gender = gruppe[0];
+                    gen = gruppe[0];
                     Max=jfornavn.length-1;
                     index = Min + (int)(Math.random() * ((Max - Min) + 1));
                     navn = jfornavn[index];
@@ -627,7 +593,7 @@ private char aktivRadio()
                     Max=adresse.length-1;
                     index = Min + (int)(Math.random() * ((Max - Min) + 1));
                     arb = adresse[index];
-                Pasient pasient = new Pasient(navn, enavn, fnr, gender, arb);
+                Pasient pasient = new Pasient(navn, enavn, fnr, gen, arb);
                 bibliotek.settInnNy(pasient); 
             }
             
@@ -644,8 +610,9 @@ private char aktivRadio()
                        radioKvinne.setEnabled(true);
                        kRegPasient.setEnabled(false);
                        kEndrePasient.setEnabled(false);
-                       fNr.setEnabled(true);
-                       fNr.setBackground(Color.white);  
+                       fNr.setEnabled(false);
+                       fNr.setBackground(Color.LIGHT_GRAY); 
+                       
 			
                     if (e.getSource() == kRegPasient)
                     {
@@ -658,17 +625,15 @@ private char aktivRadio()
 		    }			
 		    else if (e.getSource() == kVisPasient)
 		    {
-                      
-                       radioMann.setEnabled(false);
-                       radioKvinne.setEnabled(false); 
 		      visPasient(getSelectedObject());
+                      resepter.nyResept(1000, new Lege("Navn", "Etternavn", "Oslo", "ABC".toCharArray(), 9), getSelectedObject(), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
 		    }		
                
         	    else if (e.getSource() == kNyPasient)
 		    {
-                        kRegPasient.setEnabled(true);
-                        fNr.setEnabled(false);
-                        fNr.setBackground(Color.LIGHT_GRAY);                        
+        	    		fNr.setEnabled(true);
+        	    		fNr.setBackground(Color.white);  
+                        kRegPasient.setEnabled(true);                       
                         emptyFields();
      		    }
                     else if (e.getSource() == kEndrePasient)
@@ -677,10 +642,14 @@ private char aktivRadio()
                         emptyFields();
                     }
                     
-		    else if ( e.getSource() == search ) 
+		    else if ( e.getSource() == kGenerer ) 
                     {
 		    	generatePasienter();
-		    }                    
+		    }
+                    else if( e.getSource() == kResept) {
+                        visReseptInfoVindu(getSelectedObject());
+
+		    }
                     oppdaterListe();
 		}
 	}

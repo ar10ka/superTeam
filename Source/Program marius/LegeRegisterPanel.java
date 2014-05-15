@@ -6,18 +6,12 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.text.Document;
 
 
@@ -34,18 +28,14 @@ public class LegeRegisterPanel extends panelSuper {
 	Color grey = new Color(128,128,128);
 	Border lineBorder = BorderFactory.createLineBorder(grey);
 
-        private ReseptRegister reg;
 	private LegeRegister leger;
 	private final Lytter sensor;
-	private final FilBehandler fil;
-        
-        private int legeID;
-	private static final int feilLegeId = 0;
+
 
 	
         //KONSTRUKTØR
 	public LegeRegisterPanel() {
-            reg = new ReseptRegister();
+            
             leger = new LegeRegister();
             fil = new FilBehandler();
 	    
@@ -58,8 +48,6 @@ public class LegeRegisterPanel extends panelSuper {
 	      ex.printStackTrace();
 	    }
 		
-		
-		legeID = feilLegeId;
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
@@ -77,9 +65,9 @@ public class LegeRegisterPanel extends panelSuper {
 		searchFNavn.setBorder(lineBorder);
 		searchENavn.setBorder(lineBorder);
 		searchID.setBorder(lineBorder);
-        navnFelt.setBorder(lineBorder);  
-        etternavnFelt.setBorder(lineBorder);
-        arbeidsStedFelt.setBorder(lineBorder);
+                navnFelt.setBorder(lineBorder);  
+                etternavnFelt.setBorder(lineBorder);
+                arbeidsStedFelt.setBorder(lineBorder);
                        
 
 		ARadio = new JRadioButton("A");
@@ -141,19 +129,57 @@ public class LegeRegisterPanel extends panelSuper {
 
                 kRegLege.setEnabled(false);
                 kEndreLege.setEnabled(false);
+                    
+                        documentListener = new DocumentListener() 
+                        {
+                            @Override
+                            public void changedUpdate(DocumentEvent documentEvent) {
+                                findIt(documentEvent);
+                            }
+                            @Override
+                            public void insertUpdate(DocumentEvent documentEvent) {
+                                findIt(documentEvent);
 
-                DocumentListener documentListener = new DocumentListener() {
-                     public void changedUpdate(DocumentEvent documentEvent) {
-                       findIt(documentEvent);
-                     }
-                     public void insertUpdate(DocumentEvent documentEvent) {
-                      findIt(documentEvent);
+                            }
+                            @Override
+                            public void removeUpdate(DocumentEvent documentEvent) {
+                                findIt(documentEvent);
+                            }
+                            };
 
-                     }
-                     public void removeUpdate(DocumentEvent documentEvent) {
-                       findIt(documentEvent);
-                     }
-                     private void findIt(DocumentEvent documentEvent) {
+                       searchAdr.getDocument().addDocumentListener(documentListener);
+                       searchFNavn.getDocument().addDocumentListener(documentListener);
+                       searchENavn.getDocument().addDocumentListener(documentListener);
+                       searchID.getDocument().addDocumentListener(documentListener);		
+                   }
+            
+        private void addSearchPanel()
+        {  
+                 gbc.anchor = GridBagConstraints.NORTH;
+                 gbc.fill = GridBagConstraints.HORIZONTAL;        
+                 gbc.gridwidth=1;
+                 gbc.weightx = 1;
+                 gbc.weighty=1;
+                 gbc.gridx=0;
+                 gbc.gridy=0;      
+                 searchPanel.add(new JLabel("Etternavn:"),gbc);
+                 gbc.gridx++;
+                 searchPanel.add(new JLabel("Fornavn:"),gbc);
+                 gbc.gridx++;
+                 searchPanel.add(new JLabel("Arbeidsplass:"),gbc);
+                 gbc.gridx++;
+                 searchPanel.add(new JLabel("LegeID:"),gbc);
+                 gbc.gridy=1;
+                 gbc.gridx=0;     
+                 searchPanel.add(searchENavn, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchFNavn, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchAdr, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchID, gbc);
+        }
+         private void findIt(DocumentEvent documentEvent) {
 
                         String idfelt = searchID.getText();
                         String fnavn = searchFNavn.getText();
@@ -187,40 +213,6 @@ public class LegeRegisterPanel extends panelSuper {
 
                        }
 
-
-                   };
-                       searchAdr.getDocument().addDocumentListener(documentListener);
-                       searchFNavn.getDocument().addDocumentListener(documentListener);
-                       searchENavn.getDocument().addDocumentListener(documentListener);
-                       searchID.getDocument().addDocumentListener(documentListener);		
-                   }
-            
-        private void addSearchPanel()
-        {  
-                 gbc.anchor = GridBagConstraints.NORTH;
-                 gbc.fill = GridBagConstraints.HORIZONTAL;        
-                 gbc.gridwidth=1;
-                 gbc.weightx = 1;
-                 gbc.weighty=1;
-                 gbc.gridx=0;
-                 gbc.gridy=0;      
-                 searchPanel.add(new JLabel("Etternavn:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Fornavn:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Arbeidsplass:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("LegeID:"),gbc);
-                 gbc.gridy=1;
-                 gbc.gridx=0;     
-                 searchPanel.add(searchENavn, gbc);
-                 gbc.gridx++;
-                 searchPanel.add(searchFNavn, gbc);
-                 gbc.gridx++;
-                 searchPanel.add(searchAdr, gbc);
-                 gbc.gridx++;
-                 searchPanel.add(searchID, gbc);
-        }
         
         private void addFeltPanel()
         {
@@ -318,7 +310,7 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
 	      leger = fil.lastInnFilLege("LegeLagring");
-	      reg = fil.lastInnFilResept("ReseptLagring");
+	      resepter = fil.lastInnFilResept("ReseptLagring");
               System.out.println(logg.toString("LegeRegister lastet inn!"));
   
 	    }
@@ -337,7 +329,7 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
                 fil.lagreFil(leger, "LegeLagring");
-                fil.lagreFil(reg, "ReseptLagring");
+                fil.lagreFil(resepter, "ReseptLagring");
                 System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -370,10 +362,6 @@ public class LegeRegisterPanel extends panelSuper {
 		return reseptGruppe;
 	}
 
-	private void error(String s)
-        {
-            JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
-        }
 	
         public void regLege() 
         {
@@ -404,14 +392,7 @@ public class LegeRegisterPanel extends panelSuper {
                  legeIDFelt.setBackground(Color.LIGHT_GRAY);
               }
             }
-            catch (NumberFormatException e)
-            {
-                 error("Fyll ut alle feltene!");
-                 kRegLege.setEnabled(true);
-                 legeIDFelt.setEnabled(false);
-                 legeIDFelt.setBackground(Color.LIGHT_GRAY);
-            }
-            catch (IndexOutOfBoundsException ex)
+            catch (NumberFormatException | IndexOutOfBoundsException e)
             {
                  error("Fyll ut alle feltene!");
                  kRegLege.setEnabled(true);
@@ -507,7 +488,7 @@ public class LegeRegisterPanel extends panelSuper {
 				if(x == 'C')
 					CRadio.setSelected(true);
 			}
-                        logomraade.append(logg.toString("Fant lege: " + l.toString()));
+                        logomraade.append(logg.toString("Fant lege: " + l.toString())+"\n");
 		}		
                 else
                     error("Ingen lege er valgt");
@@ -556,8 +537,8 @@ public class LegeRegisterPanel extends panelSuper {
                     return null;
 	}
         
-        public void oppdaterListe() {
-		
+        public void oppdaterListe() 
+        {
 		list.setListData(leger.returnObjekt());
 	}
         
@@ -599,33 +580,11 @@ public class LegeRegisterPanel extends panelSuper {
                 
                 Lege lege = new Lege(navn, enavn,arb, gruppe, 0);
                 leger.settInn(lege);
-                
-                
-                
-                
             }
         }
             
             
-      public void visInfoVindu( Lege l ) 
-        {
-            if(getSelectedObject() != null)
-            {
-                	System.out.println("Knappen er selected");
-		    	infoFrame = new JFrame("Info-vindu");
-		    	infoFrame.setLayout(new BorderLayout());
-		    	System.out.println("etter JFRAME");	
-                        
-                        infoVindu = new infoVindu(getSelectedObject());
-		    	infoFrame.add(infoVindu);
-		    	infoFrame.setVisible(true);
-		    	infoFrame.setSize(800,300);
-                
-                        logomraade.append(logg.toString("Fant lege: " + l.toString()));
-		}		
-                else
-                    error("Ingen lege er valgt");
-        }
+
             
         
         
@@ -652,10 +611,10 @@ public class LegeRegisterPanel extends panelSuper {
 		    }			
 		    else if (e.getSource() == kVisLege)
 		    {
-                       reg.nyResept(1000, getSelectedObject(), new Pasient("Arnt", "Henriksen", "20000000", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
+                              resepter.nyResept(1337, getSelectedObject(), new Pasient("Arnt", "Henriksen", "212345 13231", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
 		
 		      visLege(getSelectedObject());
-		    }		
+                    }		
                
         	    else if (e.getSource() == kNyLege)
 		    {
@@ -676,7 +635,7 @@ public class LegeRegisterPanel extends panelSuper {
 		    }
                     
 		    else if( e.getSource() == kResept) {
-                        visInfoVindu(getSelectedObject());
+                        visReseptInfoVindu(getSelectedObject());
 
 		    }
                     oppdaterListe();

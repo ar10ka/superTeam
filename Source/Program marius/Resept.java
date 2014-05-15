@@ -76,6 +76,7 @@ public class Resept implements Serializable
     	setString = s;
     }
     
+    
     @Override
     public String toString() {
     	return setString;

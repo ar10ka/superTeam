@@ -26,13 +26,13 @@ public class DesignTest extends JFrame{
 	private toolBarKnapper knapper;
         private Logg logg;
         private CardLayout card;
-        private JPanel hovedpanel, panel4,panel5,panel6;
+        private JPanel hovedpanel, panel4,panel6;
         private LegeRegisterPanel panel1;
         private PasientRegisterPanel  panel2;
         private MedisinRegisterPanel  panel3;
        // private ReseptRegisterPanel  panel4;
-     /*   private StatistikkPanel  panel5;
-        private InformasjonPanel  panel6;*/
+        private StatistikkPanel  panel5;
+       /* private InformasjonPanel  panel6;*/
         
         
         
@@ -51,21 +51,21 @@ public class DesignTest extends JFrame{
 
                 
                 
-                //LEGGER TIL VERKTÃ˜YLINJE
+                //LEGGER TIL VERKTØYLINJE
 		f.add(toolbar, BorderLayout.NORTH);	 
                 
-                //Layouten
-                card = new CardLayout();
-                //Hovedpanel
-          hovedpanel = new JPanel();
-          hovedpanel.setLayout(card);
+         //Layouten
+         card = new CardLayout();
+         //Hovedpanel
+         hovedpanel = new JPanel();
+         hovedpanel.setLayout(card);
           
           // paneler
           panel1 = new LegeRegisterPanel();
           panel2= new PasientRegisterPanel();
           panel3= new MedisinRegisterPanel();
           panel4= new ReseptRegisterPanel();
-          panel5= new JPanel();//StatestikkPanel();
+          panel5= new StatistikkPanel();
           panel6= new JPanel();//InformasjonsPanel();
           
           
@@ -74,7 +74,7 @@ public class DesignTest extends JFrame{
          // panel2.setLayout(null);
          // panel3.setLayout(null);
           //panel4.setLayout(null);
-          panel5.setLayout(null);
+          //panel5.setLayout(null);
           panel6.setLayout(null);
           
           panel1.setName("LegeRegister");
@@ -83,7 +83,8 @@ public class DesignTest extends JFrame{
           panel3.setName("MedisinRegister");
           panel4.setName("ReseptRegister");
           //panel4.setBackground(Color.ORANGE);
-          panel5.setBackground(Color.pink);
+          panel5.setName("StatistikkPanel");
+         // panel5.setBackground(Color.pink);
           panel6.setBackground(Color.yellow);
           
           
@@ -101,7 +102,7 @@ public class DesignTest extends JFrame{
           hovedpanel.setBorder(new EmptyBorder(12, 12, 12, 12));
           
           
-            //JFRAME egenskaper
+          //JFRAME egenskaper
           f.getContentPane().setBackground(toolbar.getBackground());
           f.setExtendedState(JFrame.MAXIMIZED_BOTH);
           f.setSize(1000,900);
@@ -124,7 +125,7 @@ public class DesignTest extends JFrame{
 	        public void windowClosing(WindowEvent e)
 	        {
                     //BURDE LAGRE ALLE PANELS
-	            lagreFilJPanel();
+	            lagreFilAlle();
 	            System.exit(0);
 	        }
 	     });
@@ -145,7 +146,7 @@ public class DesignTest extends JFrame{
 		Border utenLinjer = BorderFactory.createEmptyBorder();
 		//f.setUndecorated( true );
 		//f.getRootPane().setWindowDecorationStyle(x);
-		//f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		toolbar =  new JToolBar();		
 		toolbar.setLayout(new GridLayout());
 		toolbar.setBorder(utenLinjer);
@@ -171,13 +172,13 @@ public class DesignTest extends JFrame{
 		    
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	
-		    	Border sidelinjer = BorderFactory.createMatteBorder(0, 1, 0, 1, new Color(112,112,112));
+		    	lagreFilJPanel();
+		    	//Border sidelinjer = BorderFactory.createMatteBorder(0, 1, 0, 1, new Color(112,112,112));
 		    	Border utenlinjer = BorderFactory.createEmptyBorder();
 		    	
 		    	
 		    	for(int i = 0; i < knappeListe.length; i++) {
-
+                            
 		    		if(e.getSource() == knappeListe[i]) {
 		    			if(i == 0)
 		    				card.show(hovedpanel, ""+(i+1));
@@ -203,7 +204,7 @@ public class DesignTest extends JFrame{
 		    }
 	  }
 	  
-private void lagreFilJPanel()
+private void lagreFilAlle()
 {
    try
     {
@@ -211,8 +212,32 @@ private void lagreFilJPanel()
                 panel2.lagreFil();
                 panel3.lagreFil();
                 //panel4.lagreFil();
-                //panel5.lagreFil();
-                //panel6.lagreFil();
+
+                
+    }
+    catch (IOException ex)
+            {
+               ex.printStackTrace();
+            }
+}
+private void lagreFilJPanel()
+{
+   try
+    {
+        for (Component comp : hovedpanel.getComponents()) {
+            if (comp.isVisible() == true) {
+                if(comp.getName() == "LegeRegister")
+                    panel1.lagreFil();
+                if(comp.getName() == "PasientRegister")
+                    panel2.lagreFil();
+                if(comp.getName() == "MedisinRegister")
+                    panel3.lagreFil();
+                
+               /* if(comp.getName() == "ReseptRegister")
+                    panel1.lagreFil();*/
+
+            }
+        }
                 
     }
     catch (IOException ex)
@@ -265,12 +290,12 @@ class toolBarKnapper
 	toolbarKnappen[5].setIcon(new ImageIcon("ikoner/info.png"));
 	
 */
-    toolbarKnappen[0].setIcon(new ImageIcon(getClass().getResource("ikoner/lege.png")));
-	toolbarKnappen[1].setIcon(new ImageIcon(getClass().getResource("ikoner/pasient.png")));
-	toolbarKnappen[2].setIcon(new ImageIcon(getClass().getResource("ikoner/medisin.png")));
-	toolbarKnappen[3].setIcon(new ImageIcon(getClass().getResource("ikoner/resept.png")));
-	toolbarKnappen[4].setIcon(new ImageIcon(getClass().getResource("ikoner/statistikk.png")));
-	toolbarKnappen[5].setIcon(new ImageIcon(getClass().getResource("ikoner/info.png"))); 
+    toolbarKnappen[0].setIcon(new ImageIcon("ikoner/lege.png"));
+	toolbarKnappen[1].setIcon(new ImageIcon("ikoner/pasient.png"));
+	toolbarKnappen[2].setIcon(new ImageIcon("ikoner/medisin.png"));
+	toolbarKnappen[3].setIcon(new ImageIcon("ikoner/resept.png"));
+	toolbarKnappen[4].setIcon(new ImageIcon("ikoner/statistikk.png"));
+	toolbarKnappen[5].setIcon(new ImageIcon("ikoner/info.png")); 
         
         }
 	

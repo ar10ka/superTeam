@@ -30,7 +30,7 @@ import javax.swing.text.MaskFormatter;
 
 public class ReseptRegisterPanel extends panelSuper {
 	
-        private JFormattedTextField medisinIDFelt;
+        private final JFormattedTextField medisinIDFelt;
 	private final JTextField  searchNavn,searchKategori,searchID;
         private final JTextField  navnFelt, medKategori;
         private JTextArea medInfo;
