@@ -19,25 +19,25 @@ public class ReseptRegisterPanel extends panelSuper {
 	
     	private JButton kVisInfo;//, kSlettResept;
 
-        
+        //Search
         private final JTextField searchdatofelt,searchidfelt,searchlegeENavnfelt,searchlegeFNavnfelt,searchlegeIdfelt,searchpasientENavnfelt,searchpasientFNavnfelt,searchpasientFnrfelt,searchmedisinNavnfelt,searchmedisinKategorifelt,searchmedisinIdfelt,mengdefelt;
+        
+        //FELT
         private final JTextArea legeanvfelt;
-        private JButton kVisPasient,kVisMedisin,kVisLege;
+        private JButton kVisPasient,kVisMedisin,kVisLege,kEndreResept,kNyResept;
         private Resept resept;
         private JScrollPane legeanv;
         
         private final JTextField reseptIDFelt;
 	
-        private JTextArea medInfo;
-	private final JButton kRegResept, kSlettResept, kVisResept,kEndreResept,kNyResept;
+        //LIST
+	private final JButton kRegResept, kSlettResept, kVisResept;
         private final JButton generer;
-	JRadioButton 	radioA, radioB,radioC;
 	JRadioButton 	searchRadioA, searchRadioB,searchRadioC,searchAny;
-        //JSpinner medKategori;
+
         ButtonGroup searchRadioGruppe;
         private JList list = new JList();
-        private final int tomID = 0;
-        
+              
         MaskFormatter medIDformatter;
 	private final Lytter sensor;
 	private final FilBehandler fil;
@@ -463,20 +463,7 @@ public class ReseptRegisterPanel extends panelSuper {
 	
 	
 	
-  
-public char aktivRadio()
-  {
-    if(radioA.isSelected())
-      return 'A';
-    if (radioB.isSelected())
-      return 'B';
-     if (radioC.isSelected())
-      return 'C';
-     
-         return 0;
-     
-        
-  }
+
 public char searchaktivRadio()
   {
     if(searchRadioA.isSelected())
@@ -759,7 +746,7 @@ public char searchaktivRadio()
 			
                     if (e.getSource() == kRegResept)
                     {
-                        if (aktivRadio()!=0)
+                        if (searchaktivRadio()!=0)
                             regResept();
                         else
                             error("Huk av reseptgruppe!");
@@ -777,7 +764,6 @@ public char searchaktivRadio()
                
         	    else if (e.getSource() == kNyResept)
 		    {
-                        radioA.setSelected(true);
                         kRegResept.setEnabled(true);                      
                         emptyFields();
      		    }
