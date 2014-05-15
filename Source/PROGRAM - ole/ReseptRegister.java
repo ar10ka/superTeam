@@ -1,14 +1,6 @@
-
-
-
-
-
-
-
 import java.io.Serializable;
-import java.text.*;
 import java.util.*;
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,7 +8,8 @@ import javax.swing.*;
  */
 public class ReseptRegister implements Serializable
 {
-    private List<Resept> reseptReg = new ArrayList<>();
+    private final List<Resept> reseptReg = new ArrayList<>();
+    private final Logg logg = new Logg();
     
     
     
@@ -31,7 +24,8 @@ public class ReseptRegister implements Serializable
     }
     public void nyResept(int id, Lege l, Pasient p, Medisin m,int mengde, String la)
     {
-        Resept r = new Resept(id,l,p,m,mengde,la);
+    	String utskrevet = logg.getDate( "Resept " + id + " er opprettet");
+        Resept r = new Resept(id,l,p,m,mengde,la, utskrevet);
         reseptReg.add(r);
     }
    
@@ -39,6 +33,25 @@ public class ReseptRegister implements Serializable
     {
         reseptReg.add(r);
     }
+    public Resept finnRandom( )//finner medisin
+  {
+          if(!reseptReg.isEmpty())
+          {
+              
+           int random = 0 + (int)(Math.random() * ((reseptReg.size() - 0) + 1));
+            
+              
+            for( int i = 0; i < reseptReg.size();i++)
+            {
+                if(random == i)
+                {
+                    return reseptReg.get(i);
+                }
+                
+            }
+          }
+          return null;
+  }
     
     //Oversikt
     
@@ -133,6 +146,25 @@ public class ReseptRegister implements Serializable
         else
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
+        
+        
+        public List<Resept> getResepterLegeObject( Lege l)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
+        { 
+        	List<Resept> r = new ArrayList<>();
+        	
+        	if(!reseptReg.isEmpty()){
+                    for ( Resept x: reseptReg)
+                    {
+                       if(x.getLege().getlegeID() == l.getlegeID())
+                       { 
+                           r.add(x);
+                       }
+                    }
+            	return r;
+        	}
+                else
+                    return null;
+        }
     
 
     
@@ -172,6 +204,27 @@ public class ReseptRegister implements Serializable
         else
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
+        
+        
+        public List<Resept> getResepterPasientObject( Pasient p)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
+        {
+        	List<Resept> r = new ArrayList<>();
+        	
+        	if(reseptReg.isEmpty())
+                    return null;
+                else{
+        		
+        
+                    for ( Resept x: reseptReg)
+                    {
+                       if(x.getPasient().getFNr()== p.getFNr())
+                       { 
+                           r.add(x);
+                       }
+                    }
+            	return r;
+        	}
+        }
     
 
 
@@ -209,4 +262,3 @@ hvis ikke skal brukeren få melding om hva som var grunnen til dette.
 
 
 */
-

@@ -30,11 +30,11 @@ import javax.swing.text.MaskFormatter;
 
 public class ReseptRegisterPanel extends panelSuper {
 	
-        
+        private final JFormattedTextField medisinIDFelt;
 	private final JTextField  searchNavn,searchKategori,searchID;
-        private final JTextField  navnFelt, medKategori,reseptIDFelt;
+        private final JTextField  navnFelt, medKategori;
         private JTextArea medInfo;
-	private final JButton kRegResept, kSlettResept, kVisResept,kEndreResept,kNyResept;
+	private final JButton kRegMedisin, kSlettMedisin, kVisMedisin,kEndreMedisin,kNyMedisin;
         private final JButton search;
 	JRadioButton 	radioA, radioB,radioC;
 	JRadioButton 	searchRadioA, searchRadioB,searchRadioC,searchAny;
@@ -43,34 +43,37 @@ public class ReseptRegisterPanel extends panelSuper {
         private JList list = new JList();
         
         MaskFormatter medIDformatter;
-	private ReseptRegister bibliotek;
+	private MedisinRegister bibliotek;
 	private final Lytter sensor;
 	private final FilBehandler fil;
         
         public static final int _A = 1;
         public static final int _B  = 2;
         public static final int _C  = 3;
-        private String reseptID;
+        private String medisinID;
 
 	
         //KONSTRUKTØR
 	public ReseptRegisterPanel() {
             
             gbc = new GridBagConstraints();
-            bibliotek = new ReseptRegister();
+            bibliotek = new MedisinRegister();
             fil = new FilBehandler();
 	    
             try //LASTER INN LEGEREGISTERET
 	    {
+              this.medIDformatter = new MaskFormatter("U##U U##");
 	      lastInnFil();
 	    }
 	    catch (IOException ex)
 	    {
 	      ex.printStackTrace();
-	    } 
+	    } catch (ParseException ex) {
+              ex.printStackTrace();
+            }
 		
 		
-		reseptID = "";
+		medisinID = "";
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
@@ -84,10 +87,10 @@ public class ReseptRegisterPanel extends panelSuper {
                 medInfo.setEditable(true);
                 JScrollPane rulle2 = new JScrollPane(medInfo);		
                 //arbeidsStedFelt = new JTextField(20);
-		//reseptIDFelt.setEditable(false);
+		//medisinIDFelt.setEditable(false);
                 
-                reseptIDFelt = new JFormattedTextField(medIDformatter);
-                reseptIDFelt.setColumns(14);
+                medisinIDFelt = new JFormattedTextField(medIDformatter);
+                medisinIDFelt.setColumns(14);
                 
 		radioA = new JRadioButton("A");
                 radioB = new JRadioButton("B");
@@ -118,21 +121,21 @@ public class ReseptRegisterPanel extends panelSuper {
                 medKategori.setPreferredSize(d);
                 medKategori.setValue( getKategori().get(getKategori().size()-1));
 */
-                kEndreResept = new JButton("Endre Resept");
-		kRegResept = new JButton("Reg Resept");
-		kSlettResept = new JButton("Slett Resept");
-		kVisResept = new JButton("Vis Resept");
-		kNyResept = new JButton("Ny Resept");
-		search = new JButton("Generer Nye Resepter");
+                kEndreMedisin = new JButton("Endre Medisin");
+		kRegMedisin = new JButton("Reg Medisin");
+		kSlettMedisin = new JButton("Slett Medisin");
+		kVisMedisin = new JButton("Vis Medisin");
+		kNyMedisin = new JButton("Ny Medisin");
+		search = new JButton("Generer Nye Medisiner");
                 
 
 
-                knappePanel.add(kNyResept);
-                knappePanel.add(kRegResept);
-                knappePanel.add(kSlettResept);
-                knappePanel.add(kEndreResept);
+                knappePanel.add(kNyMedisin);
+                knappePanel.add(kRegMedisin);
+                knappePanel.add(kSlettMedisin);
+                knappePanel.add(kEndreMedisin);
                 knappePanel.add(search);
-                knappePanel.add(kVisResept);
+                knappePanel.add(kVisMedisin);
 
                 addFeltPanel();
                 addSearchPanel();
@@ -152,15 +155,15 @@ public class ReseptRegisterPanel extends panelSuper {
                 add(spbottom, BorderLayout.CENTER);
 
                 sensor = new Lytter();	
-                kRegResept.addActionListener(sensor);
-                kEndreResept.addActionListener(sensor);
-                kSlettResept.addActionListener(sensor);
-                kVisResept.addActionListener(sensor);
-                kNyResept.addActionListener(sensor);
+                kRegMedisin.addActionListener(sensor);
+                kEndreMedisin.addActionListener(sensor);
+                kSlettMedisin.addActionListener(sensor);
+                kVisMedisin.addActionListener(sensor);
+                kNyMedisin.addActionListener(sensor);
                 search.addActionListener(sensor);
 
-                kRegResept.setEnabled(false);
-                kEndreResept.setEnabled(false);
+                kRegMedisin.setEnabled(false);
+                kEndreMedisin.setEnabled(false);
 
                 DocumentListener documentListener = new DocumentListener() {
                      public void changedUpdate(DocumentEvent documentEvent) {
@@ -181,7 +184,7 @@ public class ReseptRegisterPanel extends panelSuper {
                         char cha = searchaktivRadio();
 
                          Document source = documentEvent.getDocument();
-                         String[] emptyArray = {"Ingen resept som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
+                         String[] emptyArray = {"Ingen medisin som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
                          int length = source.getLength();
                          boolean b = true;
 
@@ -194,7 +197,7 @@ public class ReseptRegisterPanel extends panelSuper {
                            if(idfelt.matches("-?\\d+(\\.\\d+)?") && bibliotek.finn(Integer.parseInt(idfelt))!=null)
                            {
                                b= false;
-                               List<Resept> l = new ArrayList<>();
+                               List<Medisin> l = new ArrayList<>();
                                l.add(bibliotek.finn(Integer.parseInt(idfelt)));
                                list.setListData(l.toArray());
                            }*/
@@ -282,11 +285,11 @@ public class ReseptRegisterPanel extends panelSuper {
                  gbc.gridy++;
                  gbc.gridx=0;
 
-                 feltPanel.add(new JLabel("Resept ID:"), gbc);
+                 feltPanel.add(new JLabel("Medisin ID:"), gbc);
 
                  gbc.gridx++;
                  gbc.gridwidth = 4;
-                 feltPanel.add(reseptIDFelt, gbc);
+                 feltPanel.add(medisinIDFelt, gbc);
                  gbc.gridwidth=1;
                  gbc.gridy++;
                  gbc.gridx=0;
@@ -331,9 +334,9 @@ public class ReseptRegisterPanel extends panelSuper {
              
              
              gbc.gridx=3;
-             feltPanel.add(kEndreResept,gbc);
+             feltPanel.add(kEndreMedisin,gbc);
              gbc.gridx=4;
-             feltPanel.add(kRegResept,gbc);
+             feltPanel.add(kRegMedisin,gbc);
              		
             feltPanel.setVisible(true);
       }
@@ -343,8 +346,8 @@ public class ReseptRegisterPanel extends panelSuper {
 	  {
 	    try
 	    {
-	      bibliotek = fil.lastInnFilResept("ReseptLagring");
-              System.out.println(logg.toString("ReseptRegister lastet inn!"));
+	      bibliotek = fil.lastInnFilMedisin("MedisinLagring");
+              System.out.println(logg.toString("MedisinRegister lastet inn!"));
   
 	    }
 	    catch (FileNotFoundException ex)
@@ -361,8 +364,8 @@ public class ReseptRegisterPanel extends panelSuper {
 	  {
 	    try
 	    {
-                fil.lagreFil(bibliotek, "ReseptLagring");
-                System.out.println(logg.toString("ReseptRegister lagret!"));
+                fil.lagreFil(bibliotek, "MedisinLagring");
+                System.out.println(logg.toString("MedisinRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
 	    {
@@ -408,18 +411,18 @@ public char searchaktivRadio()
          public boolean feltFylt()
         {
             return aktivRadio() != 0 
-                    && !reseptIDFelt.getText().equals("")
+                    && !medisinIDFelt.getText().equals("")
                     && !navnFelt.getText().equals("")
                     && !medInfo.getText().equals("")
                     //&& !medKategori.getValue().toString().equals(""); Hvis JSpinner
                     && !medKategori.getText().equals("");
         }
 	
-        public void regResept() 
+        public void regMedisin() 
         {
             try
              {
-                    String id = reseptIDFelt.getText().replaceAll("\\s","");
+                    String id = medisinIDFelt.getText().replaceAll("\\s","");
                     String navn = navnFelt.getText();
                     char rbStatus = aktivRadio();
                     String info = medInfo.getText();
@@ -428,35 +431,35 @@ public char searchaktivRadio()
 
                     if ( feltFylt() )
                     {
-                    Resept resept = new Resept(id, navn, info, k, rbStatus);
-                    bibliotek.settInnNy(resept);
-                    logomraade.append(logg.toString("Resept lagt til")+"\n");
+                    Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
+                    bibliotek.settInnNy(medisin);
+                    logomraade.append(logg.toString("Medisin lagt til")+"\n");
                     }
                     else  {
                         error("Fyll ut alle feltene!");
-                        kRegResept.setEnabled(true);
+                        kRegMedisin.setEnabled(true);
                     }
             }
             catch (NumberFormatException e)
             {
                  error("Fyll ut alle feltene!");
-                 kRegResept.setEnabled(true);
+                 kRegMedisin.setEnabled(true);
             }
             catch (IndexOutOfBoundsException ex)
             {
                  error("Fyll ut alle feltene!");
-                 kRegResept.setEnabled(true);
+                 kRegMedisin.setEnabled(true);
             }
 
         }
         
-        public void endreResept()
+        public void endreMedisin()
         {
             try
                 {
                
                     
-                    String id = reseptIDFelt.getText().replaceAll("\\s","");//får personnummer og fjerner blanke tegn
+                    String id = medisinIDFelt.getText().replaceAll("\\s","");//får personnummer og fjerner blanke tegn
           
                     String navn = navnFelt.getText();
                     char rbStatus = aktivRadio();
@@ -472,30 +475,30 @@ public char searchaktivRadio()
                   System.out.println(bibliotek.finn(id).getMedID());
                 if (bibliotek.finnes(id))
                 {          
-                    Resept resept = new Resept(id, navn, info, k, rbStatus);
-                        if(bibliotek.endre(resept))
+                    Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
+                        if(bibliotek.endre(medisin))
                         {
-                            reseptIDFelt.setText(""+id);
-                            logomraade.append(logg.toString("Resept endret")+"\n");
+                            medisinIDFelt.setText(""+id);
+                            logomraade.append(logg.toString("Medisin endret")+"\n");
                         }
                         else
-                            logomraade.append(logg.toString("Kunne ikke endre resept! Prøv igjen!")+"\n");
+                            logomraade.append(logg.toString("Kunne ikke endre medisin! Prøv igjen!")+"\n");
                 }
                 else
                 {
-                    error("Reseptn finnes ikke");
+                    error("Medisinn finnes ikke");
 
                     int n = JOptionPane.showConfirmDialog(null,
-                            "Resept finnes ikke!\nVil du legge til resept?",
-                            "Ny Resept!",
+                            "Medisin finnes ikke!\nVil du legge til medisin?",
+                            "Ny Medisin!",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION)
                     {    
-                        regResept();
-                        logomraade.append(logg.toString("Resept lagt til")+"\n");
+                        regMedisin();
+                        logomraade.append(logg.toString("Medisin lagt til")+"\n");
                     }
                     else 
-                        error("Resept er ikke lagt til");
+                        error("Medisin er ikke lagt til");
                     emptyFields();
                 }
               }
@@ -512,15 +515,15 @@ public char searchaktivRadio()
     }
         }
         
-	public void visResept( Resept l ) 
+	public void visMedisin( Medisin l ) 
         {
             if(getSelectedObject() != null)
             {
-                kEndreResept.setEnabled(true);
-                reseptIDFelt.setEnabled(false);
+                kEndreMedisin.setEnabled(true);
+                medisinIDFelt.setEnabled(false);
                         
                 
-			reseptIDFelt.setText(l.getMedID());			
+			medisinIDFelt.setText(l.getMedID());			
 			navnFelt.setText(l.getNavn());
 			//medKategori.setValue(l.getKategori());JSPINNER
 			medKategori.setText(l.getKategori());
@@ -534,35 +537,35 @@ public char searchaktivRadio()
 				if(x == 'C')
 					radioC.setSelected(true);
 			
-                        logomraade.append(logg.toString("Fant resept: " + l.toString()));
+                        logomraade.append(logg.toString("Fant medisin: " + l.toString()));
 		}		
                 else
-                    error("Ingen resept er valgt");
+                    error("Ingen medisin er valgt");
         }
-	public void slettResept( Resept l) {
+	public void slettMedisin( Medisin l) {
             
              int n = JOptionPane.showConfirmDialog(null,
-                            "Vil du fjerne reseptn?",
-                            "Fjern Resept!",
+                            "Vil du fjerne medisinn?",
+                            "Fjern Medisin!",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION)
                     {  
 
                         if(bibliotek.fjern(l)) {
-                                String utskrift = "Reseptn " + l.getNavn() + " " + l.getMedID()+" - "+ l.getReseptGruppe()+ " er fjernet \n"; 
+                                String utskrift = "Medisinn " + l.getNavn() + " " + l.getMedID()+" - "+ l.getReseptGruppe()+ " er fjernet \n"; 
                                 logomraade.append(logg.toString(utskrift));
 
                         }
                         else
-                            error("Finner ikke resept \n");
+                            error("Finner ikke medisin \n");
                     }
                     else 
-                        error("Resept er ikke fjernet ");
+                        error("Medisin er ikke fjernet ");
 	}
         
 	public void  emptyFields() {
 
-            reseptIDFelt.setText("");
+            medisinIDFelt.setText("");
             navnFelt.setText("");
             //medKategori.setValue("---");
             medKategori.setText("");
@@ -571,10 +574,10 @@ public char searchaktivRadio()
             radioGruppe.clearSelection();
 	}
         
-        public Resept getSelectedObject() {
+        public Medisin getSelectedObject() {
 		
 		if(!list.isSelectionEmpty()) {
-			Resept l = (Resept)list.getSelectedValue();
+			Medisin l = (Medisin)list.getSelectedValue();
 			
 			return l;
 			
@@ -611,7 +614,7 @@ public static String[] getKategoriString(){
     return arr;
 }
         
-        private void generateResepter()
+        private void generateMedisiner()
         {
             int Min=0;
             int Max;
@@ -674,8 +677,8 @@ public static String[] getKategoriString(){
                 
                 
                 
-                Resept resept = new Resept(idstring,n, info,k, g);
-                bibliotek.settInnNy(resept);
+                Medisin medisin = new Medisin(idstring,n, info,k, g);
+                bibliotek.settInnNy(medisin);
                 
                 
                 
@@ -691,44 +694,44 @@ public static String[] getKategoriString(){
 		@Override
 		public void actionPerformed(ActionEvent e) {
                     
-                       kRegResept.setEnabled(false);
-                       kEndreResept.setEnabled(false);
+                       kRegMedisin.setEnabled(false);
+                       kEndreMedisin.setEnabled(false);
                        
-                      reseptIDFelt.setEnabled(true);
+                      medisinIDFelt.setEnabled(true);
 			
-                    if (e.getSource() == kRegResept)
+                    if (e.getSource() == kRegMedisin)
                     {
                         if (aktivRadio()!=0)
-                            regResept();
+                            regMedisin();
                         else
                             error("Huk av reseptgruppe!");
                         emptyFields();
                     }			
-		    else if (e.getSource() == kSlettResept)
+		    else if (e.getSource() == kSlettMedisin)
 		    {
-                        slettResept(getSelectedObject());
+                        slettMedisin(getSelectedObject());
 		    }			
-		    else if (e.getSource() == kVisResept)
+		    else if (e.getSource() == kVisMedisin)
 		    {
-                      reseptIDFelt.setEnabled(false);
-		      visResept(getSelectedObject());
+                      medisinIDFelt.setEnabled(false);
+		      visMedisin(getSelectedObject());
 		    }		
                
-        	    else if (e.getSource() == kNyResept)
+        	    else if (e.getSource() == kNyMedisin)
 		    {
                         radioA.setSelected(true);
-                        kRegResept.setEnabled(true);                      
+                        kRegMedisin.setEnabled(true);                      
                         emptyFields();
      		    }
-                    else if (e.getSource() == kEndreResept)
+                    else if (e.getSource() == kEndreMedisin)
                     {
-                        endreResept();
+                        endreMedisin();
                         emptyFields();
                     }
                     
 		    else if ( e.getSource() == search ) 
                     {
-		    	generateResepter();
+		    	generateMedisiner();
 		    }                    
                     oppdaterListe();
 		}

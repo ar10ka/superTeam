@@ -1,56 +1,38 @@
 
-
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicBorders;
 import javax.swing.text.Document;
 import javax.swing.text.MaskFormatter;
 
-
-
 public class MedisinRegisterPanel extends panelSuper {
 	
-        private JFormattedTextField medisinIDFelt;
+        private final JFormattedTextField medisinIDFelt;
 	private final JTextField  searchNavn,searchKategori,searchID;
         private final JTextField  navnFelt, medKategori;
-        private JTextArea medInfo;
+        private final JTextArea medInfo;
 	private final JButton kRegMedisin, kSlettMedisin, kVisMedisin,kEndreMedisin,kNyMedisin;
         private final JButton search;
-	JRadioButton 	radioA, radioB,radioC;
-	JRadioButton 	searchRadioA, searchRadioB,searchRadioC,searchAny;
+	private final JRadioButton 	radioA, radioB,radioC;
+	private final JRadioButton 	searchRadioA, searchRadioB,searchRadioC,searchAny;
         //JSpinner medKategori;
-        ButtonGroup searchRadioGruppe,radioGruppe;
-        private JList list = new JList();
+        private final  ButtonGroup searchRadioGruppe,radioGruppe;
+
         
-        MaskFormatter medIDformatter;
+        private MaskFormatter medIDformatter;
 	private MedisinRegister bibliotek;
 	private final Lytter sensor;
-	private final FilBehandler fil;
         
         public static final int _A = 1;
         public static final int _B  = 2;
         public static final int _C  = 3;
-        private String medisinID;
+
 
 	
         //KONSTRUKTØR
@@ -62,7 +44,7 @@ public class MedisinRegisterPanel extends panelSuper {
 	    
             try //LASTER INN LEGEREGISTERET
 	    {
-              this.medIDformatter = new MaskFormatter("U##U U##");
+              medIDformatter = new MaskFormatter("U##U U##");
 	      lastInnFil();
 	    }
 	    catch (IOException ex)
@@ -72,8 +54,6 @@ public class MedisinRegisterPanel extends panelSuper {
               ex.printStackTrace();
             }
 		
-		
-		medisinID = "";
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
@@ -83,7 +63,7 @@ public class MedisinRegisterPanel extends panelSuper {
 		
 		navnFelt = new JTextField(10);
 		medKategori = new JTextField(10);
-                medInfo    = new JTextArea(6,10);
+                medInfo    = new JTextArea(5,30);
                 medInfo.setEditable(true);
                 JScrollPane rulle2 = new JScrollPane(medInfo);		
                 //arbeidsStedFelt = new JTextField(20);
@@ -111,10 +91,10 @@ public class MedisinRegisterPanel extends panelSuper {
                 searchRadioGruppe.add(searchRadioB);
                 searchRadioGruppe.add(searchRadioC);
                 searchRadioGruppe.add(searchAny);
-
+ /*               
                 
                  // KATEGORI RULLEVINDU
-/*                SpinnerListModel listModel = new SpinnerListModel(getKategori());
+                SpinnerListModel listModel = new SpinnerListModel(getKategori());
                 medKategori    = new JSpinner(listModel);
                 Dimension d = medKategori.getPreferredSize();
                 d.width = 100;
@@ -161,28 +141,59 @@ public class MedisinRegisterPanel extends panelSuper {
                 kVisMedisin.addActionListener(sensor);
                 kNyMedisin.addActionListener(sensor);
                 search.addActionListener(sensor);
-                                
-                searchRadioA.addActionListener(sensor);
-                searchRadioB.addActionListener(sensor);
-                searchRadioC.addActionListener(sensor);
-                searchAny.addActionListener(sensor);
-                
 
                 kRegMedisin.setEnabled(false);
                 kEndreMedisin.setEnabled(false);
 
-                DocumentListener documentListener = new DocumentListener() {
-                     public void changedUpdate(DocumentEvent documentEvent) {
-                       findIt(documentEvent);
-                     }
-                     public void insertUpdate(DocumentEvent documentEvent) {
-                      findIt(documentEvent);
-
-                     }
-                     public void removeUpdate(DocumentEvent documentEvent) {
-                       findIt(documentEvent);
-                     }
-                   };
+               
+            documentListener = new DocumentListener() {
+                
+                public void changedUpdate(DocumentEvent documentEvent) {
+                    findIt(documentEvent);
+                }
+                public void insertUpdate(DocumentEvent documentEvent) {
+                    findIt(documentEvent);
+                    
+                }
+                public void removeUpdate(DocumentEvent documentEvent) {
+                    findIt(documentEvent);
+                }
+                private void findIt(DocumentEvent documentEvent) {
+                    
+                    String idfelt = searchID.getText();
+                    String navn = searchNavn.getText();
+                    String kat = searchKategori.getText();
+                    char cha = searchaktivRadio();
+                    
+                    Document source = documentEvent.getDocument();
+                    String[] emptyArray = {"Ingen medisin som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
+                    int length = source.getLength();
+                    boolean b = true;
+                    
+                    if(bibliotek.finnObjekt(navn, idfelt, cha, kat)!=null)
+                    {
+                        b = false;
+                        list.setListData(bibliotek.finnObjekt(navn, idfelt, cha, kat));
+                    }
+                    /*
+                    if(idfelt.matches("-?\\d+(\\.\\d+)?") && bibliotek.finn(Integer.parseInt(idfelt))!=null)
+                    {
+                    b= false;
+                    List<Medisin> l = new ArrayList<>();
+                    l.add(bibliotek.finn(Integer.parseInt(idfelt)));
+                    list.setListData(l.toArray());
+                    }*/
+                    if(b)
+                        list.setListData(emptyArray);
+                    
+                    if(length == 0)
+                        list.setListData(bibliotek.returnObjekt());
+                    
+                    
+                }
+                
+                
+            };
                        searchNavn.getDocument().addDocumentListener(documentListener);
                        searchKategori.getDocument().addDocumentListener(documentListener);
                        searchID.getDocument().addDocumentListener(documentListener);		
@@ -194,7 +205,7 @@ public class MedisinRegisterPanel extends panelSuper {
                  gbc.fill = GridBagConstraints.HORIZONTAL;        
                  gbc.gridwidth=1;
                  gbc.weightx = 0.6;
-                 gbc.weighty= 0.6;
+                 gbc.weighty=0.6;
                  gbc.gridx=0;
                  gbc.gridy=1;      
                  searchPanel.add(new JLabel("Navn:"),gbc);
@@ -222,80 +233,6 @@ public class MedisinRegisterPanel extends panelSuper {
                  searchPanel.add(searchAny);
         }
         
-        private void findIt(DocumentEvent documentEvent) {
-
-                        String idfelt = searchID.getText();
-                        String navn = searchNavn.getText();
-                        String kat = searchKategori.getText();
-                        char cha = searchaktivRadio();
-
-                         Document source = documentEvent.getDocument();
-                         String[] emptyArray = {"Ingen medisin som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
-                         int length = source.getLength();
-                         boolean b = true;
-
-                           if(bibliotek.finnObjekt(navn, idfelt, cha, kat)!=null)
-                           {
-                               b = false;
-                               list.setListData(bibliotek.finnObjekt(navn, idfelt, cha, kat));
-                           }
-                           /*
-                           if(idfelt.matches("-?\\d+(\\.\\d+)?") && bibliotek.finn(Integer.parseInt(idfelt))!=null)
-                           {
-                               b= false;
-                               List<Medisin> l = new ArrayList<>();
-                               l.add(bibliotek.finn(Integer.parseInt(idfelt)));
-                               list.setListData(l.toArray());
-                           }*/
-                           if(b)
-                               list.setListData(emptyArray);
-
-                          if(length == 0)  
-                           list.setListData(bibliotek.returnObjekt());
-
-
-                       }
-        
-        private void findIt() {
-
-                        //System.out.println("0");
-                        String idfelt = searchID.getText();
-                        String navn = searchNavn.getText();
-                        String kat = searchKategori.getText();
-                        char cha = searchaktivRadio();
-
-                         //Document source = documentEvent.getDocument();
-                         String[] emptyArray = {"Ingen medisin som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
-                         //int length = source.getLength();
-                         boolean b = true;
-
-                           if(bibliotek.finnObjekt(navn, idfelt, cha, kat)!=null)
-                           {
-                        System.out.println(bibliotek.finnRandom().getReseptGruppe());
-                               b = false;
-                               list.setListData(bibliotek.finnObjekt(navn, idfelt, cha, kat));
-                               
-                           }
-                           /*
-                           if(idfelt.matches("-?\\d+(\\.\\d+)?") && bibliotek.finn(Integer.parseInt(idfelt))!=null)
-                           {
-                               b= false;
-                               List<Medisin> l = new ArrayList<>();
-                               l.add(bibliotek.finn(Integer.parseInt(idfelt)));
-                               list.setListData(l.toArray());
-                           }*/
-                           if(b)
-                           {
-                        //System.out.println("2");
-                               list.setListData(emptyArray);
-                               
-                           }
-                           
-                        //System.out.println("3");
-                           //list.setListData(bibliotek.returnObjekt());
-                           return;
-
-                       }
         private void addFeltPanel()
         {
            
@@ -449,10 +386,7 @@ public char searchaktivRadio()
         
   }
 
-	public void error(String s)
-        {
-            JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
-        }
+
          public boolean feltFylt()
         {
             return aktivRadio() != 0 
@@ -485,12 +419,7 @@ public char searchaktivRadio()
                         kRegMedisin.setEnabled(true);
                     }
             }
-            catch (NumberFormatException e)
-            {
-                 error("Fyll ut alle feltene!");
-                 kRegMedisin.setEnabled(true);
-            }
-            catch (IndexOutOfBoundsException ex)
+            catch (NumberFormatException | IndexOutOfBoundsException e)
             {
                  error("Fyll ut alle feltene!");
                  kRegMedisin.setEnabled(true);
@@ -560,7 +489,7 @@ public char searchaktivRadio()
     }
         }
         
-	public void visMedisin( Medisin l ) 
+	public void visMedisin( Medisin m ) 
         {
             if(getSelectedObject() != null)
             {
@@ -568,12 +497,12 @@ public char searchaktivRadio()
                 medisinIDFelt.setEnabled(false);
                         
                 
-			medisinIDFelt.setText(l.getMedID());			
-			navnFelt.setText(l.getNavn());
+			medisinIDFelt.setText(m.getMedID());			
+			navnFelt.setText(m.getNavn());
 			//medKategori.setValue(l.getKategori());JSPINNER
-			medKategori.setText(l.getKategori());
-			medInfo.setText(l.getInformasjon());
-                        char x = l.getReseptGruppe();
+			medKategori.setText(m.getKategori());
+			medInfo.setText(m.getInformasjon());
+                        char x = m.getReseptGruppe();
 			
 				if(x == 'A') 
 					radioA.setSelected(true);		
@@ -582,7 +511,7 @@ public char searchaktivRadio()
 				if(x == 'C')
 					radioC.setSelected(true);
 			
-                        logomraade.append(logg.toString("Fant medisin: " + l.toString()));
+                        logomraade.append(logg.toString("Fant medisin: " + m.toString())+"\n");
 		}		
                 else
                     error("Ingen medisin er valgt");
@@ -749,7 +678,7 @@ public static String[] getKategoriString(){
                         if (aktivRadio()!=0)
                             regMedisin();
                         else
-                            error("Huk av reseptgruppe!");
+                            error("Husk av reseptgruppe!");
                         emptyFields();
                     }			
 		    else if (e.getSource() == kSlettMedisin)
@@ -777,12 +706,7 @@ public static String[] getKategoriString(){
 		    else if ( e.getSource() == search ) 
                     {
 		    	generateMedisiner();
-		    }
-                    
-                    else if ( e.getSource() == searchRadioA || e.getSource() == searchRadioB || e.getSource() == searchRadioC || e.getSource() == searchAny )
-                    {
-                        findIt();
-                    }
+		    }                    
                     oppdaterListe();
 		}
 	}
