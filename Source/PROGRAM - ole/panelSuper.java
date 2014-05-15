@@ -33,7 +33,10 @@ public class panelSuper extends JPanel{
      Border feltBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
      Color blue;
      FilBehandler fil;
-       ReseptRegister resepter;
+     ReseptRegister reseptRegister;
+     PasientRegister pasientRegister;
+     MedisinRegister medisinRegister;
+     LegeRegister legeRegister;
      ReseptInfoVindu ReseptInfoVindu;
      InfoVindu InfoVindu;
      JFrame infoFrame;

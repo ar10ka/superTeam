@@ -27,14 +27,13 @@ public class PasientRegisterPanel extends panelSuper {
         private final ButtonGroup radioGruppe;
 
        
-	private PasientRegister bibliotek;
 	private final Lytter sensor;
 
 	
         //KONSTRUKTØR
 	public PasientRegisterPanel() {
             
-           bibliotek  = new PasientRegister();
+           pasientRegister  = new PasientRegister();
             fil = new FilBehandler();
 	    
             try //LASTER INN PASIENTREGISTER OG SETTER FORMAT FOR FNR INPUT
@@ -92,7 +91,7 @@ public class PasientRegisterPanel extends panelSuper {
                 addFeltPanel();
                 addSearchPanel();
         
-                list = new JList(bibliotek.returnObjekt()); //data has type Object[]
+                list = new JList(pasientRegister.returnObjekt()); //data has type Object[]
                 list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 list.setLayoutOrientation(JList.VERTICAL);
                 JScrollPane scrollpane = new JScrollPane(list);
@@ -152,17 +151,17 @@ public class PasientRegisterPanel extends panelSuper {
                     int length = source.getLength();
                     boolean b = false;
                     
-                    if(bibliotek.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
+                    if(pasientRegister.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
                     {
                         b = true;
-                        list.setListData(bibliotek.finnObjekt(fnavn, enavn, adr,idfelt));
+                        list.setListData(pasientRegister.finnObjekt(fnavn, enavn, adr,idfelt));
                     }
 
                     if(!b)
                         list.setListData(emptyArray);
                     
                     if(length == 0)
-                        list.setListData(bibliotek.returnObjekt());
+                        list.setListData(pasientRegister.returnObjekt());
                     
                     
                 }
@@ -292,8 +291,8 @@ public class PasientRegisterPanel extends panelSuper {
             {
               try
               {
-                resepter = fil.lastInnFilResept("ReseptLagring");
-                bibliotek = fil.lastInnFilPasient("PasientLagring");
+                reseptRegister = fil.lastInnFilResept("ReseptLagring");
+                pasientRegister = fil.lastInnFilPasient("PasientLagring");
                 System.out.println(logg.toString("PasientRegister lastet inn!"));
               }
               catch (FileNotFoundException ex)
@@ -310,8 +309,8 @@ public class PasientRegisterPanel extends panelSuper {
             {
               try
               {
-                fil.lagreFil(resepter,"ReseptLagring");
-                fil.lagreFil(bibliotek, "PasientLagring");
+                fil.lagreFil(reseptRegister,"ReseptLagring");
+                fil.lagreFil(pasientRegister, "PasientLagring");
                 System.out.println(logg.toString("PasientRegister lagret!"));
               }
               catch (FileNotFoundException ex)
@@ -352,10 +351,10 @@ public class PasientRegisterPanel extends panelSuper {
 
              if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )            {
                  
-                  if (!bibliotek.finnes(id))
+                  if (!pasientRegister.finnes(id))
                   { 
                     Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
-                    bibliotek.settInnNy(pasient);
+                    pasientRegister.settInnNy(pasient);
                     logomraade.append(logg.toString("Pasient lagt til")+"\n");
                    }
                    else
@@ -392,12 +391,12 @@ public class PasientRegisterPanel extends panelSuper {
 
               if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )
               {
-                if (bibliotek.finnes(id))
+                if (pasientRegister.finnes(id))
                 {          
                     Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
 
 
-                        if(bibliotek.endre(pasient))
+                        if(pasientRegister.endre(pasient))
                         {
                             fNr.setText(id);
                             logomraade.append(logg.toString("Pasient endret")+"\n");
@@ -472,7 +471,7 @@ public class PasientRegisterPanel extends panelSuper {
                     if (n == JOptionPane.YES_OPTION)
                     {  
 
-                        if(bibliotek.fjern(p)) {
+                        if(pasientRegister.fjern(p)) {
                                 String utskrift = "Pasienten " + p.getFNavn() + " " + p.getENavn()+" "+ p.getFNr()+ " er fjernet \n"; 
                                 logomraade.append(logg.toString(utskrift));
 
@@ -505,7 +504,7 @@ public class PasientRegisterPanel extends panelSuper {
         
         private void oppdaterListe() {
 		
-		list.setListData(bibliotek.returnObjekt());
+		list.setListData(pasientRegister.returnObjekt());
 	}
         
         private void generatePasienter()
@@ -594,7 +593,7 @@ public class PasientRegisterPanel extends panelSuper {
                     index = Min + (int)(Math.random() * ((Max - Min) + 1));
                     arb = adresse[index];
                 Pasient pasient = new Pasient(navn, enavn, fnr, gen, arb);
-                bibliotek.settInnNy(pasient); 
+                pasientRegister.settInnNy(pasient); 
             }
             
         }
@@ -610,7 +609,8 @@ public class PasientRegisterPanel extends panelSuper {
                        radioKvinne.setEnabled(true);
                        kRegPasient.setEnabled(false);
                        kEndrePasient.setEnabled(false);
-                       fNr.setEnabled(true);
+                       fNr.setEnabled(false);
+                        fNr.setBackground(Color.LIGHT_GRAY);
                        fNr.setBackground(Color.white);  
 			
                     if (e.getSource() == kRegPasient)
@@ -625,14 +625,14 @@ public class PasientRegisterPanel extends panelSuper {
 		    else if (e.getSource() == kVisPasient)
 		    {
 		      visPasient(getSelectedObject());
-                      resepter.nyResept(1000, new Lege("Navn", "Etternavn", "Oslo", "ABC".toCharArray(), 9), getSelectedObject(), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
+                      reseptRegister.nyResept(new Lege("Navn", "Etternavn", "Oslo", "ABC".toCharArray(), 9), getSelectedObject(), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
 		    }		
                
         	    else if (e.getSource() == kNyPasient)
 		    {
                         kRegPasient.setEnabled(true);
-                        fNr.setEnabled(false);
-                        fNr.setBackground(Color.LIGHT_GRAY);                        
+                        fNr.setBackground(Color.white); 
+                        fNr.setEnabled(true);                        
                         emptyFields();
      		    }
                     else if (e.getSource() == kEndrePasient)

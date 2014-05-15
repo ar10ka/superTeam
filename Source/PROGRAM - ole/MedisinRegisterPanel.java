@@ -26,7 +26,7 @@ public class MedisinRegisterPanel extends panelSuper {
 
         
         private MaskFormatter medIDformatter;
-	private MedisinRegister bibliotek;
+	
 	private final Lytter sensor;
         
         public static final int _A = 1;
@@ -39,7 +39,7 @@ public class MedisinRegisterPanel extends panelSuper {
 	public MedisinRegisterPanel() {
             
             gbc = new GridBagConstraints();
-            bibliotek = new MedisinRegister();
+            medisinRegister = new MedisinRegister();
             fil = new FilBehandler();
 	    
             try //LASTER INN LEGEREGISTERET
@@ -91,6 +91,10 @@ public class MedisinRegisterPanel extends panelSuper {
                 searchRadioGruppe.add(searchRadioB);
                 searchRadioGruppe.add(searchRadioC);
                 searchRadioGruppe.add(searchAny);
+                searchRadioA.setBackground(blue);
+                searchRadioB.setBackground(blue);
+                searchRadioC.setBackground(blue);
+                searchAny.setBackground(blue);
  /*               
                 
                  // KATEGORI RULLEVINDU
@@ -120,7 +124,7 @@ public class MedisinRegisterPanel extends panelSuper {
                 addFeltPanel();
                 addSearchPanel();
       
-                list = new JList(bibliotek.returnObjekt()); //data has type Object[]
+                list = new JList(medisinRegister.returnObjekt()); //data has type Object[]
                 list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 list.setLayoutOrientation(JList.VERTICAL);
                 JScrollPane scrollpane = new JScrollPane(list);
@@ -170,24 +174,16 @@ public class MedisinRegisterPanel extends panelSuper {
                     int length = source.getLength();
                     boolean b = true;
                     
-                    if(bibliotek.finnObjekt(navn, idfelt, cha, kat)!=null)
+                    if(medisinRegister.finnObjekt(navn, idfelt, cha, kat)!=null)
                     {
                         b = false;
-                        list.setListData(bibliotek.finnObjekt(navn, idfelt, cha, kat));
+                        list.setListData(medisinRegister.finnObjekt(navn, idfelt, cha, kat));
                     }
-                    /*
-                    if(idfelt.matches("-?\\d+(\\.\\d+)?") && bibliotek.finn(Integer.parseInt(idfelt))!=null)
-                    {
-                    b= false;
-                    List<Medisin> l = new ArrayList<>();
-                    l.add(bibliotek.finn(Integer.parseInt(idfelt)));
-                    list.setListData(l.toArray());
-                    }*/
                     if(b)
                         list.setListData(emptyArray);
                     
                     if(length == 0)
-                        list.setListData(bibliotek.returnObjekt());
+                        list.setListData(medisinRegister.returnObjekt());
                     
                     
                 }
@@ -201,18 +197,23 @@ public class MedisinRegisterPanel extends panelSuper {
             
         private void addSearchPanel()
         {  
+            
                  gbc.anchor = GridBagConstraints.NORTH;
                  gbc.fill = GridBagConstraints.HORIZONTAL;        
                  gbc.gridwidth=1;
                  gbc.weightx = 0.6;
                  gbc.weighty=0.6;
                  gbc.gridx=0;
+                 gbc.gridy = 0;
+                 searchPanel.add(searchRadioA);                 
                  gbc.gridy=1;      
                  searchPanel.add(new JLabel("Navn:"),gbc);
                  gbc.gridx++;
                  searchPanel.add(new JLabel("ID:"),gbc);
                  gbc.gridx++;
                  searchPanel.add(new JLabel("Kategori:"),gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchRadioB);
                  gbc.gridy=2;
                  gbc.gridx=0;     
                  searchPanel.add(searchNavn, gbc);
@@ -221,15 +222,9 @@ public class MedisinRegisterPanel extends panelSuper {
                  gbc.gridx++;
                  gbc.gridwidth = 2;
                  searchPanel.add(searchKategori, gbc);
-                 gbc.gridwidth = 1;
                  gbc.gridx++;
-                 gbc.gridy = 0;
-                 searchPanel.add(searchRadioA);
-                 gbc.gridy = 1;
-                 searchPanel.add(searchRadioB);
-                 gbc.gridy = 2;
                  searchPanel.add(searchRadioC);
-                 gbc.gridy = 3;
+                 gbc.gridy=3;
                  searchPanel.add(searchAny);
         }
         
@@ -328,7 +323,7 @@ public class MedisinRegisterPanel extends panelSuper {
 	  {
 	    try
 	    {
-	      bibliotek = fil.lastInnFilMedisin("MedisinLagring");
+	      medisinRegister = fil.lastInnFilMedisin("MedisinLagring");
               System.out.println(logg.toString("MedisinRegister lastet inn!"));
   
 	    }
@@ -346,7 +341,7 @@ public class MedisinRegisterPanel extends panelSuper {
 	  {
 	    try
 	    {
-                fil.lagreFil(bibliotek, "MedisinLagring");
+                fil.lagreFil(medisinRegister, "MedisinLagring");
                 System.out.println(logg.toString("MedisinRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -411,7 +406,7 @@ public char searchaktivRadio()
                     if ( feltFylt() )
                     {
                     Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
-                    bibliotek.settInnNy(medisin);
+                    medisinRegister.settInnNy(medisin);
                     logomraade.append(logg.toString("Medisin lagt til")+"\n");
                     }
                     else  {
@@ -446,11 +441,11 @@ public char searchaktivRadio()
                   System.out.println(id);
                   
                   
-                  System.out.println(bibliotek.finn(id).getMedID());
-                if (bibliotek.finnes(id))
+                  System.out.println(medisinRegister.finn(id).getMedID());
+                if (medisinRegister.finnes(id))
                 {          
                     Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
-                        if(bibliotek.endre(medisin))
+                        if(medisinRegister.endre(medisin))
                         {
                             medisinIDFelt.setText(""+id);
                             logomraade.append(logg.toString("Medisin endret")+"\n");
@@ -525,7 +520,7 @@ public char searchaktivRadio()
                     if (n == JOptionPane.YES_OPTION)
                     {  
 
-                        if(bibliotek.fjern(l)) {
+                        if(medisinRegister.fjern(l)) {
                                 String utskrift = "Medisinn " + l.getNavn() + " " + l.getMedID()+" - "+ l.getReseptGruppe()+ " er fjernet \n"; 
                                 logomraade.append(logg.toString(utskrift));
 
@@ -562,7 +557,7 @@ public char searchaktivRadio()
         
         public void oppdaterListe() {
 		
-		list.setListData(bibliotek.returnObjekt());
+		list.setListData(medisinRegister.returnObjekt());
 	}
       /*  
 public static List<String> getKategori()
@@ -652,7 +647,7 @@ public static String[] getKategoriString(){
                 
                 
                 Medisin medisin = new Medisin(idstring,n, info,k, g);
-                bibliotek.settInnNy(medisin);
+                medisinRegister.settInnNy(medisin);
                 
                 
                 

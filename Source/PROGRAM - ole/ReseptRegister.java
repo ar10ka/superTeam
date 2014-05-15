@@ -10,7 +10,7 @@ public class ReseptRegister implements Serializable
 {
     private final List<Resept> reseptReg = new ArrayList<>();
     private final Logg logg = new Logg();
-    
+    private int reseptID=10000;
     
     
     public boolean godkjentLege(Lege l, Medisin m)
@@ -22,17 +22,14 @@ public class ReseptRegister implements Serializable
             }
        return false;
     }
-    public void nyResept(int id, Lege l, Pasient p, Medisin m,int mengde, String la)
+    public void nyResept( Lege l, Pasient p, Medisin m,int mengde, String la)
     {
+        int id  = reseptID++;
     	String utskrevet = logg.getDate( "Resept " + id + " er opprettet");
         Resept r = new Resept(id,l,p,m,mengde,la, utskrevet);
         reseptReg.add(r);
     }
-   
-    public void nyResept(Resept r)
-    {
-        reseptReg.add(r);
-    }
+
     public Resept finnRandom( )//finner medisin
   {
           if(!reseptReg.isEmpty())
@@ -105,6 +102,14 @@ public class ReseptRegister implements Serializable
             return s;
         else
             return "Ingen pasienter har blitt utskrevet denne medisinen!";
+    }
+     public Object[] returnObjekt()
+    {
+       String[] emptyArray = {"Det er ingen resepter registrert ennå"};
+       if(!reseptReg.isEmpty())  
+          return reseptReg.toArray();
+         else
+          return emptyArray;
     }
     
     
@@ -225,6 +230,38 @@ public class ReseptRegister implements Serializable
             	return r;
         	}
         }
+        public Object[] finnObjekt (String rId, String rDato, char rGruppe, 
+                                   String lId, String lNavn, String lEnavn,
+                                   String pId, String pNavn, String pEnavn,
+                                   String mId,  String mNavn, String mKat) {
+		Set<Pasient> leger = new HashSet<>();
+		if(!reseptReg.isEmpty())
+                {
+                    
+                    for( Resept r: reseptReg) {
+                        if(        String.valueOf(r.getID()).contains(rId) 
+                                && r.getDato().contains(rDato) 
+                                && r.getMedisin().getReseptGruppe()== rGruppe
+                                && String.valueOf(r.getLege().getlegeID()).contains(lId)
+                                && r.getLege().getNavn().contains(lNavn)
+                                && r.getLege().getEtternavn().contains(lEnavn)
+                                && r.getPasient().getFNr().contains(pId)
+                                && r.getPasient().getFNavn().contains(pNavn)
+                                && r.getPasient().getENavn().contains(pEnavn)
+                                && r.getMedisin().getMedID().contains(mId)
+                                && r.getMedisin().getNavn().contains(mNavn)
+                                && r.getMedisin().getKategori().contains(mKat)
+                                )
+                            reseptReg.add(r);
+                            
+                    }
+                    if (!leger.isEmpty())
+                        return leger.toArray();
+                    else
+                        return null;
+                }
+             return null;
+	}
     
 
 

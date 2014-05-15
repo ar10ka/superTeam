@@ -25,7 +25,6 @@ Klasse: Dataingeniï¿½r
 public class LegeRegister implements Serializable
 {
 
-	private Lege lege;
 	private List<Lege> reg = new ArrayList<>();
 	private int legeID = 1000; 
 	
@@ -98,6 +97,26 @@ public class LegeRegister implements Serializable
                     
                     for( Lege l: reg) {
                         if(l.getNavn().toLowerCase().contains(n.toLowerCase()) && l.getEtternavn().toLowerCase().contains(e.toLowerCase())&& l.getArbeidsSted().toLowerCase().contains(adr.toLowerCase()) )
+                            leger.add(l);
+                            
+                    }
+                    if (!leger.isEmpty())
+                        return leger.toArray();
+                    else
+                        return null;
+                }
+             return null;
+	}   
+	public Object[] finnObjekt ( String n, String e, String adr, String i) {
+		Set<Lege> leger = new HashSet<>();
+		if(!reg.isEmpty())
+                {
+                    
+                    for( Lege l: reg) {
+                        if(l.getNavn().toLowerCase().contains(n.toLowerCase()) 
+                                && l.getEtternavn().toLowerCase().contains(e.toLowerCase())
+                                && l.getArbeidsSted().toLowerCase().contains(adr.toLowerCase()) 
+                                && String.valueOf(l.getlegeID()).contains(i))
                             leger.add(l);
                             
                     }

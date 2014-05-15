@@ -26,9 +26,10 @@ public class ReseptInfoVindu extends panelSuper {
 
         
         private final JTextField datofelt,idfelt,lENavn,lFNavn,lId,pENavn,pFNavn,pFnr,mNavn,mRgruppe,mId,mengdefelt;
-        private final JTextArea legeanv;
+        private final JTextArea legeanvfelt;
         private JButton kVisPasient,kVisMedisin,kVisLege;
         private Resept resept;
+        private JScrollPane legeanv;
         
 
         
@@ -37,11 +38,11 @@ public class ReseptInfoVindu extends panelSuper {
             fil = new FilBehandler();
             
 	
-            resepter = new ReseptRegister();
+            reseptRegister = new ReseptRegister();
             
             try
             {
-              resepter = fil.lastInnFilResept("ReseptLagring");
+              reseptRegister = fil.lastInnFilResept("ReseptLagring");
             }	    
 	    catch (FileNotFoundException ex)
 	    {
@@ -74,7 +75,8 @@ public class ReseptInfoVindu extends panelSuper {
             mRgruppe = new JTextField(10);
             mId = new JTextField(10);
             mengdefelt = new JTextField(10);
-            legeanv = new JTextArea(5,10);
+            legeanvfelt = new JTextArea(5,10);
+            legeanv = new JScrollPane(legeanvfelt);
             datofelt.setEditable(false);
             idfelt.setEditable(false);
             lENavn.setEditable(false);
@@ -87,8 +89,7 @@ public class ReseptInfoVindu extends panelSuper {
             mRgruppe.setEditable(false);
             mId.setEditable(false);
             mengdefelt.setEditable(false);
-            legeanv.setEditable(false);
-            legeanv.setEditable(false);
+            legeanvfelt.setEditable(false);
             
             
             
@@ -97,19 +98,13 @@ public class ReseptInfoVindu extends panelSuper {
                         {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                /*                                kVisLege.setEnabled(false);
-                                kVisMedisin.setEnabled(false);
-                                kVisPasient.setEnabled(false);*/
-                          
- 
+            
 
                                  if (e.getSource() == kVisInfo)
                                  {
-                                     /*kVisLege.setEnabled(true);
-                                     kVisMedisin.setEnabled(true);
-                                     kVisPasient.setEnabled(true);*/
+                                    
                                      visResept(getSelectedObject());
-                                     resept = getSelectedObject();
+                                     
                                
                                  }			
                                  
@@ -165,7 +160,7 @@ public class ReseptInfoVindu extends panelSuper {
             sptop.add(feltPanel);
             add(sptop, BorderLayout.CENTER);
             
-            String [] tomListe = {"Inger resepter er registrert"};
+            String [] tomListe = {"Inger reseptRegister er registrert"};
             if(visListe(o) !=null)
             {
                 list.setListData(visListe(o));
@@ -186,7 +181,8 @@ public class ReseptInfoVindu extends panelSuper {
         private void visResept( Resept r ) 
         {
             if(getSelectedObject() != null)
-            {                
+            {        
+                    resept = getSelectedObject();
                     datofelt.setText(r.getDato());
                     idfelt.setText(r.getID()+"");
                     lENavn.setText(r.getLege().getEtternavn());
@@ -199,7 +195,7 @@ public class ReseptInfoVindu extends panelSuper {
                     mRgruppe.setText(r.getMedisin().getReseptGruppe()+"");
                     mId.setText(r.getMedisin().getMedID());
                     mengdefelt.setText(r.getMengde()+"");      
-                    legeanv.setText(r.getLegeAnvisning());      
+                    legeanvfelt.setText(r.getLegeAnvisning());      
 
                     logomraade.append(logg.toString("Fant resept: " + r.toString()));
 		}		
@@ -291,6 +287,7 @@ public class ReseptInfoVindu extends panelSuper {
                  gbc.gridx=0;
                  feltPanel.add(new JLabel("LEGEANVISNING"), gbc);
                  gbc.gridx++;
+                 gbc.gridwidth=4;
                  feltPanel.add(legeanv,gbc);
              		
             feltPanel.setVisible(true);
@@ -306,9 +303,9 @@ public class ReseptInfoVindu extends panelSuper {
 		if (o instanceof Lege ) 
                 {	
                     l = (Lege)o;
-			if(resepter.getResepterLegeObject(l)!= null) 
+			if(reseptRegister.getResepterLegeObject(l)!= null) 
                         {
-                            for(Resept x: resepter.getResepterLegeObject(l)) 
+                            for(Resept x: reseptRegister.getResepterLegeObject(l)) 
                             {
                                     String s = x.getID() + " " + x.getPasient().getFNavn() + " " + x.getPasient().getENavn() + " " + x.getDato();
                                     x.setToString(s);
@@ -322,9 +319,9 @@ public class ReseptInfoVindu extends panelSuper {
                 if (o instanceof Pasient)
                 {
                     p = (Pasient)o;
-                        if(resepter.getResepterPasientObject(p)!= null) 
+                        if(reseptRegister.getResepterPasientObject(p)!= null) 
                         {
-                           for(Resept x: resepter.getResepterPasientObject(p)) 
+                           for(Resept x: reseptRegister.getResepterPasientObject(p)) 
                            {
                                     String s = x.getID() + " " + x.getLege().getNavn() + " " + x.getLege().getEtternavn() + " "
                                     + x.getLege().getlegeID() + " " + x.getDato();

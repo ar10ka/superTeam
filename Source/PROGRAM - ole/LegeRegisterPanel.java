@@ -28,7 +28,6 @@ public class LegeRegisterPanel extends panelSuper {
 	Color grey = new Color(128,128,128);
 	Border lineBorder = BorderFactory.createLineBorder(grey);
 
-	private LegeRegister leger;
 	private final Lytter sensor;
 
 
@@ -36,7 +35,7 @@ public class LegeRegisterPanel extends panelSuper {
         //KONSTRUKTØR
 	public LegeRegisterPanel() {
             
-            leger = new LegeRegister();
+            legeRegister = new LegeRegister();
             fil = new FilBehandler();
 	    
             try //LASTER INN LEGEREGISTERET
@@ -103,7 +102,7 @@ public class LegeRegisterPanel extends panelSuper {
                 addFeltPanel();
                 addSearchPanel();
            
-                list = new JList(leger.returnObjekt()); //data has type Object[]
+                list = new JList(legeRegister.returnObjekt()); //data has type Object[]
                 list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 list.setLayoutOrientation(JList.VERTICAL);
                 JScrollPane scrollpane = new JScrollPane(list);
@@ -189,26 +188,18 @@ public class LegeRegisterPanel extends panelSuper {
                          Document source = documentEvent.getDocument();
                          String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
                          int length = source.getLength();
-                         boolean b = false;
+                        // boolean b = false;
 
-                           if(leger.finnObjekt(fnavn, enavn, adr)!=null)
+                           if(legeRegister.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
                            {
-                               b = true;
-                               list.setListData(leger.finnObjekt(fnavn, enavn, adr));
+                             //  b = true;
+                               list.setListData(legeRegister.finnObjekt(fnavn, enavn, adr,idfelt));
                            }
-
-                           if(idfelt.matches("-?\\d+(\\.\\d+)?") && leger.finn(Integer.parseInt(idfelt))!=null)
-                           {
-                               b= true;
-                               List<Lege> l = new ArrayList<>();
-                               l.add(leger.finn(Integer.parseInt(idfelt)));
-                               list.setListData(l.toArray());
-                           }
-                           if(!b)
+                          else
                                list.setListData(emptyArray);
 
                           if(length == 0)  
-                           list.setListData(leger.returnObjekt());
+                           list.setListData(legeRegister.returnObjekt());
 
 
                        }
@@ -309,8 +300,8 @@ public class LegeRegisterPanel extends panelSuper {
 	  {
 	    try
 	    {
-	      leger = fil.lastInnFilLege("LegeLagring");
-	      resepter = fil.lastInnFilResept("ReseptLagring");
+	      legeRegister = fil.lastInnFilLege("LegeLagring");
+	      reseptRegister = fil.lastInnFilResept("ReseptLagring");
               System.out.println(logg.toString("LegeRegister lastet inn!"));
   
 	    }
@@ -328,8 +319,8 @@ public class LegeRegisterPanel extends panelSuper {
 	  {
 	    try
 	    {
-                fil.lagreFil(leger, "LegeLagring");
-                fil.lagreFil(resepter, "ReseptLagring");
+                fil.lagreFil(legeRegister, "LegeLagring");
+                fil.lagreFil(reseptRegister, "ReseptLagring");
                 System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -377,7 +368,7 @@ public class LegeRegisterPanel extends panelSuper {
               if (!fnavn.equals("") && !enavn.equals("")&& ActivRadio()!=null && !arb.equals("") )
               {
                      Lege lege = new Lege(fnavn, enavn,arb, reseptGruppe, 0);
-                    leger.settInn(lege);
+                    legeRegister.settInn(lege);
                     logomraade.append(logg.toString("Lege lagt til")+"\n");
 
 
@@ -418,12 +409,12 @@ public class LegeRegisterPanel extends panelSuper {
                 
               if (!fnavn.equals("") && !enavn.equals("") && !legeIDFelt.equals("") && !arb.equals("") )
               {
-                if (leger.finnes(id))
+                if (legeRegister.finnes(id))
                 {          
                     Lege lege = new Lege(fnavn, enavn,arb, ActivRadio(), id);
 
 
-                        if(leger.endreLege(lege))
+                        if(legeRegister.endreLege(lege))
                         {
                             legeIDFelt.setText(""+id);
                             logomraade.append(logg.toString("Lege endret")+"\n");
@@ -502,7 +493,7 @@ public class LegeRegisterPanel extends panelSuper {
                     if (n == JOptionPane.YES_OPTION)
                     {  
 
-                        if(leger.slettLege(l.getlegeID())) {
+                        if(legeRegister.slettLege(l.getlegeID())) {
                                 String utskrift = "Legen " + l.getNavn() + " " + l.getEtternavn() +" "+ l.getlegeID() + " er fjernet \n"; 
                                 logomraade.append(logg.toString(utskrift));
 
@@ -539,7 +530,7 @@ public class LegeRegisterPanel extends panelSuper {
         
         public void oppdaterListe() 
         {
-		list.setListData(leger.returnObjekt());
+		list.setListData(legeRegister.returnObjekt());
 	}
         
         private void generateLeger()
@@ -579,7 +570,7 @@ public class LegeRegisterPanel extends panelSuper {
                 
                 
                 Lege lege = new Lege(navn, enavn,arb, gruppe, 0);
-                leger.settInn(lege);
+                legeRegister.settInn(lege);
             }
         }
             
@@ -611,7 +602,7 @@ public class LegeRegisterPanel extends panelSuper {
 		    }			
 		    else if (e.getSource() == kVisLege)
 		    {
-                              resepter.nyResept(1337, getSelectedObject(), new Pasient("Arnt", "Henriksen", "212345 13231", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
+                              reseptRegister.nyResept(getSelectedObject(), new Pasient("Arnt", "Henriksen", "212345 13231", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
 		
 		      visLege(getSelectedObject());
                     }		

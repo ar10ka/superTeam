@@ -17,26 +17,17 @@ import javax.swing.text.MaskFormatter;
 
 public class ReseptRegisterPanel extends panelSuper {
 	
-    	private JButton kVisInfo;//, kSlettResept;
-
-        
-        private final JTextField searchdatofelt,searchidfelt,searchlegeENavnfelt,searchlegeFNavnfelt,searchlegeIdfelt,searchpasientENavnfelt,searchpasientFNavnfelt,searchpasientFnrfelt,searchmedisinNavnfelt,searchmedisinKategorifelt,searchmedisinIdfelt,mengdefelt;
-        private final JTextArea legeanvfelt;
-        private JButton kVisPasient,kVisMedisin,kVisLege;
-        private Resept resept;
-        private JScrollPane legeanv;
-        
-        private final JTextField reseptIDFelt;
-	
+        private final JFormattedTextField reseptIDFelt;
+	private final JTextField  searchNavn,searchKategori,searchID;
+        private final JTextField  navnFelt, medKategori;
         private JTextArea medInfo;
 	private final JButton kRegResept, kSlettResept, kVisResept,kEndreResept,kNyResept;
-        private final JButton generer;
+        private final JButton search;
 	JRadioButton 	radioA, radioB,radioC;
 	JRadioButton 	searchRadioA, searchRadioB,searchRadioC,searchAny;
         //JSpinner medKategori;
-        ButtonGroup searchRadioGruppe;
+        ButtonGroup searchRadioGruppe,radioGruppe;
         private JList list = new JList();
-        private final int tomID = 0;
         
         MaskFormatter medIDformatter;
 	private final Lytter sensor;
@@ -53,9 +44,6 @@ public class ReseptRegisterPanel extends panelSuper {
             
             gbc = new GridBagConstraints();
             reseptRegister = new ReseptRegister();
-            pasientRegister = new PasientRegister();
-            medisinRegister = new MedisinRegister();
-            legeRegister = new LegeRegister();
             fil = new FilBehandler();
 	    
             try //LASTER INN LEGEREGISTERET
@@ -69,11 +57,35 @@ public class ReseptRegisterPanel extends panelSuper {
 	    } catch (ParseException ex) {
               ex.printStackTrace();
             }
-		reseptIDFelt = new JTextField(10);
+		
 		
 		reseptID = "";
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
+                
+                searchNavn = new JTextField(11);
+                searchKategori = new JTextField(11);
+                searchID = new JTextField(11);
+		
+		navnFelt = new JTextField(10);
+		medKategori = new JTextField(10);
+                medInfo    = new JTextArea(15,30);
+                medInfo.setEditable(true);
+                JScrollPane rulle2 = new JScrollPane(medInfo);		
+                //arbeidsStedFelt = new JTextField(20);
+		//reseptIDFelt.setEditable(false);
+                
+                reseptIDFelt = new JFormattedTextField(medIDformatter);
+                reseptIDFelt.setColumns(14);
+                
+		radioA = new JRadioButton("A");
+                radioB = new JRadioButton("B");
+                radioC = new JRadioButton("C");
+
+                radioGruppe = new ButtonGroup();
+                radioGruppe.add(radioA);
+                radioGruppe.add(radioB);
+                radioGruppe.add(radioC);
                 
 		searchRadioA = new JRadioButton("A");
                 searchRadioB = new JRadioButton("B");
@@ -85,46 +97,30 @@ public class ReseptRegisterPanel extends panelSuper {
                 searchRadioGruppe.add(searchRadioB);
                 searchRadioGruppe.add(searchRadioC);
                 searchRadioGruppe.add(searchAny);
-                searchRadioA.setBackground(blue);
-                searchRadioB.setBackground(blue);
-                searchRadioC.setBackground(blue);
-                searchAny.setBackground(blue);
-
+ /*               
+                
+                 // KATEGORI RULLEVINDU
+                SpinnerListModel listModel = new SpinnerListModel(getKategori());
+                medKategori    = new JSpinner(listModel);
+                Dimension d = medKategori.getPreferredSize();
+                d.width = 100;
+                medKategori.setPreferredSize(d);
+                medKategori.setValue( getKategori().get(getKategori().size()-1));
+*/
                 kEndreResept = new JButton("Endre Resept");
 		kRegResept = new JButton("Reg Resept");
 		kSlettResept = new JButton("Slett Resept");
 		kVisResept = new JButton("Vis Resept");
 		kNyResept = new JButton("Ny Resept");
-		generer = new JButton("Generer Nye Resepter");
-                kVisInfo = new JButton("Vis Info");
-;
-            kVisPasient = new JButton("Vis Pasient");
-            kVisMedisin = new JButton("Vis Medisin");
-            kVisLege = new JButton("Vis Lege");
-            
-            searchdatofelt = new JTextField(10);
-            searchidfelt = new JTextField(10);
-            searchlegeENavnfelt = new JTextField(10);
-            searchlegeFNavnfelt = new JTextField(10);
-            searchlegeIdfelt = new JTextField(10);
-            searchpasientENavnfelt = new JTextField(10);
-            searchpasientFNavnfelt = new JTextField(10);
-            searchpasientFnrfelt = new JTextField(10);
-            searchmedisinNavnfelt = new JTextField(10);
-            searchmedisinKategorifelt = new JTextField(10);
-            searchmedisinIdfelt = new JTextField(10);
-            
-            mengdefelt = new JTextField(10);
-            legeanvfelt = new JTextArea(5,10);
-            legeanv = new JScrollPane(legeanvfelt);
+		search = new JButton("Generer Nye Resepter");
                 
 
 
                 knappePanel.add(kNyResept);
-               // knappePanel.add(kRegResept);
+                knappePanel.add(kRegResept);
                 knappePanel.add(kSlettResept);
-                //knappePanel.add(kEndreResept);
-                knappePanel.add(generer);
+                knappePanel.add(kEndreResept);
+                knappePanel.add(search);
                 knappePanel.add(kVisResept);
 
                 addFeltPanel();
@@ -150,7 +146,7 @@ public class ReseptRegisterPanel extends panelSuper {
                 kSlettResept.addActionListener(sensor);
                 kVisResept.addActionListener(sensor);
                 kNyResept.addActionListener(sensor);
-                generer.addActionListener(sensor);
+                search.addActionListener(sensor);
 
                 kRegResept.setEnabled(false);
                 kEndreResept.setEnabled(false);
@@ -168,38 +164,29 @@ public class ReseptRegisterPanel extends panelSuper {
                      }
                      private void findIt(DocumentEvent documentEvent) {
 
-                        String rId = searchidfelt.getText();
-                        String rDato = searchdatofelt.getText();
-                        char rGruppe  = searchaktivRadio();
-                        String lId = searchlegeIdfelt.getText();
-                        String lNavn = searchlegeFNavnfelt.getText();
-                        String lEnavn = searchlegeENavnfelt.getText();
-                        String pId = searchpasientFnrfelt.getText();
-                        String pNavn = searchpasientFNavnfelt.getText();
-                        String pEnavn = searchpasientENavnfelt.getText();
-                        String mId = searchmedisinIdfelt.getText();
-                        String mNavn = searchmedisinNavnfelt.getText();
-                        String mKat = searchmedisinKategorifelt.getText();
-                        
+                        String idfelt = searchID.getText();
+                        String navn = searchNavn.getText();
+                        String kat = searchKategori.getText();
+                        char cha = searchaktivRadio();
 
                          Document source = documentEvent.getDocument();
-                         String[] emptyArray = {"Ingen resept som stemmer med søket  " + rId + " " + rDato + " " +  rGruppe 
-                                                    + " " + lId + " " + lNavn + " " + lEnavn + " " + pId + " " 
-                                                    + pNavn + " " + pEnavn + " " + mId + " " + mNavn + " " + mKat};
+                         String[] emptyArray = {"Ingen resept som stemmer med søket  " + navn + " " + idfelt + " " + cha + " " + kat};
                          int length = source.getLength();
                          boolean b = true;
 
-                           if(reseptRegister.finnObjekt(rId, rDato, rGruppe,lId,lNavn,lEnavn,pId,pNavn,pEnavn,mId,mNavn,mKat)!=null)
+                           if(reseptRegister.finnObjekt(navn, idfelt, cha, kat)!=null)
                            {
-                               //Resept:id, dato, reseptgruppe
-                               //Lege: id, Navn,etternavn
-                               //Pasient:id, navn etternavn
-                               //Medisin:id, navn kategori
-                               
                                b = false;
-                               list.setListData(reseptRegister.finnObjekt(rId, rDato, rGruppe,lId,lNavn,lEnavn,pId,pNavn,pEnavn,mId,mNavn,mKat));
+                               list.setListData(reseptRegister.finnObjekt(navn, idfelt, cha, kat));
                            }
-   
+                           /*
+                           if(idfelt.matches("-?\\d+(\\.\\d+)?") && reseptRegister.finn(Integer.parseInt(idfelt))!=null)
+                           {
+                               b= false;
+                               List<Resept> l = new ArrayList<>();
+                               l.add(reseptRegister.finn(Integer.parseInt(idfelt)));
+                               list.setListData(l.toArray());
+                           }*/
                            if(b)
                                list.setListData(emptyArray);
 
@@ -211,137 +198,47 @@ public class ReseptRegisterPanel extends panelSuper {
 
 
                    };
-                searchdatofelt.getDocument().addDocumentListener(documentListener);	
-                searchidfelt.getDocument().addDocumentListener(documentListener);	
-                searchlegeENavnfelt.getDocument().addDocumentListener(documentListener);	
-                searchlegeFNavnfelt.getDocument().addDocumentListener(documentListener);	
-                searchlegeIdfelt.getDocument().addDocumentListener(documentListener);	
-                searchpasientENavnfelt.getDocument().addDocumentListener(documentListener);	
-                searchpasientFNavnfelt.getDocument().addDocumentListener(documentListener);	
-                searchpasientFnrfelt.getDocument().addDocumentListener(documentListener);	
-                searchmedisinNavnfelt.getDocument().addDocumentListener(documentListener);	
-                searchmedisinKategorifelt.getDocument().addDocumentListener(documentListener);	
-                searchmedisinIdfelt.getDocument().addDocumentListener(documentListener);		
+                       searchNavn.getDocument().addDocumentListener(documentListener);
+                       searchKategori.getDocument().addDocumentListener(documentListener);
+                       searchID.getDocument().addDocumentListener(documentListener);		
                    }
             
         private void addSearchPanel()
         {  
-                //Resept:id, dato, reseptgruppe
-               //Lege: id, Navn,etternavn
-               //Pasient:id, navn etternavn
-               //Medisin:id, navn kategori
                  gbc.anchor = GridBagConstraints.NORTH;
                  gbc.fill = GridBagConstraints.HORIZONTAL;        
                  gbc.gridwidth=1;
                  gbc.weightx = 0.6;
                  gbc.weighty=0.6;
-                 
                  gbc.gridx=0;
-                 gbc.gridy=1;
-                 
-                 
-                 searchPanel.add(new JLabel("ReseptID:"),gbc);
-                 gbc.gridwidth=3;
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Utskrevet Dato:"),gbc);
-                 gbc.gridwidth=1;
-                 gbc.gridx= 0;
-                 gbc.gridy=2;  
-                 
-                 searchPanel.add(searchidfelt,gbc);
-                 gbc.gridx++;
-                 gbc.gridwidth=3;
-                 searchPanel.add(searchdatofelt,gbc);
-                 
-                 gbc.gridwidth=1;
-                 gbc.gridx= 0;
-                 gbc.gridy=3; 
-                 
-                 searchPanel.add(new JLabel("LegeID:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Etternavn:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Fornavn:"),gbc);
-                 
-                 gbc.gridy=4;
-                 gbc.gridx=0; 
-                 
-                 searchPanel.add(searchlegeIdfelt, gbc);
-                 gbc.gridx++;
-                 searchPanel.add(searchlegeENavnfelt, gbc);
-                 gbc.gridx++;
-                 gbc.gridwidth = 2;
-                 searchPanel.add(searchlegeFNavnfelt, gbc);
-                 gbc.gridwidth = 1;
-                 
-                 gbc.gridx=0;
-                 gbc.gridy = 5;
-                   
-                 searchPanel.add(new JLabel("Pasient Fnr:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Etternavn:"),gbc);
-                 gbc.gridx++;
-                 searchPanel.add(new JLabel("Fornavn:"),gbc);
-                 
-                 gbc.gridx=0;
-                 gbc.gridy=6;
-                 
-                 searchPanel.add(searchpasientFnrfelt, gbc);
-                 gbc.gridx++;
-                 searchPanel.add(searchpasientENavnfelt, gbc);
-                 gbc.gridx++;
-                 gbc.gridwidth = 2;
-                 searchPanel.add(searchpasientFNavnfelt, gbc);
-                 gbc.gridwidth = 1;
-                 
-                 gbc.gridx=0;
-                 gbc.gridy = 7;
-                   
-                 searchPanel.add(new JLabel("Medisin ID:"),gbc);
-                 gbc.gridx++;
+                 gbc.gridy=1;      
                  searchPanel.add(new JLabel("Navn:"),gbc);
                  gbc.gridx++;
-                 searchPanel.add(new JLabel("Kategori:"),gbc);
-                 
-                 gbc.gridx=0;
-                 gbc.gridy=8;
-                 
-                 searchPanel.add(searchmedisinIdfelt, gbc);
+                 searchPanel.add(new JLabel("ID:"),gbc);
                  gbc.gridx++;
-                 searchPanel.add(searchmedisinNavnfelt, gbc);
+                 searchPanel.add(new JLabel("Kategori:"),gbc);
+                 gbc.gridy=2;
+                 gbc.gridx=0;     
+                 searchPanel.add(searchNavn, gbc);
+                 gbc.gridx++;
+                 searchPanel.add(searchID, gbc);
                  gbc.gridx++;
                  gbc.gridwidth = 2;
-                 searchPanel.add(searchmedisinKategorifelt, gbc);
+                 searchPanel.add(searchKategori, gbc);
                  gbc.gridwidth = 1;
-                 
-                 gbc.gridx=0;
+                 gbc.gridx++;
                  gbc.gridy = 0;
-                 
-                 
-                 //Radiobutton
                  searchPanel.add(searchRadioA);
-                 gbc.gridy = 3;
+                 gbc.gridy = 1;
                  searchPanel.add(searchRadioB);
-                 gbc.gridy = 4;
+                 gbc.gridy = 2;
                  searchPanel.add(searchRadioC);
-                 gbc.gridy = 5;
+                 gbc.gridy = 3;
                  searchPanel.add(searchAny);
         }
  private void addFeltPanel()
         {   
-            
-            
-            /*            
-                FELT REG
-            
-            Lege: legeid
-            pasient: fnr
-            medisin: medid
-            Resept: mengde, legeAnvisning
-            
-            
-            *//*
-                feltPanel.setLayout( new GridBagLayout() );
+                 feltPanel.setLayout( new GridBagLayout() );
                 
                  gbc.anchor = GridBagConstraints.NORTH;
                  gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -358,18 +255,17 @@ public class ReseptRegisterPanel extends panelSuper {
                  
                  gbc.gridx=0;
                  gbc.gridy++;
-                 
-                 //SET FALSE NÅR NY RESEPT
+
                  feltPanel.add(new JLabel("Skrevet ut:"), gbc);
 
                  gbc.gridx++;
                  //gbc.gridwidth =1;
-                 feltPanel.add(searchdatofelt, gbc);
+                 feltPanel.add(datofelt, gbc);
                  //gbc.gridwidth=1;
                  gbc.gridx++;
                  feltPanel.add(new JLabel("Reseptnummer:"), gbc);
                  gbc.gridx++;
-                 feltPanel.add(searchidfelt, gbc);
+                 feltPanel.add(idfelt, gbc);
                  
                  
                  gbc.gridy++;
@@ -426,7 +322,7 @@ public class ReseptRegisterPanel extends panelSuper {
                  gbc.gridx++;
                  feltPanel.add(legeanv,gbc);
              		
-            feltPanel.setVisible(true);*/
+            feltPanel.setVisible(true);
       }
 	
 	  private void lastInnFil() throws IOException
@@ -496,21 +392,20 @@ public char searchaktivRadio()
             JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
         }
          public boolean feltFylt()
-        {/*
+        {
             return aktivRadio() != 0 
                     && !reseptIDFelt.getText().equals("")
                     && !navnFelt.getText().equals("")
                     && !medInfo.getText().equals("")
                     //&& !medKategori.getValue().toString().equals(""); Hvis JSpinner
-                    && !medKategori.getText().equals("");*/
-            return false;
+                    && !medKategori.getText().equals("");
         }
 	
         public void regResept() 
-        {/*
+        {
             try
              {
-                    Lege l = reseptIDFelt.getText().replaceAll("\\s","");
+                    String id = reseptIDFelt.getText().replaceAll("\\s","");
                     String navn = navnFelt.getText();
                     char rbStatus = aktivRadio();
                     String info = medInfo.getText();
@@ -519,7 +414,8 @@ public char searchaktivRadio()
 
                     if ( feltFylt() )
                     {
-                    reseptRegister.nyResept(lege,pasient,medisin,mengde,legeanvisning);
+                    Resept resept = new Resept(id, navn, info, k, rbStatus);
+                    reseptRegister.settInnNy(resept);
                     logomraade.append(logg.toString("Resept lagt til")+"\n");
                     }
                     else  {
@@ -537,11 +433,11 @@ public char searchaktivRadio()
                  error("Fyll ut alle feltene!");
                  kRegResept.setEnabled(true);
             }
-                                */
+
         }
         
         public void endreResept()
-        {/*
+        {
             try
                 {
                
@@ -595,15 +491,15 @@ public char searchaktivRadio()
     catch ( NumberFormatException | IndexOutOfBoundsException e)
     {
       error("Fyll ut alle feltene!");
-    }*/
+    }
         }
         //FERDIG
 	private void visResept( Resept r ) 
-        {/*
+        {
             if(getSelectedObject() != null)
             {                
-                    searchdatofelt.setText(r.getDato());
-                    searchidfelt.setText(r.getID()+"");
+                    datofelt.setText(r.getDato());
+                    idfelt.setText(r.getID()+"");
                     lENavn.setText(r.getLege().getEtternavn());
                     lFNavn.setText(r.getLege().getNavn());
                     lId.setText(r.getLege().getlegeID()+"");
@@ -619,11 +515,11 @@ public char searchaktivRadio()
                     logomraade.append(logg.toString("Fant resept: " + r.toString()));
 		}		
                 else
-                    error("Ingen resept er valgt");*/
+                    error("Ingen resept er valgt");
         }
         
 	public void slettResept( Resept l) {
-            /*
+            
              int n = JOptionPane.showConfirmDialog(null,
                             "Vil du fjerne reseptn?",
                             "Fjern Resept!",
@@ -640,18 +536,18 @@ public char searchaktivRadio()
                             error("Finner ikke resept \n");
                     }
                     else 
-                        error("Resept er ikke fjernet ");*/
+                        error("Resept er ikke fjernet ");
 	}
         
 	public void  emptyFields() {
-/*
+
             reseptIDFelt.setText("");
             navnFelt.setText("");
             //medKategori.setValue("---");
             medKategori.setText("");
             medInfo.setText("");
-            */
-            searchRadioGruppe.clearSelection();
+            
+            radioGruppe.clearSelection();
 	}
         
         public Resept getSelectedObject() {
@@ -673,7 +569,7 @@ public char searchaktivRadio()
  
         
         private void generateResepter()
-        {/*
+        {
             int Min=0;
             int Max;
             int index;
@@ -741,7 +637,7 @@ public char searchaktivRadio()
                 
                 
                 
-            }*/
+            }
             
         }
 
@@ -787,7 +683,7 @@ public char searchaktivRadio()
                         emptyFields();
                     }
                     
-		    else if ( e.getSource() == generer ) 
+		    else if ( e.getSource() == search ) 
                     {
 		    	generateResepter();
 		    }                    

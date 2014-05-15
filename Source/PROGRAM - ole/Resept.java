@@ -47,6 +47,10 @@ public class Resept implements Serializable
     {
         return reseptID;
     }
+    public void setID(int id)
+    {
+        reseptID = id;
+    }
     public Lege getLege()
     {
         return lege;
