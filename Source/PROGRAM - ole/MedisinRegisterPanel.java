@@ -405,9 +405,10 @@ public char searchaktivRadio()
 
                     if ( feltFylt() )
                     {
-                    Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
-                    medisinRegister.settInnNy(medisin);
-                    logomraade.append(logg.toString("Medisin lagt til")+"\n");
+                            Medisin medisin = new Medisin(id, navn, info, k, rbStatus);
+                            medisinRegister.settInnNy(medisin);
+                            logomraade.append(logg.toString("Medisin lagt til")+"\n");
+                            visMedisin(medisin);
                     }
                     else  {
                         error("Fyll ut alle feltene!");
@@ -486,10 +487,10 @@ public char searchaktivRadio()
         
 	public void visMedisin( Medisin m ) 
         {
-            if(getSelectedObject() != null)
+            if(m != null)
             {
                 kEndreMedisin.setEnabled(true);
-                medisinIDFelt.setEnabled(false);
+                medisinIDFelt.setEditable(false);
                         
                 
 			medisinIDFelt.setText(m.getMedID());			
@@ -666,7 +667,7 @@ public static String[] getKategoriString(){
                        kRegMedisin.setEnabled(false);
                        kEndreMedisin.setEnabled(false);
                        
-                      medisinIDFelt.setEnabled(true);
+                      medisinIDFelt.setEditable(true);
 			
                     if (e.getSource() == kRegMedisin)
                     {
@@ -674,7 +675,7 @@ public static String[] getKategoriString(){
                             regMedisin();
                         else
                             error("Husk av reseptgruppe!");
-                        emptyFields();
+                        
                     }			
 		    else if (e.getSource() == kSlettMedisin)
 		    {
@@ -682,7 +683,8 @@ public static String[] getKategoriString(){
 		    }			
 		    else if (e.getSource() == kVisMedisin)
 		    {
-                      medisinIDFelt.setEnabled(false);
+                      emptyFields();
+                      medisinIDFelt.setEditable(false);
 		      visMedisin(getSelectedObject());
 		    }		
                
@@ -695,7 +697,6 @@ public static String[] getKategoriString(){
                     else if (e.getSource() == kEndreMedisin)
                     {
                         endreMedisin();
-                        emptyFields();
                     }
                     
 		    else if ( e.getSource() == search ) 

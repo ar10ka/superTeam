@@ -209,8 +209,8 @@ public class ReseptInfoVindu extends panelSuper {
                 
                  gbc.anchor = GridBagConstraints.NORTH;
                  gbc.fill = GridBagConstraints.HORIZONTAL;
-                 //gbc.insets = new Insets(5,10,5,15);
-                 //gbc.ipady = 20;
+                 gbc.insets = new Insets(5,10,5,15);
+                 gbc.ipady = 20;
             
                  gbc.weightx = 0.5;
                  gbc.weighty=1;

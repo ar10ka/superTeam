@@ -27,24 +27,19 @@ public class LegeRegister implements Serializable
 
 	private List<Lege> reg = new ArrayList<>();
 	private int legeID = 1000; 
+        private int antall;
 	
 	public LegeRegister() {
-		
+		antall = 0;
 	}
 	
 	
-	public void settInn(Lege ny) {
-		//int nyttID = legeID++;
-		if(ny.getNavn() != null)
-		{
-			ny.setlegeID(legeID++);
-			reg.add(ny);
-		}
+	public void settInn(String fnavn, String enavn, String arb, char[] reseptGruppe) 
+        {
+            Lege l = new Lege(fnavn,enavn, arb, reseptGruppe,legeID++);
+            reg.add(l);
 	}
-	
-
-	
-	public Lege finn (int id) {
+        public Lege finn (int id) {
 		if(!reg.isEmpty()) {
 			for( Lege l: reg) {
 				if(l.getlegeID()==(id)) {
@@ -54,8 +49,11 @@ public class LegeRegister implements Serializable
 		}
 		return null;
 	}
-         public Lege finn(Lege l)//finner lege
-  {
+
+	
+
+        public Lege finn(Lege l)//finner lege
+        {
           if(!reg.isEmpty())
           {
             for( Lege x : reg)
@@ -65,16 +63,16 @@ public class LegeRegister implements Serializable
             }
           }
           return null;
-   }
-         
-   public Object[] returnObjekt()
-    {
-       String[] emptyArray = {"Det er ingen lege registrert ennå"};
-       if(!reg.isEmpty())  
-          return reg.toArray();
-         else
-          return emptyArray;
-    }
+        }
+
+        public Object[] returnObjekt()
+         {
+            String[] emptyArray = {"Det er ingen lege registrert ennå"};
+            if(!reg.isEmpty())  
+               return reg.toArray();
+              else
+               return emptyArray;
+         }
          
 	public List<Lege> finn ( String n, String e) {
 		List<Lege> leger = new ArrayList<>();
@@ -127,7 +125,25 @@ public class LegeRegister implements Serializable
                 }
              return null;
 	}   
-	
+	public Lege finnRandom( )//finner medisin
+  {
+          if(!reg.isEmpty())
+          {
+              
+           int random = 1 + (int)(Math.random() * ((reg.size() - 1) + 1));
+            
+              
+            for( int i = 0; i < reg.size();i++)
+            {
+                if(random == i)
+                {
+                    return reg.get(i);
+                }
+                
+            }
+          }
+          return null;
+  }
 	public boolean slettLege(int id) {
 		if(!reg.isEmpty())
 		{
@@ -204,22 +220,68 @@ public class LegeRegister implements Serializable
 		}
 		return antall;
 	}
-	
-}
-
-class ComparatorImpl implements Comparator<Lege> {
-
-    public ComparatorImpl() {
-    }
-
-    @Override
-    public int compare(Lege l1, Lege l2) {
-        if(l1.getEtternavn().compareTo(l2.getEtternavn()) == 0) {
-        	return 0;
+        public Lege getLatestAdded()
+        {
+            return reg.get(reg.size());
         }
-        return 1;
-    }
- 
+           public int getAntall() {
+	   return antall;
+   }
+   
+   public Object [] [] finnFraByen(String by) { // metoden som returnerer leger utifra byen
+	   //String[] emptyArray = {"Ingen Leger er registrert i denne byen"};
+	   
+	   List<Lege> leger = new ArrayList<>();
+	   
+	   if(!reg.isEmpty() ) {
+		   for(Lege lege: reg) {
+		   if(by.equals(lege.getArbeidsSted())) {
+			   
+			   leger.add(lege);
+		   }
+		  }
+		   Object[][] felter = new Object[leger.size()][];
+			   
+			antall = leger.size();  
+			   
+			   
+			   
+			  for (int i = 0; i < leger.size(); i++) {
+				   Lege lege = leger.get(i);
+				   
+				   felter[i] = new Object[] {
+						   lege.getlegeID(),
+						   lege.getNavn(),
+						   lege.getEtternavn(),
+						   lege.getArbeidsSted()
+						   
+				   } ;
+				
+				  //return felter;
+			   }
+			  return felter;
+			   
+		   }
+	   System.out.println("returnerer null I legeRegister");
+	   	return null;
+	   }
+
+	
+    }   
+
+    class ComparatorImpl implements Comparator<Lege> {
+
+        public ComparatorImpl() {
+        }
+
+        @Override
+        public int compare(Lege l1, Lege l2) {
+            if(l1.getEtternavn().compareTo(l2.getEtternavn()) == 0) {
+                    return 0;
+            }
+            return 1;
+        }
+
 }
 	
 

@@ -21,17 +21,16 @@ import javax.swing.JTextArea;
 public class Resept implements Serializable
 {
     private int reseptID;
-    private Logg logg;
     private Lege lege;
     private Pasient pasient;
     private Medisin medisin;
     private String utskrevet;
     private String legeanvisning;
-    private int mengdeMg;
+    private String mengdeMg;
     private String setString;
     
     
-    public Resept (int id, Lege l, Pasient p, Medisin m,int mengde, String la, String dato)
+    public Resept (int id, Lege l, Pasient p, Medisin m,String mengde, String la, String dato)
     {
         reseptID = id;
         lege = l;
@@ -39,9 +38,12 @@ public class Resept implements Serializable
         medisin = m;
         utskrevet = dato;
         mengdeMg = mengde;
-        legeanvisning = la;
-        setString = reseptID + " " +  utskrevet + " " + p.getFNavn() + " " + p.getENavn();
-    }
+        legeanvisning = la;           
+        
+        //System.out.println(reseptID + " " +  utskrevet + " " + p.getFNavn() + " " + p.getENavn());
+
+        setString = reseptID + "   " +  utskrevet + " " + p.getFNavn() + " " + p.getENavn();
+}
     
     public int getID()
     {
@@ -67,7 +69,7 @@ public class Resept implements Serializable
     {
         return utskrevet;
     }
-    public int getMengde()
+    public String getMengde()
     {
         return mengdeMg;
     }

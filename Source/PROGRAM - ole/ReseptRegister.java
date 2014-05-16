@@ -22,14 +22,23 @@ public class ReseptRegister implements Serializable
             }
        return false;
     }
-    public void nyResept( Lege l, Pasient p, Medisin m,int mengde, String la)
+    public void nyResept( Lege l, Pasient p, Medisin m,String mengde, String la)
     {
         int id  = reseptID++;
     	String utskrevet = logg.getDate( "Resept " + id + " er opprettet");
         Resept r = new Resept(id,l,p,m,mengde,la, utskrevet);
         reseptReg.add(r);
     }
-
+	public Resept finn (int id) {
+		if(!reseptReg.isEmpty()) {
+			for( Resept r: reseptReg) {
+				if(r.getID()==(id)) {
+					return r;
+				}
+			}
+		}
+		return null;
+	}
     public Resept finnRandom( )//finner medisin
   {
           if(!reseptReg.isEmpty())
@@ -108,7 +117,7 @@ public class ReseptRegister implements Serializable
        String[] emptyArray = {"Det er ingen resepter registrert ennå"};
        if(!reseptReg.isEmpty())  
           return reseptReg.toArray();
-         else
+       else
           return emptyArray;
     }
     
@@ -222,7 +231,7 @@ public class ReseptRegister implements Serializable
         
                     for ( Resept x: reseptReg)
                     {
-                       if(x.getPasient().getFNr()== p.getFNr())
+                       if(x.getPasient().getFNr().equals(p.getFNr()))
                        { 
                            r.add(x);
                        }
@@ -234,34 +243,80 @@ public class ReseptRegister implements Serializable
                                    String lId, String lNavn, String lEnavn,
                                    String pId, String pNavn, String pEnavn,
                                    String mId,  String mNavn, String mKat) {
-		Set<Pasient> leger = new HashSet<>();
+		Set<Resept> resepter = new HashSet<>();
 		if(!reseptReg.isEmpty())
                 {
-                    
+                         
                     for( Resept r: reseptReg) {
-                        if(        String.valueOf(r.getID()).contains(rId) 
-                                && r.getDato().contains(rDato) 
-                                && r.getMedisin().getReseptGruppe()== rGruppe
-                                && String.valueOf(r.getLege().getlegeID()).contains(lId)
-                                && r.getLege().getNavn().contains(lNavn)
-                                && r.getLege().getEtternavn().contains(lEnavn)
-                                && r.getPasient().getFNr().contains(pId)
-                                && r.getPasient().getFNavn().contains(pNavn)
-                                && r.getPasient().getENavn().contains(pEnavn)
-                                && r.getMedisin().getMedID().contains(mId)
-                                && r.getMedisin().getNavn().contains(mNavn)
-                                && r.getMedisin().getKategori().contains(mKat)
-                                )
-                            reseptReg.add(r);
+                        if(rGruppe!=0)
+                        {
+                       
+                            if(        String.valueOf(r.getID()).toLowerCase().contains(rId.toLowerCase()) 
+                                    && r.getDato().toLowerCase().contains(rDato.toLowerCase()) 
+                                    && r.getMedisin().getReseptGruppe()== rGruppe
+                                    && String.valueOf(r.getLege().getlegeID()).toLowerCase().contains(lId.toLowerCase())
+                                    && r.getLege().getNavn().toLowerCase().contains(lNavn.toLowerCase())
+                                    && r.getLege().getEtternavn().toLowerCase().contains(lEnavn.toLowerCase())
+                                    && r.getPasient().getFNr().toLowerCase().contains(pId.toLowerCase())
+                                    && r.getPasient().getFNavn().toLowerCase().contains(pNavn.toLowerCase())
+                                    && r.getPasient().getENavn().toLowerCase().contains(pEnavn.toLowerCase())
+                                    && r.getMedisin().getMedID().toLowerCase().contains(mId.toLowerCase())
+                                    && r.getMedisin().getNavn().toLowerCase().contains(mNavn.toLowerCase())
+                                    && r.getMedisin().getKategori().toLowerCase().contains(mKat.toLowerCase())
+                                    ){
+                                        resepter.add(r);
+                            }
                             
+                        }
+                        else
+                        {
+                            try{
+                            if(        String.valueOf(r.getID()).toLowerCase().contains(rId.toLowerCase()) 
+                                    && r.getDato().toLowerCase().contains(rDato.toLowerCase()) 
+                                    
+                                    && String.valueOf(r.getLege().getlegeID()).toLowerCase().contains(lId.toLowerCase())
+                                    && r.getLege().getNavn().toLowerCase().contains(lNavn.toLowerCase())
+                                    && r.getLege().getEtternavn().toLowerCase().contains(lEnavn.toLowerCase())
+                                    && r.getPasient().getFNr().toLowerCase().contains(pId.toLowerCase())
+                                    && r.getPasient().getFNavn().toLowerCase().contains(pNavn.toLowerCase())
+                                    && r.getPasient().getENavn().toLowerCase().contains(pEnavn.toLowerCase())
+                                    && r.getMedisin().getMedID().toLowerCase().contains(mId.toLowerCase())
+                                    && r.getMedisin().getNavn().toLowerCase().contains(mNavn.toLowerCase())
+                                    && r.getMedisin().getKategori().toLowerCase().contains(mKat.toLowerCase())
+                                    ){
+                                        resepter.add(r);
+                            }
+                        }
+                        catch(NullPointerException e)
+                                {
+                                    System.out.println(r.getID());
+                                }
+                         }   
                     }
-                    if (!leger.isEmpty())
-                        return leger.toArray();
+                    if (!resepter.isEmpty())
+                        return resepter.toArray();
                     else
                         return null;
                 }
              return null;
 	}
+        public boolean slettResept(Resept r) {
+		if(!reseptReg.isEmpty())
+		{
+			for(Resept x: reseptReg) {
+				if(x.getID()==(r.getID())) {
+					reseptReg.remove(x);
+					return true;
+				}
+			}
+		}
+		return false;
+	}        
+        public Resept getLatestAdded()
+        {
+            return reseptReg.get(reseptReg.size());
+        }
+
     
 
 

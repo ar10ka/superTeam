@@ -132,41 +132,25 @@ public class panelSuper extends JPanel{
 		    	infoFrame.setVisible(true);
 		    	infoFrame.setSize(1100,600);
                 
-                        logomraade.append(logg.toString("Fant pasient: " + p.toString()));
+                        logomraade.append(logg.toString("Fant pasient: " + p.toString())+"\n");
 		}		
                 else
                     error("Ingen pasient er valgt");
         }
     public void visInfoVindu( Lege l ) 
-        {
-            if(!list.isSelectionEmpty())
-            {
-                        
+        {        
                         InfoVindu = new InfoVindu(l,"Lege");
                         logomraade.append(logg.toString("Vis mer info om lege: " + l.toString()));
-		}		
-                else
-                    error("Ingen lege er valgt");
         }
     public void visInfoVindu( Pasient p ) 
         {
-            if(!list.isSelectionEmpty())
-            {
                         InfoVindu = new InfoVindu(p,"Pasient");
-                        logomraade.append(logg.toString("Vis mer info om pasient: " + p.toString()));
-		}		
-                else
-                    error("Ingen pasient er valgt");
+                        logomraade.append(logg.toString("Vis mer info om pasient: " + p.toString())+"\n");
         }
     public void visInfoVindu( Medisin m ) 
         {
-            if(!list.isSelectionEmpty())
-            {
                 InfoVindu = new InfoVindu(m,"Medisin");
-                logomraade.append(logg.toString("Vis mer info om lege: " + m.toString()));
-            }		
-            else
-                error("Ingen lege er valgt");
+                logomraade.append(logg.toString("Vis mer info om Medisin: " + m.toString())+"\n");
         }
 
 

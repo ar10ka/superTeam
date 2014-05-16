@@ -26,39 +26,41 @@ public class PasientRegister implements Serializable
   {
   }
 public Object[] finnObjekt ( String n, String e, String adr, String fnr) {
-		Set<Pasient> leger = new HashSet<>();
+		Set<Pasient> pasienter = new HashSet<>();
 		if(!reg.isEmpty())
                 {
                     
                     for( Pasient l: reg) {
                         if(l.getFNr().contains(fnr) &&l.getFNavn().toLowerCase().contains(n.toLowerCase()) && l.getENavn().toLowerCase().contains(e.toLowerCase())&& l.getAdresse().toLowerCase().contains(adr.toLowerCase()) )
-                            leger.add(l);
+                            pasienter.add(l);
                             
                     }
-                    if (!leger.isEmpty())
-                        return leger.toArray();
+                    if (!pasienter.isEmpty())
+                        return pasienter.toArray();
                     else
                         return null;
                 }
              return null;
-	}   /*
-public Object[] finnObjekt ( String fnr) {
-		Set<Pasient> leger = new HashSet<>();
-		if(!reg.isEmpty())
+	}  
+public Pasient finnRandom( )//finner medisin
+  {
+          if(!reg.isEmpty())
+          {
+              
+           int random = 1 + (int)(Math.random() * ((reg.size() - 1) + 1));
+            
+              
+            for( int i = 0; i < reg.size();i++)
+            {
+                if(random == i)
                 {
-                    
-                    for( Pasient l: reg) {
-                        if(l.getFNr().contains(fnr) )
-                            leger.add(l);
-                            
-                    }
-                    if (!leger.isEmpty())
-                        return leger.toArray();
-                    else
-                        return null;
+                    return reg.get(i);
                 }
-             return null;
-	}   */
+                
+            }
+          }
+          return null;
+  }
  public List<Pasient> finn(String fn, String en )//finner pasient
   {
      List<Pasient> pas = new ArrayList<>();

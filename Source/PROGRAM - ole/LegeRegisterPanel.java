@@ -301,7 +301,6 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
 	      legeRegister = fil.lastInnFilLege("LegeLagring");
-	      reseptRegister = fil.lastInnFilResept("ReseptLagring");
               System.out.println(logg.toString("LegeRegister lastet inn!"));
   
 	    }
@@ -320,7 +319,6 @@ public class LegeRegisterPanel extends panelSuper {
 	    try
 	    {
                 fil.lagreFil(legeRegister, "LegeLagring");
-                fil.lagreFil(reseptRegister, "ReseptLagring");
                 System.out.println(logg.toString("LegeRegister lagret!"));
 	    }
 	    catch (FileNotFoundException ex)
@@ -365,29 +363,25 @@ public class LegeRegisterPanel extends panelSuper {
 
 
 
-              if (!fnavn.equals("") && !enavn.equals("")&& ActivRadio()!=null && !arb.equals("") )
-              {
-                     Lege lege = new Lege(fnavn, enavn,arb, reseptGruppe, 0);
-                    legeRegister.settInn(lege);
-                    logomraade.append(logg.toString("Lege lagt til")+"\n");
-
-
-
-              }
-              
-              if (fnavn.equals("") || enavn.equals("")|| ActivRadio()==null || arb.equals("") )
-              {
-                 error("Fyll ut alle feltene!");
-                 kRegLege.setEnabled(true);
-                 legeIDFelt.setEnabled(false);
-                 legeIDFelt.setBackground(Color.LIGHT_GRAY);
+                        if (!fnavn.equals("") && !enavn.equals("")&& ActivRadio()!=null && !arb.equals("") )
+                        {
+                              legeRegister.settInn(fnavn, enavn,arb, reseptGruppe);
+                              logomraade.append(logg.toString("Lege lagt til")+"\n");
+                              
+                        }
+                        else
+                        {
+                           error("Fyll ut alle feltene!");
+                           kRegLege.setEnabled(true);
+                           legeIDFelt.setEditable(false);
+                           legeIDFelt.setBackground(Color.LIGHT_GRAY);
               }
             }
             catch (NumberFormatException | IndexOutOfBoundsException e)
             {
                  error("Fyll ut alle feltene!");
                  kRegLege.setEnabled(true);
-                 legeIDFelt.setEnabled(false);
+                 legeIDFelt.setEditable(false);
                  legeIDFelt.setBackground(Color.LIGHT_GRAY);
             }
 
@@ -459,10 +453,10 @@ public class LegeRegisterPanel extends panelSuper {
         
 	public void visLege( Lege l ) 
         {
-            if(getSelectedObject() != null)
+            if(l != null)
             {
                 kEndreLege.setEnabled(true);
-                legeIDFelt.setEnabled(false);
+                legeIDFelt.setEditable(false);
                         
                 
 			legeIDFelt.setText(""+l.getlegeID());			
@@ -479,7 +473,7 @@ public class LegeRegisterPanel extends panelSuper {
 				if(x == 'C')
 					CRadio.setSelected(true);
 			}
-                        logomraade.append(logg.toString("Fant lege: " + l.toString())+"\n");
+                        logomraade.append(logg.toString("Fant lege: " + l.toString()));
 		}		
                 else
                     error("Ingen lege er valgt");
@@ -494,7 +488,7 @@ public class LegeRegisterPanel extends panelSuper {
                     {  
 
                         if(legeRegister.slettLege(l.getlegeID())) {
-                                String utskrift = "Legen " + l.getNavn() + " " + l.getEtternavn() +" "+ l.getlegeID() + " er fjernet \n"; 
+                                String utskrift = "Legen " + l.getNavn() + " " + l.getEtternavn() +" "+ l.getlegeID() + " er fjernet\n"; 
                                 logomraade.append(logg.toString(utskrift));
 
                         }
@@ -569,8 +563,7 @@ public class LegeRegisterPanel extends panelSuper {
                 arb = arbeid[index];
                 
                 
-                Lege lege = new Lege(navn, enavn,arb, gruppe, 0);
-                legeRegister.settInn(lege);
+                legeRegister.settInn(navn, enavn,arb, gruppe);
             }
         }
             
@@ -588,13 +581,12 @@ public class LegeRegisterPanel extends panelSuper {
                     
                        kRegLege.setEnabled(false);
                        kEndreLege.setEnabled(false);
-                       legeIDFelt.setEnabled(true);
+                       legeIDFelt.setEditable(true);
                        legeIDFelt.setBackground(Color.white);  
 			
                     if (e.getSource() == kRegLege)
                     {
                         regLege();
-                        emptyFields();
                     }			
 		    else if (e.getSource() == kSlettLege)
 		    {
@@ -602,22 +594,20 @@ public class LegeRegisterPanel extends panelSuper {
 		    }			
 		    else if (e.getSource() == kVisLege)
 		    {
-                              reseptRegister.nyResept(getSelectedObject(), new Pasient("Arnt", "Henriksen", "212345 13231", 'M', "Oslo"), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
-		
+                      emptyFields();      
 		      visLege(getSelectedObject());
                     }		
                
         	    else if (e.getSource() == kNyLege)
 		    {
                         kRegLege.setEnabled(true);
-                        legeIDFelt.setEnabled(false);
+                        legeIDFelt.setEditable(false);
                         legeIDFelt.setBackground(Color.LIGHT_GRAY);                        
                         emptyFields();
      		    }
                     else if (e.getSource() == kEndreLege)
                     {
                         endreLege();
-                        emptyFields();
                     }
                     
 		    else if ( e.getSource() == kGenerer ) 

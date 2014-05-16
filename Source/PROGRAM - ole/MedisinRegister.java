@@ -67,7 +67,7 @@ public class MedisinRegister implements Serializable
           if(!reg.isEmpty())
           {
               
-           int random = 0 + (int)(Math.random() * ((reg.size() - 0) + 1));
+           int random = 1 + (int)(Math.random() * ((reg.size() - 2) + 1));
             
               
             for( int i = 0; i < reg.size();i++)

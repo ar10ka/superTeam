@@ -26,13 +26,13 @@ public class DesignTest extends JFrame{
 	private toolBarKnapper knapper;
         private Logg logg;
         private CardLayout card;
-        private JPanel hovedpanel, panel4,panel5,panel6;
+        private JPanel hovedpanel,panel6;
         private LegeRegisterPanel panel1;
         private PasientRegisterPanel  panel2;
         private MedisinRegisterPanel  panel3;
-       // private ReseptRegisterPanel  panel4;
-     /*   private StatistikkPanel  panel5;
-        private InformasjonPanel  panel6;*/
+        private ReseptRegisterPanel  panel4;
+        private StatistikkPanel  panel5;
+      /*  private InformasjonPanel  panel6;*/
         
         
         
@@ -65,7 +65,7 @@ public class DesignTest extends JFrame{
           panel2= new PasientRegisterPanel();
           panel3= new MedisinRegisterPanel();
           panel4= new ReseptRegisterPanel();
-          panel5= new JPanel();//StatestikkPanel();
+          panel5= new StatistikkPanel();
           panel6= new JPanel();//InformasjonsPanel();
           
           
@@ -74,16 +74,14 @@ public class DesignTest extends JFrame{
          // panel2.setLayout(null);
          // panel3.setLayout(null);
           //panel4.setLayout(null);
-          panel5.setLayout(null);
+          //panel5.setLayout(null);
           panel6.setLayout(null);
           
           panel1.setName("LegeRegister");
-         
           panel2.setName("PasientRegister");
           panel3.setName("MedisinRegister");
           panel4.setName("ReseptRegister");
-          //panel4.setBackground(Color.ORANGE);
-          panel5.setBackground(Color.pink);
+          panel5.setName("StatistikkRegister");
           panel6.setBackground(Color.yellow);
           
           
@@ -210,7 +208,7 @@ private void lagreFilAlle()
                 panel1.lagreFil();
                 panel2.lagreFil();
                 panel3.lagreFil();
-                //panel4.lagreFil();
+                panel4.lagreFil();
 
                 
     }
@@ -225,14 +223,14 @@ private void lagreFilJPanel()
     {
         for (Component comp : hovedpanel.getComponents()) {
             if (comp.isVisible() == true) {
-                if(comp.getName() == "LegeRegister")
+                if("LegeRegister".equals(comp.getName()))
                     panel1.lagreFil();
-                if(comp.getName() == "PasientRegister")
-                    panel1.lagreFil();
-                if(comp.getName() == "MedisinRegister")
-                    panel1.lagreFil();
-               /* if(comp.getName() == "ReseptRegister")
-                    panel1.lagreFil();*/
+                if("PasientRegister".equals(comp.getName()))
+                    panel2.lagreFil();
+                if("MedisinRegister".equals(comp.getName()))
+                    panel3.lagreFil();
+                if("ReseptRegister".equals(comp.getName()))
+                    panel4.lagreFil();
 
             }
         }

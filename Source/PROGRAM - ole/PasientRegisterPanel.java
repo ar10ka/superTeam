@@ -291,7 +291,6 @@ public class PasientRegisterPanel extends panelSuper {
             {
               try
               {
-                reseptRegister = fil.lastInnFilResept("ReseptLagring");
                 pasientRegister = fil.lastInnFilPasient("PasientLagring");
                 System.out.println(logg.toString("PasientRegister lastet inn!"));
               }
@@ -309,7 +308,6 @@ public class PasientRegisterPanel extends panelSuper {
             {
               try
               {
-                fil.lagreFil(reseptRegister,"ReseptLagring");
                 fil.lagreFil(pasientRegister, "PasientLagring");
                 System.out.println(logg.toString("PasientRegister lagret!"));
               }
@@ -353,9 +351,10 @@ public class PasientRegisterPanel extends panelSuper {
                  
                   if (!pasientRegister.finnes(id))
                   { 
-                    Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
-                    pasientRegister.settInnNy(pasient);
-                    logomraade.append(logg.toString("Pasient lagt til")+"\n");
+                        Pasient pasient = new Pasient(fnavn, enavn, id, gen,adr);
+                        pasientRegister.settInnNy(pasient);
+                        logomraade.append(logg.toString("Pasient lagt til")+"\n");
+                        visPasient(pasient);
                    }
                    else
                       error("Pasienten er allerede registrert");
@@ -364,7 +363,7 @@ public class PasientRegisterPanel extends panelSuper {
               {
                  error("Fyll ut alle feltene!");
                  kRegPasient.setEnabled(true);
-                 fNr.setEnabled(false);
+                 fNr.setEditable(false);
                  fNr.setBackground(Color.LIGHT_GRAY);
               }
             }
@@ -372,7 +371,7 @@ public class PasientRegisterPanel extends panelSuper {
             {
                  error("Fyll ut alle feltene!");
                  kRegPasient.setEnabled(true);
-                 fNr.setEnabled(false);
+                 fNr.setEditable(false);
                  fNr.setBackground(Color.LIGHT_GRAY);
             }
 
@@ -437,10 +436,10 @@ public class PasientRegisterPanel extends panelSuper {
         
 	private void visPasient( Pasient p ) 
         {
-            if(getSelectedObject() != null)
+            if(p != null)
             {
                 kEndrePasient.setEnabled(true);
-                fNr.setEnabled(false);
+                fNr.setEditable(false);
                 radioMann.setEnabled(false);
                 radioKvinne.setEnabled(false); 
                         
@@ -609,14 +608,13 @@ public class PasientRegisterPanel extends panelSuper {
                        radioKvinne.setEnabled(true);
                        kRegPasient.setEnabled(false);
                        kEndrePasient.setEnabled(false);
-                       fNr.setEnabled(false);
+                       fNr.setEditable(false);
                         fNr.setBackground(Color.LIGHT_GRAY);
                        fNr.setBackground(Color.white);  
 			
                     if (e.getSource() == kRegPasient)
                     {
                         regPasient();
-                        emptyFields();
                     }			
 		    else if (e.getSource() == kSlettPasient)
 		    {
@@ -624,21 +622,21 @@ public class PasientRegisterPanel extends panelSuper {
 		    }			
 		    else if (e.getSource() == kVisPasient)
 		    {
-		      visPasient(getSelectedObject());
-                      reseptRegister.nyResept(new Lege("Navn", "Etternavn", "Oslo", "ABC".toCharArray(), 9), getSelectedObject(), new Medisin("wkof","medisinen","info","kategori",'A'), 20, "Lege anvisning");
-		    }		
+                        emptyFields();
+                        visPasient(getSelectedObject());
+                    }		
                
         	    else if (e.getSource() == kNyPasient)
 		    {
                         kRegPasient.setEnabled(true);
                         fNr.setBackground(Color.white); 
-                        fNr.setEnabled(true);                        
+                        fNr.setEditable(true);                        
                         emptyFields();
      		    }
                     else if (e.getSource() == kEndrePasient)
                     {
                         endrePasient();
-                        emptyFields();
+                        
                     }
                     
 		    else if ( e.getSource() == kGenerer ) 
