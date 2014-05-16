@@ -1,20 +1,14 @@
 
-
-
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
 
-
+//LEGEKLASSEN
 public class Lege implements Serializable 
 {
-		private String navn;
-		private String etternavn;
-		private String arbeidsSted;
+		private String navn,etternavn,arbeidsSted;
 		private char[] reseptGruppe;
-		private ArrayList<String> reseptList = new ArrayList<>();
-		//private String legeID;
+		private final ArrayList<String> reseptList = new ArrayList<>();
 		private int legeID;
 
                 /**
@@ -34,6 +28,7 @@ public class Lege implements Serializable
 			reseptGruppe = rgruppe;
 
 		}
+                 //Metoden ordner stringen i parameteret slik at det blir stor bokstav i starten av en setning, etter punktum og mellomrom. Resten blir liten bokstav.
                 public static String ordneString(String string) 
                 {
                     char[] chars = string.toLowerCase().toCharArray();
@@ -73,9 +68,7 @@ public class Lege implements Serializable
 		public void setReseptGruppe(char [] r) {
 			reseptGruppe = r;
 		}
-
-
-
+                
 		public String getNavn() {
 			return navn;
 		}
@@ -90,7 +83,6 @@ public class Lege implements Serializable
 
 		}
 		
-
 		public String getArbeidsSted() {
 			return arbeidsSted;
 		}

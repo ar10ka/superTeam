@@ -1,22 +1,19 @@
 
-import java.io.*;
-import java.util.*;
 
+
+import java.io.*;
 
 /**
  *
  * @author Ole
  */
+//FILBEHANDLERKLASSEN - Klassen er ansvarlig for å lagre filer som den for beskjed om å lagre
 public class FilBehandler {
        
   
     private final Logg logg;
 
-    
-    
-
-        
-        
+    //KONSTRUKTØR
     public FilBehandler()
     {
         logg = new Logg();  

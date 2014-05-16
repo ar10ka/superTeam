@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -66,7 +68,7 @@ public class StatistikkPanel extends panelSuper {
 		panel = new JPanel();
 		byFelt = new JTextField("Skriv inn byen");
 		//searchBy = new JTextField(20);
-		searchKnappen = new JButton("Søk Lege Utifra byen");
+		searchKnappen = new JButton("Sï¿½k Lege Utifra byen");
 		panel.setBackground(Color.red);
 		panel.add(byFelt, BorderLayout.NORTH);
 		panel.add(searchKnappen, BorderLayout.NORTH);
@@ -118,7 +120,7 @@ public class StatistikkPanel extends panelSuper {
 			System.out.println("Kommer i if setningen");
 			//Object legeObjekt [] [] = null;
 			Object [] [] legeObject = legeRegister.finnFraByen(by);
-			for(int i = 0; i <= legeRegister.finnFraByen(by).length; i++) {
+			for(int i = 0; i < legeRegister.finnFraByen(by).length; i++) {
 				model.addRow(legeRegister.finnFraByen(by)[i]);
 
 				
@@ -148,6 +150,11 @@ public class StatistikkPanel extends panelSuper {
 			
                if (e.getSource() == searchKnappen)
                   {
+                   try {
+                       lastInnFil();
+                   } catch (IOException ex) {
+                      ex.printStackTrace();
+                   }
             	   //tabel.removeAll();
             	   model.setRowCount(0);
             	   tabel.repaint();
@@ -160,5 +167,4 @@ public class StatistikkPanel extends panelSuper {
 		    
 		}
 	}
-
 }

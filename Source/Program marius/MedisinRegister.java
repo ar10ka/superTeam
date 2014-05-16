@@ -1,30 +1,11 @@
-
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 import java.io.Serializable;
 import java.util.*;
 
-
-/**
- *
- * @author Ole
- */
 public class MedisinRegister implements Serializable
 {
   private List<Medisin> reg = new ArrayList<>();
-
-  public MedisinRegister()
-  {
-  }
-
   
+  //Finner medisin ved medisin id
   	public Medisin finn (String id) {
 		if(!reg.isEmpty()) {
 			for( Medisin m: reg) {
@@ -35,7 +16,7 @@ public class MedisinRegister implements Serializable
 		}
 		return null;
 	}
-         public Medisin finn(Medisin m)//finner medisin
+         public Medisin finn(Medisin m)//finner medisin ved objekt
   {
           if(!reg.isEmpty())
           {
@@ -49,7 +30,7 @@ public class MedisinRegister implements Serializable
    }
          
 
- public Medisin finn(String n, String id )//finner medisin
+ public Medisin finn(String n, String id )//finner medisin ved navn og id
   {
           if(!reg.isEmpty())
           {
@@ -62,12 +43,12 @@ public class MedisinRegister implements Serializable
           }
           return null;
   }
- public Medisin finnRandom( )//finner medisin
+ public Medisin finnRandom( )//finner tilfeldig medisin
   {
           if(!reg.isEmpty())
           {
               
-           int random = 0 + (int)(Math.random() * ((reg.size() - 0) + 1));
+           int random = 1 + (int)(Math.random() * ((reg.size() - 2) + 1));
             
               
             for( int i = 0; i < reg.size();i++)
@@ -81,7 +62,7 @@ public class MedisinRegister implements Serializable
           }
           return null;
   }
-    public Object[] returnObjekt()
+    public Object[] returnObjekt() //Returnerer alle objektene i registeret i et array
     {
        String[] emptyArray = {"Det er ingen medisin registrert ennå"};
        if(!reg.isEmpty())  
@@ -89,13 +70,14 @@ public class MedisinRegister implements Serializable
          else
           return emptyArray;
     }
- 	public Object[] finnObjekt ( String navn, String id, char cha ,String kat) {
+    
+    //Returnerer et array av objekter som stemmer over ens med parameterene. Brukes av søkemetoder i andre klasser
+    public Object[] finnObjekt ( String navn, String id, char cha ,String kat) {
 		Set<Medisin> medisin = new HashSet<>();
 		if(!reg.isEmpty())
                 {
-                    
                     for( Medisin m: reg) {
-                        if(cha!=0)
+                        if(cha!=0)//HVIS MAN HAR VALGT EN RESEPTGRUPPE
                         {
                             if(m.getReseptGruppe()==cha && m.getNavn().toLowerCase().contains(navn.toLowerCase()) && m.getMedID().toLowerCase().contains(id.toLowerCase())&& m.getKategori().toLowerCase().contains(kat.toLowerCase()) )
                                 medisin.add(m);
@@ -104,7 +86,6 @@ public class MedisinRegister implements Serializable
                             if(m.getNavn().toLowerCase().contains(navn.toLowerCase()) && m.getMedID().toLowerCase().contains(id.toLowerCase())&& m.getKategori().toLowerCase().contains(kat.toLowerCase()) )
                                 medisin.add(m);
                         }
-                            
                     }
                     if (!medisin.isEmpty())
                         return medisin.toArray();
@@ -114,7 +95,7 @@ public class MedisinRegister implements Serializable
              return null;
 	}
 
-//finnes medisin?
+        //finnes medisinen?
 	public boolean finnes(String n, String e) {
 		return finn(n, e) != null;
 	}
@@ -130,32 +111,32 @@ public class MedisinRegister implements Serializable
 		return false;
 	}
 
-  public boolean tom () //er lista tom?
-  {
-      return reg.isEmpty();
-  }
-
- public boolean fjern( Medisin n )
-  {
-          if(!tom())
-          {
-            for( Medisin m : reg)
-            {
-                
-                 if( m.getNavn().equals( n.getNavn()) && m.getMedID().equals(n.getMedID()))
+        public boolean tom () //er lista tom?
+        {
+            return reg.isEmpty();
+        }
+        //Fjerner medisin gitt ved objekt
+        public boolean fjern( Medisin n )
+         {
+                 if(!tom())
                  {
-                    reg.remove(m);
-                    return true;
+                   for( Medisin m : reg)
+                   {
+
+                        if( m.getNavn().equals( n.getNavn()) && m.getMedID().equals(n.getMedID()))
+                        {
+                           reg.remove(m);
+                           return true;
+                        }
+
+                   }
                  }
-                 
-            }
-          }
-          return false;
-  }
+                 return false;
+        }
+        //Endrer medisin gitt ved objekt
  	public boolean endre(Medisin l) {
 		
 		if(!tom()) {
-			
 			for( Medisin x: reg) {
 				if(x.getMedID().equals(l.getMedID())) {
 					x.setNavn(l.getNavn());
@@ -166,22 +147,17 @@ public class MedisinRegister implements Serializable
 					return true;
 				}
 			}
-			
 		}
 		return false;
 	}
 	
  
-  public void settInnNy( Medisin ny )
+  public void settInnNy( Medisin ny )//Registrerer nytt medisin objekt i registeret
   {
     reg.add(ny);
   }
-
-  public void sorter()
-  {
-	 Collections.sort(reg,new ComparatorImpl());
-  }
-
+  
+  @Override
   public String toString()
   {
     String tekst = "                MEDISINREGISTER:\n";
@@ -193,16 +169,4 @@ public class MedisinRegister implements Serializable
     else
       return "Listen er tom";
   }
-
-    private static class ComparatorImpl implements Comparator<Medisin> {
-
-        public ComparatorImpl() {
-        }
-
-        @Override
-        public int compare(Medisin o1, Medisin o2) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
-
 }

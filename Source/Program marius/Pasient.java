@@ -15,6 +15,7 @@ Klasse: Dataingeniør
 
 import java.io.Serializable;
 
+//PASIENTKLASSEN
 public class Pasient implements Serializable
 {
 	private String fnavn, enavn,adresse,fNr;
@@ -28,9 +29,9 @@ public class Pasient implements Serializable
 		fNr = fnr;
                 gender = g;
                 adresse = ordneString(a);
-		
-
 	}
+        
+        //Metoden ordner stringen i parameteret slik at det blir stor bokstav i starten av en setning, etter punktum og mellomrom.
         public static String ordneString(String string) 
         {
             char[] chars = string.toLowerCase().toCharArray();
@@ -47,7 +48,6 @@ public class Pasient implements Serializable
                     funnet = false;
                 }
             }
-            
           return String.valueOf(chars).replaceAll("([^\\d-]?)(-?[\\d\\.]+)([^\\d]?)", "$1 $2 $3").replaceAll(" +", " ").trim();
         }
 
@@ -100,9 +100,6 @@ public class Pasient implements Serializable
 	  {
 		 fNr = nr;
 	  }
-
-
-
 	@Override
 	public String toString()
 	  {
@@ -110,12 +107,10 @@ public class Pasient implements Serializable
 	  }
         public String getInfo()
 	  {
-		
               return "Navn:\t" + fnavn + " " + enavn
                         + "\nfNr:\t" + fNr
                         + "\nKjønn:\t" + gender
                         + "\nAdresse:\t" + adresse
                         + "\n\n";
 	  }
-
 }

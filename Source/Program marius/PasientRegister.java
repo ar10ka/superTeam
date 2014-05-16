@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 /*
 
 Studentnr: s188097
@@ -18,47 +11,49 @@ Klasse: Dataingenioer
 import java.io.*;
 import java.util.*;
 
+
+//PASIENTREGISTERET
 public class PasientRegister implements Serializable
 {
   private List<Pasient> reg = new ArrayList<>();
 
-  public PasientRegister()
-  {
-  }
-public Object[] finnObjekt ( String n, String e, String adr, String fnr) {
-		Set<Pasient> leger = new HashSet<>();
+  //Returnerer pasienter i et objekt array. Metoden brukes av søkemetoder i andre klasser.
+  public Object[] finnObjekt ( String n, String e, String adr, String fnr) {
+		Set<Pasient> pasienter = new HashSet<>();
 		if(!reg.isEmpty())
                 {
                     
                     for( Pasient l: reg) {
                         if(l.getFNr().contains(fnr) &&l.getFNavn().toLowerCase().contains(n.toLowerCase()) && l.getENavn().toLowerCase().contains(e.toLowerCase())&& l.getAdresse().toLowerCase().contains(adr.toLowerCase()) )
-                            leger.add(l);
+                            pasienter.add(l);
                             
                     }
-                    if (!leger.isEmpty())
-                        return leger.toArray();
+                    if (!pasienter.isEmpty())
+                        return pasienter.toArray();
                     else
                         return null;
                 }
              return null;
-	}   /*
-public Object[] finnObjekt ( String fnr) {
-		Set<Pasient> leger = new HashSet<>();
-		if(!reg.isEmpty())
+	}  
+public Pasient finnRandom( )//finner pasient
+  {
+          if(!reg.isEmpty())
+          {
+              
+           int random = 1 + (int)(Math.random() * ((reg.size() - 1) + 1));
+            
+              
+            for( int i = 0; i < reg.size();i++)
+            {
+                if(random == i)
                 {
-                    
-                    for( Pasient l: reg) {
-                        if(l.getFNr().contains(fnr) )
-                            leger.add(l);
-                            
-                    }
-                    if (!leger.isEmpty())
-                        return leger.toArray();
-                    else
-                        return null;
+                    return reg.get(i);
                 }
-             return null;
-	}   */
+                
+            }
+          }
+          return null;
+  }
  public List<Pasient> finn(String fn, String en )//finner pasient
   {
      List<Pasient> pas = new ArrayList<>();
@@ -118,6 +113,7 @@ public Object[] finnObjekt ( String fnr) {
       return reg.isEmpty();
   }
 
+  //Fjerner pasienten n fra registeret
  public boolean fjern( Pasient n )
   {
           if(!tom())
@@ -136,12 +132,14 @@ public Object[] finnObjekt ( String fnr) {
           }
           return false;
   }
-
+ 
+ //Legger til pasient i registeret
   public void settInnNy( Pasient ny )
   {
     reg.add(ny);
 
   }
+  //Endrer pasient av gitt parameter
   public boolean endre( Pasient n )
   {
             if(!tom())
@@ -163,7 +161,7 @@ public Object[] finnObjekt ( String fnr) {
           }
           return false;
   }
-  
+  //Returnerer hele lista som objektarray
   public Object[] returnObjekt()
   {
       String[] emptyArray = {"Det er ingen pasienter registrert!"};
@@ -173,11 +171,7 @@ public Object[] finnObjekt ( String fnr) {
           return emptyArray;
   }
 
-  public void sorter()
-  {
-	 Collections.sort(reg,new ComparatorImpl());
-  }
-
+ //Returnerer hele lista som String
   @Override
   public String toString()
   {
@@ -190,17 +184,4 @@ public Object[] finnObjekt ( String fnr) {
     else
       return "Listen er tom";
   }
-
-    private static class ComparatorImpl implements Comparator<Pasient> {
-
-        public ComparatorImpl() {
-        }
-
-        @Override
-        public int compare(Pasient o1, Pasient o2) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
-
-
 }

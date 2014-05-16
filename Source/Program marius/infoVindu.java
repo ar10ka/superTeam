@@ -3,36 +3,33 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-
+//KLASSEN VISER MER INFO AV GITT OBJEKT
 public class InfoVindu extends JFrame {
 	
-    private JPanel panel;
-    private ActionListener lytter;
-    private GridBagConstraints gbc;
+    private final JPanel panel;
+    private final GridBagConstraints gbc;
 	private final JTextField  searchAdr,searchFNavn,searchENavn,searchID,medKategori,medInfo,medisinIDFelt;
         private final JTextField  legeIDFelt, navnFelt, etternavnFelt, arbeidsStedFelt,adressefelt,fnr;
         private final ButtonGroup radioGruppe, medradioGruppe;
 
 	private final JRadioButton ARadio, BRadio, CRadio,radioMann, radioKvinne,radioA, radioB,radioC;; 
-	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
 	Color greyWhite = new Color(224,224,224);
 	Color grey = new Color(128,128,128);
 	Border lineBorder = BorderFactory.createLineBorder(grey);
 
-	
-	public InfoVindu( Object o, String s) {
-           super(s+" - Infovindu");
-            panel = new JPanel(new GridBagLayout());
-            setLayout(new BorderLayout());
-            setBackground(Color.DARK_GRAY);
-            
-		    	setVisible(true);
-		    setSize(800,300);
+            //KONSTRUKTØR
+            public InfoVindu( Object o, String s) {
+               super(s+" - Infovindu");
+                panel = new JPanel(new GridBagLayout());
+                setLayout(new BorderLayout());
+                setBackground(Color.DARK_GRAY);
+
+                setVisible(true);
+		setSize(800,300);
                     
                 gbc = new GridBagConstraints();
                 medisinIDFelt = new JTextField(11);
@@ -91,8 +88,6 @@ public class InfoVindu extends JFrame {
                 arbeidsStedFelt.setBorder(lineBorder);
                 adressefelt.setBorder(lineBorder);
                 fnr.setBorder(lineBorder);
-                       
-
                 
                 ARadio.setEnabled(false);
 		BRadio.setEnabled(false);
@@ -102,19 +97,14 @@ public class InfoVindu extends JFrame {
                 radioA.setEnabled(false);
                 radioB.setEnabled(false);
                 radioC.setEnabled(false);
-
                 
                 lagLayout(o);
-
-      
 	}
+            //Hvis metoden blir kalt så blir vinduet seende slik ut, avhengig av hvilket objekt lagLayout får
         private void addLegeFeltPanel()
         {
 
-		legeIDFelt.setEditable(false);
-
-	
-            
+                 legeIDFelt.setEditable(false);  
                  panel.setLayout( new GridBagLayout() );
                 
                  gbc.anchor = GridBagConstraints.NORTH;
@@ -183,7 +173,6 @@ public class InfoVindu extends JFrame {
             panel.setVisible(true);
             add(panel,BorderLayout.CENTER);
       }
-	
 	private void addPasientFeltPanel()
         {
                  panel.setLayout( new GridBagLayout() );
@@ -300,7 +289,8 @@ public class InfoVindu extends JFrame {
       }
 	
 	
-        
+    //metoden får et objekt av enten pasient,lege eller pasient og sjekker hva slags objekt det er. 
+          //Lager layout og sender deretter objektet videre til enten visPasient, visLege eller visMedisin    
 	public void lagLayout(Object o) {
 	
 		if (o instanceof Lege )
@@ -323,6 +313,7 @@ public class InfoVindu extends JFrame {
                 }
         }
                 
+        //Disse metodene setter feltene i panelet til objektets innhold.
         private void visPasient( Pasient p ) 
         {       
                 fnr.setText(""+p.getFNr());			
