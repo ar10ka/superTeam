@@ -1,15 +1,21 @@
 
+/*
+
+Studentnr: s198757
+Navn: Marius Baltramaitis
+
+
+Klasse: Dataingeniør
+
+*/
 
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -24,9 +30,7 @@ public class LegeRegisterPanel extends panelSuper {
 
 	private final JRadioButton ARadio, BRadio, CRadio;
 	private char [] reseptGruppe = new char [] {'A', 'B', 'C'};
-	Color greyWhite = new Color(224,224,224);
-	Color grey = new Color(128,128,128);
-	Border lineBorder = BorderFactory.createLineBorder(grey);
+
 
 	private final Lytter sensor;
 
@@ -50,6 +54,8 @@ public class LegeRegisterPanel extends panelSuper {
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
+                
+                //Initialiserer datafelter
                 searchAdr = new JTextField(11);
                 searchFNavn = new JTextField(11);
                 searchENavn = new JTextField(11);
@@ -64,7 +70,9 @@ public class LegeRegisterPanel extends panelSuper {
 		searchFNavn.setBorder(lineBorder);
 		searchENavn.setBorder(lineBorder);
 		searchID.setBorder(lineBorder);
-                navnFelt.setBorder(lineBorder);  
+                navnFelt.setBorder(lineBorder);
+                legeIDFelt.setBorder(lineBorder);
+		navnFelt.setBorder(lineBorder);
                 etternavnFelt.setBorder(lineBorder);
                 arbeidsStedFelt.setBorder(lineBorder);
                        
@@ -99,10 +107,12 @@ public class LegeRegisterPanel extends panelSuper {
                 knappePanel.add(kVisLege);
                 knappePanel.add(kResept);
 
+                //Metoder som setter layouten for hver sitt panel
                 addFeltPanel();
                 addSearchPanel();
            
-                list = new JList(legeRegister.returnObjekt()); //data has type Object[]
+                //Objektliste som skal inneholde alle reseptobjektene i reseptRegister
+                list = new JList(legeRegister.returnObjekt());
                 list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 list.setLayoutOrientation(JList.VERTICAL);
                 JScrollPane scrollpane = new JScrollPane(list);
@@ -110,12 +120,15 @@ public class LegeRegisterPanel extends panelSuper {
                 listPanel.add(searchPanel, BorderLayout.PAGE_START);
                 listPanel.add(scrollpane, BorderLayout.CENTER);
                 listPanel.add(knappePanel, BorderLayout.PAGE_END);
+                //Legger panelene i splitpanel fra superklassen.
                 sptop.add(listPanel);
                 sptop.add(feltPanel);
                 spbottom.add(sptop);
                 spbottom.add(loggPanel);
+                //legger panelene i dette panelet
                 add(spbottom, BorderLayout.CENTER);
 
+                //Legger til lytterobjekt av klassen Lytter til hver knapp
                 sensor = new Lytter();	
                 kRegLege.addActionListener(sensor);
                 kEndreLege.addActionListener(sensor);
@@ -129,6 +142,7 @@ public class LegeRegisterPanel extends panelSuper {
                 kRegLege.setEnabled(false);
                 kEndreLege.setEnabled(false);
                     
+                //Lytter til søkepanelets JTextFields
                         documentListener = new DocumentListener() 
                         {
                             @Override
@@ -178,33 +192,6 @@ public class LegeRegisterPanel extends panelSuper {
                  gbc.gridx++;
                  searchPanel.add(searchID, gbc);
         }
-         private void findIt(DocumentEvent documentEvent) {
-
-                        String idfelt = searchID.getText();
-                        String fnavn = searchFNavn.getText();
-                        String enavn = searchENavn.getText();
-                        String adr = searchAdr.getText();
-
-                         Document source = documentEvent.getDocument();
-                         String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
-                         int length = source.getLength();
-                        // boolean b = false;
-
-                           if(legeRegister.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
-                           {
-                             //  b = true;
-                               list.setListData(legeRegister.finnObjekt(fnavn, enavn, adr,idfelt));
-                           }
-                          else
-                               list.setListData(emptyArray);
-
-                          if(length == 0)  
-                           list.setListData(legeRegister.returnObjekt());
-
-
-                       }
-
-        
         private void addFeltPanel()
         {
            
@@ -295,8 +282,35 @@ public class LegeRegisterPanel extends panelSuper {
             feltPanel.setVisible(true);
       }
 	
+        //Søkemetoden for list. Oppdaterer og viser listen etter det du skriver i de forskjellige feltene
+        private void findIt(DocumentEvent documentEvent) {
+
+                        String idfelt = searchID.getText();
+                        String fnavn = searchFNavn.getText();
+                        String enavn = searchENavn.getText();
+                        String adr = searchAdr.getText();
+
+                         Document source = documentEvent.getDocument();
+                         String[] emptyArray = {"Ingen lege som stemmer med søket  " + fnavn + " " + enavn + " " + idfelt + " " + adr};
+                         int length = source.getLength();
+                        // boolean b = false;
+
+                           if(legeRegister.finnObjekt(fnavn, enavn, adr,idfelt)!=null)
+                           {
+                             //  b = true;
+                               list.setListData(legeRegister.finnObjekt(fnavn, enavn, adr,idfelt));
+                           }
+                          else
+                               list.setListData(emptyArray);
+
+                          if(length == 0)  
+                           list.setListData(legeRegister.returnObjekt());
+
+
+                       }
 	
-	  private void lastInnFil() throws IOException
+        //Metode som bruker FilBehandler-objekt for å laste innholdet av alle registrene fra fil
+        private void lastInnFil() throws IOException
 	  {
 	    try
 	    {
@@ -314,7 +328,8 @@ public class LegeRegisterPanel extends panelSuper {
 	    }
 	  }
 	
-	  void lagreFil() throws IOException
+	//Metode som bruker FilBehnadler-objekt for å lagre innholdet i legeRegisteret til fil
+        void lagreFil() throws IOException
 	  {
 	    try
 	    {
@@ -327,9 +342,7 @@ public class LegeRegisterPanel extends panelSuper {
 	    }
 	  }
 	
-	
-	
-	
+        //Returnerer den radioknappen som er valgt, hvis ingen så returnerer den 0
 	public char[]  ActivRadio() {				
 		if(ARadio.isSelected() && !BRadio.isSelected() && !CRadio.isSelected()) 
 			reseptGruppe = new char [] {'A'};
@@ -350,8 +363,8 @@ public class LegeRegisterPanel extends panelSuper {
 		
 		return reseptGruppe;
 	}
-
-	
+        
+        //Metode som registrerer ny lege
         public void regLege() 
         {
             try
@@ -386,7 +399,7 @@ public class LegeRegisterPanel extends panelSuper {
             }
 
         }
-        
+        //Metode som endrer valgte lege
         public void endreLege()
         {
             try
@@ -451,6 +464,7 @@ public class LegeRegisterPanel extends panelSuper {
     }
         }
         
+	//Metode som tar imot lege-objekt og fyller feltene i feltPanelet  med informasjon fra objektet
 	public void visLege( Lege l ) 
         {
             if(l != null)
@@ -478,6 +492,8 @@ public class LegeRegisterPanel extends panelSuper {
                 else
                     error("Ingen lege er valgt");
         }
+        
+        //Metode som fjerner valgt lege
 	public void slettLege( Lege l) {
             
              int n = JOptionPane.showConfirmDialog(null,
@@ -499,6 +515,7 @@ public class LegeRegisterPanel extends panelSuper {
                         error("Lege er ikke fjernet til");
 	}
         
+        //Tømmer alle feltene i feltPanel
 	public void  emptyFields() {
 
             legeIDFelt.setText("");
@@ -510,6 +527,7 @@ public class LegeRegisterPanel extends panelSuper {
             CRadio.setSelected(false);
 	}
         
+        //metode som returnerer lege-objekt som er markert i objektlisten
         public Lege getSelectedObject() {
 		
 		if(!list.isSelectionEmpty()) {
@@ -522,11 +540,13 @@ public class LegeRegisterPanel extends panelSuper {
                     return null;
 	}
         
+        //Oppdaterer listen
         public void oppdaterListe() 
         {
 		list.setListData(legeRegister.returnObjekt());
 	}
         
+        //Genererer nye tilfeldige leger
         private void generateLeger()
         {
             int Min=0;
@@ -566,14 +586,8 @@ public class LegeRegisterPanel extends panelSuper {
                 legeRegister.settInn(navn, enavn,arb, gruppe);
             }
         }
-            
-            
-
-            
         
-        
-	
-	
+	//Lytterklasse som bestemmer hva som skjer når man trykker på knappene
 	private class Lytter implements ActionListener {
 		
 		@Override

@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JTextArea;
 
 /*
 
@@ -17,7 +16,7 @@ Studentnr: s198757
 Navn: Marius Baltramaitis
 
 
-Klasse: Dataingeniï¿½r
+Klasse: Dataingeniør
 
 */
 
@@ -249,12 +248,11 @@ public class LegeRegister implements Serializable
 			  for (int i = 0; i < leger.size(); i++) {
 				   Lege lege = leger.get(i);
 				   
-				   felter[i] = new Object[] {
-						   lege.getlegeID(),
+				   felter[i] = new Object[] { i+1,
 						   lege.getNavn(),
 						   lege.getEtternavn(),
-						   lege.getArbeidsSted()
-						   
+						   lege.getArbeidsSted(),
+                                                   lege.getlegeID()						   
 				   } ;
 				
 				  //return felter;

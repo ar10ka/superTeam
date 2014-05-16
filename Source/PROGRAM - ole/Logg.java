@@ -1,19 +1,17 @@
 
-
-
-
-
-
+/**
+ *
+ * @author Ole Bøe Andreassen - s188097
+ */
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-
+//LOGGKLASSEN - Klassen logger alt som blir sendt til den vi toString metoden.
 public class Logg extends JPanel{
 
         private String logg = "";
@@ -37,27 +35,25 @@ public class Logg extends JPanel{
                 t.setText(output);
         	return output;
         }
-        
+        //Returnerer datoen
         public String getDate(String s)
         {
             toString(s);
             return date;
         }
         
+        //Registerer logghendelse
         private void regLogg(String output)
         {
             try
             {
                 lastInnFil();
             }
-            
 	    catch (IOException ex)
             {
                 ex.printStackTrace();
             }
-                
                     logg += output + "\n";
-            
             try
             {
                lagreFil();

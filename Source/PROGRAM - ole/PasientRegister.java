@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 /*
 
 Studentnr: s188097
@@ -18,14 +11,14 @@ Klasse: Dataingenioer
 import java.io.*;
 import java.util.*;
 
+
+//PASIENTREGISTERET
 public class PasientRegister implements Serializable
 {
   private List<Pasient> reg = new ArrayList<>();
 
-  public PasientRegister()
-  {
-  }
-public Object[] finnObjekt ( String n, String e, String adr, String fnr) {
+  //Returnerer pasienter i et objekt array. Metoden brukes av søkemetoder i andre klasser.
+  public Object[] finnObjekt ( String n, String e, String adr, String fnr) {
 		Set<Pasient> pasienter = new HashSet<>();
 		if(!reg.isEmpty())
                 {
@@ -42,7 +35,7 @@ public Object[] finnObjekt ( String n, String e, String adr, String fnr) {
                 }
              return null;
 	}  
-public Pasient finnRandom( )//finner medisin
+public Pasient finnRandom( )//finner pasient
   {
           if(!reg.isEmpty())
           {
@@ -120,6 +113,7 @@ public Pasient finnRandom( )//finner medisin
       return reg.isEmpty();
   }
 
+  //Fjerner pasienten n fra registeret
  public boolean fjern( Pasient n )
   {
           if(!tom())
@@ -138,12 +132,14 @@ public Pasient finnRandom( )//finner medisin
           }
           return false;
   }
-
+ 
+ //Legger til pasient i registeret
   public void settInnNy( Pasient ny )
   {
     reg.add(ny);
 
   }
+  //Endrer pasient av gitt parameter
   public boolean endre( Pasient n )
   {
             if(!tom())
@@ -165,7 +161,7 @@ public Pasient finnRandom( )//finner medisin
           }
           return false;
   }
-  
+  //Returnerer hele lista som objektarray
   public Object[] returnObjekt()
   {
       String[] emptyArray = {"Det er ingen pasienter registrert!"};
@@ -174,12 +170,46 @@ public Pasient finnRandom( )//finner medisin
       else
           return emptyArray;
   }
+  public Object [] [] finnFraAdresse (String adresse ) { // metoden returnerer leger utifra byen han/hun er fra
+	   //String[] emptyArray = {"Ingen Leger er registrert i denne byen"};
+	   
+	   List<Pasient> pasienter = new ArrayList<>();
+	   ;
+	   if(!reg.isEmpty() ) {
+               
+		   for(Pasient p: reg) {
+                    if(adresse.equals(p.getAdresse())) {
+			   
+			   pasienter.add(p);
+		   }
+		  }
+		   Object[][] felter = new Object[pasienter.size()][];
+			   
+			//antall = medisiner.size();  
+			   
+			   
+			   
+			  for (int i = 0; i < pasienter.size(); i++) {
+				   Pasient p = pasienter.get(i);
+                                   
+				   felter[i] = new Object[] {i+1,
+						   p.getENavn(),
+						   p.getFNavn(),
+						   p.getGender(),
+                                                    p.getFNr()
+						   
+				   } ;
+				
+				  //return felter;
+			   }
+			  return felter;
+			   
+		   }
+	   System.out.println("returnerer null I legeRegister");
+	   	return null;
+	   }
 
-  public void sorter()
-  {
-	 Collections.sort(reg,new ComparatorImpl());
-  }
-
+ //Returnerer hele lista som String
   @Override
   public String toString()
   {
@@ -192,17 +222,4 @@ public Pasient finnRandom( )//finner medisin
     else
       return "Listen er tom";
   }
-
-    private static class ComparatorImpl implements Comparator<Pasient> {
-
-        public ComparatorImpl() {
-        }
-
-        @Override
-        public int compare(Pasient o1, Pasient o2) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
-
-
 }

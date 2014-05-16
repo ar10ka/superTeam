@@ -1,18 +1,20 @@
 import java.io.Serializable;
 import java.util.*;
-import javax.swing.JOptionPane;
+
 
 /**
  *
- * @author Ole
+ * @author Ole Bøe Andreassen - s188097
  */
+
+//ReseptRegisterklasse
 public class ReseptRegister implements Serializable
 {
     private final List<Resept> reseptReg = new ArrayList<>();
     private final Logg logg = new Logg();
     private int reseptID=10000;
     
-    
+    //Sjekker om legen er godkjent for den medisinen
     public boolean godkjentLege(Lege l, Medisin m)
     {
        for(char x :l.getReseptGruppe() )
@@ -22,6 +24,8 @@ public class ReseptRegister implements Serializable
             }
        return false;
     }
+    
+    //Oppretter nytt resept objekt og legger den inn i registeret
     public void nyResept( Lege l, Pasient p, Medisin m,String mengde, String la)
     {
         int id  = reseptID++;
@@ -39,7 +43,8 @@ public class ReseptRegister implements Serializable
 		}
 		return null;
 	}
-    public Resept finnRandom( )//finner medisin
+        //Returnerer en tilfeldig resept
+    public Resept finnRandom( )
   {
           if(!reseptReg.isEmpty())
           {
@@ -112,6 +117,8 @@ public class ReseptRegister implements Serializable
         else
             return "Ingen pasienter har blitt utskrevet denne medisinen!";
     }
+    
+    //Returnerer en array av alle reseptene i registeret. Hvis tom returnerer den et String objekt
      public Object[] returnObjekt()
     {
        String[] emptyArray = {"Det er ingen resepter registrert ennå"};
@@ -161,8 +168,8 @@ public class ReseptRegister implements Serializable
             return "Ingen resepter har blitt skrevet av denne legen!";
     }
         
-        
-        public List<Resept> getResepterLegeObject( Lege l)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
+        //Returnerer en liste over resepeter skrevet ut av spesifik lege
+        public List<Resept> getResepterLegeObject( Lege l)
         { 
         	List<Resept> r = new ArrayList<>();
         	
@@ -220,7 +227,8 @@ public class ReseptRegister implements Serializable
     }
         
         
-        public List<Resept> getResepterPasientObject( Pasient p)//Husk å ta getText() fra kategori og char fra rgruppe inn selvom det er 0/""
+        //Returnerer en liste over resepeter skrevet ut av spesifik pasient
+        public List<Resept> getResepterPasientObject( Pasient p)
         {
         	List<Resept> r = new ArrayList<>();
         	
@@ -239,6 +247,8 @@ public class ReseptRegister implements Serializable
             	return r;
         	}
         }
+        
+        //Returnerer objekter som stemmer over ens med parameterene i metoden. Brukes for diverse søk i andre klasser
         public Object[] finnObjekt (String rId, String rDato, char rGruppe, 
                                    String lId, String lNavn, String lEnavn,
                                    String pId, String pNavn, String pEnavn,
@@ -250,7 +260,7 @@ public class ReseptRegister implements Serializable
                     for( Resept r: reseptReg) {
                         if(rGruppe!=0)
                         {
-                       
+                            //Har huket av reseptgruppe
                             if(        String.valueOf(r.getID()).toLowerCase().contains(rId.toLowerCase()) 
                                     && r.getDato().toLowerCase().contains(rDato.toLowerCase()) 
                                     && r.getMedisin().getReseptGruppe()== rGruppe
@@ -268,7 +278,7 @@ public class ReseptRegister implements Serializable
                             }
                             
                         }
-                        else
+                        else //Har ikke huket av Reseptgruppe
                         {
                             try{
                             if(        String.valueOf(r.getID()).toLowerCase().contains(rId.toLowerCase()) 
@@ -294,12 +304,13 @@ public class ReseptRegister implements Serializable
                          }   
                     }
                     if (!resepter.isEmpty())
-                        return resepter.toArray();
+                        return resepter.toArray(); //Returnerer lista
                     else
-                        return null;
+                        return null; //Hvis lista er tom, returnerer null
                 }
-             return null;
+             return null;//Hvis ingen resepter er registrert
 	}
+        //Sletter resept, bestemt av parameteret
         public boolean slettResept(Resept r) {
 		if(!reseptReg.isEmpty())
 		{
@@ -311,46 +322,48 @@ public class ReseptRegister implements Serializable
 			}
 		}
 		return false;
-	}        
+	}
+        public Object [] [] finnFraKategori (String kategori ) { // metoden som returnerer leger utifra byen
+	   //String[] emptyArray = {"Ingen Leger er registrert i denne byen"};
+	   
+	   List<Resept> resepter = new ArrayList<>();
+	   
+	   if(!reseptReg.isEmpty() ) {
+               
+		   for(Resept r: reseptReg) {
+                    if(r.getMedisin().getKategori().equals(kategori))
+			   
+			   resepter.add(r);
+		   }
+		  
+		   Object[][] felter = new Object[resepter.size()][];
+			   
+			//antall = medisiner.size();  
+			   
+			   
+			   
+			  for (int i = 0; i < resepter.size(); i++) {
+				   Resept r = resepter.get(i);
+                                   
+				   felter[i] = new Object[] {i+1,
+						   r.getMedisin().getReseptGruppe(),
+						   r.getMedisin().getKategori(),
+                                                   r.getID(),
+                                                   r.getDato()
+						   
+				   } ;
+				
+				  //return felter;
+			   }
+			  return felter;
+			   
+		   }
+
+	   	return null;
+	   }
+        //Returnerer det siste objektet som ble lagt til i registeret
         public Resept getLatestAdded()
         {
-            return reseptReg.get(reseptReg.size());
+            return reseptReg.get(reseptReg.size()-1);
         }
-
-    
-
-
-    
 } 
-
-    
-
-//Dette skal lagres:
-//-dato for registrering av resept
-
-
-
-//-Pasientdata for den pasienten resepten er skrevet ut til
-
-
-
-//-Legedata for legen som skrev ut resepten
-
-//-Hvilken medisin resepten er på
-
-//-Mengde av medisin
-//-Medisinens kategori
-//-Legens anvisning (JTextArea) om bruk av medisinen.
-   
- 
-
-/*
-DETTE MÅ GJØRES (PROGRAM VINDUET)
--Når legen skal registrere resept, må han sjekkes om han er godkjent for den kategorien
-dvs. at han skal finnes i lege-registeret og bevilling for angitt reseptgruppe
--Hvis pasienten ikke finnes i pasientregisteret må han registreres før registrering av resept
--Hvis det over er i orden kan medisinen utleveres/selges og resepten blir registrert i dette registeret
-hvis ikke skal brukeren få melding om hva som var grunnen til dette.
-
-
-*/

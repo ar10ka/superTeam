@@ -1,3 +1,14 @@
+
+/*
+
+Studentnr: s198757
+Navn: Marius Baltramaitis
+
+
+Klasse: Dataingeniør
+
+*/
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -22,7 +33,7 @@ import javax.swing.ListSelectionModel;
 public class ReseptInfoVindu extends panelSuper {
 	
 	ActionListener lytter;
-	private JButton kVisInfo;//, kSlettResept;
+	private JButton kVisInfo;
 
         
         private final JTextField datofelt,idfelt,lENavn,lFNavn,lId,pENavn,pFNavn,pFnr,mNavn,mRgruppe,mId,mengdefelt;
@@ -30,16 +41,14 @@ public class ReseptInfoVindu extends panelSuper {
         private JButton kVisPasient,kVisMedisin,kVisLege;
         private Resept resept;
         private JScrollPane legeanv;
-        
-
-        
 	
+        //KLASSE SOM VISER INFORMASJON OM EN RESEPT PÅ ENTEN ET LEGE ELLER ET PASIENT-OBJEKT
 	public ReseptInfoVindu( final Object o) {
-            fil = new FilBehandler();
             
-	
+            fil = new FilBehandler();
             reseptRegister = new ReseptRegister();
             
+            //Laster inn reseptRegisteret fra fil
             try
             {
               reseptRegister = fil.lastInnFilResept("ReseptLagring");
@@ -58,8 +67,9 @@ public class ReseptInfoVindu extends panelSuper {
             }
             setLayout(new BorderLayout());
             setBackground(Color.DARK_GRAY);
+            
+            //INITIALISERER DATAFELT
             kVisInfo = new JButton("Vis Info");
- //           kSlettResept = new JButton("Fjern Resepten");
             kVisPasient = new JButton("Vis Pasient");
             kVisMedisin = new JButton("Vis Medisin");
             kVisLege = new JButton("Vis Lege");
@@ -77,6 +87,8 @@ public class ReseptInfoVindu extends panelSuper {
             mengdefelt = new JTextField(10);
             legeanvfelt = new JTextArea(5,10);
             legeanv = new JScrollPane(legeanvfelt);
+            
+            //SIDEN VI BARE SKAL VISE INFO TRENGER IKKE FELTENE VÆRE REDIGERBARE
             datofelt.setEditable(false);
             idfelt.setEditable(false);
             lENavn.setEditable(false);
@@ -93,60 +105,45 @@ public class ReseptInfoVindu extends panelSuper {
             
             
             
-            
+            //OPPRETTER LYTTER-OBJEKT
             lytter = new ActionListener() 
-                        {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-            
-
-                                 if (e.getSource() == kVisInfo)
-                                 {
-                                    
-                                     visResept(getSelectedObject());
-                                     
-                               
-                                 }			
-                                 
-                                 else if (e.getSource() == kVisLege)
-                                 {
-                                     if(getSelectedObject() != null)
-                                         visInfoVindu(resept.getLege());
-                                     else
-                                         error("Ingen resept er valgt");
-                                 }			
-                                 
-                                 else if (e.getSource() == kVisMedisin)
-                                 {
-                                     if(getSelectedObject() != null)
-                                        visInfoVindu(resept.getMedisin());
-                                     else
-                                         error("Ingen resept er valgt");
-                                 }			
-                                 
-                                 else if (e.getSource() == kVisPasient)
-                                 {
-                                     if(getSelectedObject() != null)
-                                        visInfoVindu(resept.getPasient());
-                                     else
-                                        error("Ingen resept er valgt");
-                                 }			
-                                 
-                            }
-                            };
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                         if (e.getSource() == kVisInfo)
+                             visResept(getSelectedObject());
+                         else if (e.getSource() == kVisLege)
+                         {
+                             if(getSelectedObject() != null)
+                                 visInfoVindu(resept.getLege());
+                             else
+                                 error("Ingen resept er valgt");
+                         }			
+                         else if (e.getSource() == kVisMedisin)
+                         {
+                             if(getSelectedObject() != null)
+                                visInfoVindu(resept.getMedisin());
+                             else
+                                 error("Ingen resept er valgt");
+                         }			
+                         else if (e.getSource() == kVisPasient)
+                         {
+                             if(getSelectedObject() != null)
+                                visInfoVindu(resept.getPasient());
+                             else
+                                error("Ingen resept er valgt");
+                         }			
+                        }
+                    };
+            //KNAPPENE FÅR LYTTEROBJEKT TILSATT
             kVisInfo.addActionListener(lytter);
-           // kSlettResept.addActionListener(lytter);
             kVisPasient.addActionListener(lytter);
             kVisMedisin.addActionListener(lytter);
             kVisLege.addActionListener(lytter);
 
-            
-            
-            
-            
             knappePanel.setLayout(new BorderLayout());
-           // knappePanel.add(kSlettResept, BorderLayout.LINE_START);
             knappePanel.add(kVisInfo, BorderLayout.LINE_END);
+            
             list = new JList();
             list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             list.setLayoutOrientation(JList.VERTICAL);
@@ -168,175 +165,180 @@ public class ReseptInfoVindu extends panelSuper {
             else
                 list.setListData(tomListe);
             
-	}
-        private Resept getSelectedObject() 
-        {	
-		if(!list.isSelectionEmpty()) {
-			Resept r = (Resept)list.getSelectedValue();
-			return r;
-		}
-                else 
-                    return null;
-	}
-        private void visResept( Resept r ) 
-        {
-            if(getSelectedObject() != null)
-            {        
-                    resept = getSelectedObject();
-                    datofelt.setText(r.getDato());
-                    idfelt.setText(r.getID()+"");
-                    lENavn.setText(r.getLege().getEtternavn());
-                    lFNavn.setText(r.getLege().getNavn());
-                    lId.setText(r.getLege().getlegeID()+"");
-                    pENavn.setText(r.getPasient().getENavn());
-                    pFNavn.setText(r.getPasient().getFNavn());
-                    pFnr.setText(r.getPasient().getFNr());
-                    mNavn.setText(r.getMedisin().getNavn());
-                    mRgruppe.setText(r.getMedisin().getReseptGruppe()+"");
-                    mId.setText(r.getMedisin().getMedID());
-                    mengdefelt.setText(r.getMengde()+"");      
-                    legeanvfelt.setText(r.getLegeAnvisning());      
-
-                    logomraade.append(logg.toString("Fant resept: " + r.toString()));
-		}		
-                else
-                    error("Ingen resept er valgt");
-        }
-        
-         private void addFeltPanel()
-        {   
-                 feltPanel.setLayout( new GridBagLayout() );
-                
-                 gbc.anchor = GridBagConstraints.NORTH;
-                 gbc.fill = GridBagConstraints.HORIZONTAL;
-                 gbc.insets = new Insets(5,10,5,15);
-                 gbc.ipady = 20;
+            }
             
-                 gbc.weightx = 0.5;
-                 gbc.weighty=1;
-                 
-                 gbc.gridy=0;
-                 gbc.gridx=2;
-                 
-                 //feltPanel.add(new JLabel("RESEPT - INFORMASJON"),gbc);
-                 
-                 gbc.gridx=0;
-                 gbc.gridy++;
+            private Resept getSelectedObject() 
+            {	
+                    if(!list.isSelectionEmpty()) {
+                            Resept r = (Resept)list.getSelectedValue();
+                            return r;
+                    }
+                    else 
+                        return null;
+            }
+            //Fyller alle feltene med informasjon fra resept-objektet
+            private void visResept( Resept r ) 
+            {
+                if(getSelectedObject() != null)
+                {        
+                        resept = getSelectedObject();
+                        datofelt.setText(r.getDato());
+                        idfelt.setText(r.getID()+"");
+                        lENavn.setText(r.getLege().getEtternavn());
+                        lFNavn.setText(r.getLege().getNavn());
+                        lId.setText(r.getLege().getlegeID()+"");
+                        pENavn.setText(r.getPasient().getENavn());
+                        pFNavn.setText(r.getPasient().getFNavn());
+                        pFnr.setText(r.getPasient().getFNr());
+                        mNavn.setText(r.getMedisin().getNavn());
+                        mRgruppe.setText(r.getMedisin().getReseptGruppe()+"");
+                        mId.setText(r.getMedisin().getMedID());
+                        mengdefelt.setText(r.getMengde()+"");      
+                        legeanvfelt.setText(r.getLegeAnvisning());      
 
-                 feltPanel.add(new JLabel("Skrevet ut:"), gbc);
+                        logomraade.append(logg.toString("Fant resept: " + r.toString()));
+                    }		
+                    else
+                        error("Ingen resept er valgt");
+            }
 
-                 gbc.gridx++;
-                 //gbc.gridwidth =1;
-                 feltPanel.add(datofelt, gbc);
-                 //gbc.gridwidth=1;
-                 gbc.gridx++;
-                 feltPanel.add(new JLabel("Reseptnummer:"), gbc);
-                 gbc.gridx++;
-                 feltPanel.add(idfelt, gbc);
-                 
-                 
-                 gbc.gridy++;
-                 gbc.gridx=0;
+            //Setter opp layout for feltpanelet
+             private void addFeltPanel()
+            {   
+                     feltPanel.setLayout( new GridBagLayout() );
 
-                 feltPanel.add(new JLabel("Lege:"), gbc);
-                 gbc.gridx++;
-                 feltPanel.add(lENavn,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(lFNavn,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(lId,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(kVisLege,gbc);
-                
+                     gbc.anchor = GridBagConstraints.NORTH;
+                     gbc.fill = GridBagConstraints.HORIZONTAL;
+                     gbc.insets = new Insets(5,10,5,15);
+                     gbc.ipady = 20;
 
-                 gbc.gridy++;
-                 gbc.gridx=0;
-                 feltPanel.add(new JLabel("Pasient:"), gbc);
-                 gbc.gridx++;
-                 feltPanel.add(pENavn,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(pFNavn,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(pFnr,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(kVisPasient,gbc);
-                 
-           
+                     gbc.weightx = 0.5;
+                     gbc.weighty=1;
 
-                 gbc.gridy++;
-                 gbc.gridx=0;
-                 feltPanel.add(new JLabel("Medisin:"), gbc);
-                 gbc.gridx++;
-                 feltPanel.add(mNavn,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(mRgruppe,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(mId,gbc);
-                 gbc.gridx++;
-                 feltPanel.add(kVisMedisin,gbc);
-             
-               
-                 gbc.gridy++;
-                 gbc.gridx=0;
-                 feltPanel.add(new JLabel("ANTALL/MENGDE"), gbc);
-                 gbc.gridx++;
-                 feltPanel.add(mengdefelt,gbc);
-      
-                 
-                 gbc.gridy++;
-                 gbc.gridx=0;
-                 feltPanel.add(new JLabel("LEGEANVISNING"), gbc);
-                 gbc.gridx++;
-                 gbc.gridwidth=4;
-                 feltPanel.add(legeanv,gbc);
-             		
-            feltPanel.setVisible(true);
-      }
-	
-	public Object[] visListe(Object o) {
-		
-		Lege l;
-		Pasient p;
-		
-		List<Object> reseptListe = new ArrayList<>();
-	
-		if (o instanceof Lege ) 
-                {	
-                    l = (Lege)o;
-			if(reseptRegister.getResepterLegeObject(l)!= null) 
-                        {
-                            for(Resept x: reseptRegister.getResepterLegeObject(l)) 
+                     gbc.gridy=0;
+                     gbc.gridx=2;
+
+                     //feltPanel.add(new JLabel("RESEPT - INFORMASJON"),gbc);
+
+                     gbc.gridx=0;
+                     gbc.gridy++;
+
+                     feltPanel.add(new JLabel("Skrevet ut:"), gbc);
+
+                     gbc.gridx++;
+                     //gbc.gridwidth =1;
+                     feltPanel.add(datofelt, gbc);
+                     //gbc.gridwidth=1;
+                     gbc.gridx++;
+                     feltPanel.add(new JLabel("Reseptnummer:"), gbc);
+                     gbc.gridx++;
+                     feltPanel.add(idfelt, gbc);
+
+
+                     gbc.gridy++;
+                     gbc.gridx=0;
+
+                     feltPanel.add(new JLabel("Lege:"), gbc);
+                     gbc.gridx++;
+                     feltPanel.add(lENavn,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(lFNavn,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(lId,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(kVisLege,gbc);
+
+
+                     gbc.gridy++;
+                     gbc.gridx=0;
+                     feltPanel.add(new JLabel("Pasient:"), gbc);
+                     gbc.gridx++;
+                     feltPanel.add(pENavn,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(pFNavn,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(pFnr,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(kVisPasient,gbc);
+
+
+
+                     gbc.gridy++;
+                     gbc.gridx=0;
+                     feltPanel.add(new JLabel("Medisin:"), gbc);
+                     gbc.gridx++;
+                     feltPanel.add(mNavn,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(mRgruppe,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(mId,gbc);
+                     gbc.gridx++;
+                     feltPanel.add(kVisMedisin,gbc);
+
+
+                     gbc.gridy++;
+                     gbc.gridx=0;
+                     feltPanel.add(new JLabel("ANTALL/MENGDE"), gbc);
+                     gbc.gridx++;
+                     feltPanel.add(mengdefelt,gbc);
+
+
+                     gbc.gridy++;
+                     gbc.gridx=0;
+                     feltPanel.add(new JLabel("LEGEANVISNING"), gbc);
+                     gbc.gridx++;
+                     gbc.gridwidth=4;
+                     feltPanel.add(legeanv,gbc);
+
+                feltPanel.setVisible(true);
+          }
+             //Metoden returnerer en array av objekter som blir brukt til å sette 
+             //opp listen med objekter av typen Lege eller Pasienet, 
+             //avhengig av hva slags objekt som blir sendt til metoden
+            public Object[] visListe(Object o) {
+
+                    Lege l;
+                    Pasient p;
+
+                    List<Object> reseptListe = new ArrayList<>();
+
+                    if (o instanceof Lege ) 
+                    {	
+                        l = (Lege)o;
+                            if(reseptRegister.getResepterLegeObject(l)!= null) 
                             {
-                                    String s = x.getID() + " " + x.getPasient().getFNavn() + " " + x.getPasient().getENavn() + " " + x.getDato();
-                                    x.setToString(s);
-                                    reseptListe.add(x);
+                                for(Resept x: reseptRegister.getResepterLegeObject(l)) 
+                                {
+                                        String s = x.getID() + " " + x.getPasient().getFNavn() + " " + x.getPasient().getENavn() + " " + x.getDato();
+                                        x.setToString(s);
+                                        reseptListe.add(x);
+                                }
                             }
+                            else
+                                return null;
                         }
-                        else
-                            return null;
+
+                    if (o instanceof Pasient)
+                    {
+                        p = (Pasient)o;
+                            if(reseptRegister.getResepterPasientObject(p)!= null) 
+                            {
+                               for(Resept x: reseptRegister.getResepterPasientObject(p)) 
+                               {
+                                        String s = x.getID() + " " + x.getLege().getNavn() + " " + x.getLege().getEtternavn() + " "
+                                        + x.getLege().getlegeID() + " " + x.getDato();
+
+                                        x.setToString(s);
+                                        reseptListe.add(x);
+                                }
+                            }
+                            else
+                                return null;
+
+
+
                     }
 
-                if (o instanceof Pasient)
-                {
-                    p = (Pasient)o;
-                        if(reseptRegister.getResepterPasientObject(p)!= null) 
-                        {
-                           for(Resept x: reseptRegister.getResepterPasientObject(p)) 
-                           {
-                                    String s = x.getID() + " " + x.getLege().getNavn() + " " + x.getLege().getEtternavn() + " "
-                                    + x.getLege().getlegeID() + " " + x.getDato();
-
-                                    x.setToString(s);
-                                    reseptListe.add(x);
-                            }
-                        }
-                        else
-                            return null;
-
-
-                
-                }
-           
-           return reseptListe.toArray();
-	}
-}
+               return reseptListe.toArray();
+            }
+    }

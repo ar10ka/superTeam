@@ -1,29 +1,19 @@
 
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 
 import java.io.*;
 
 /**
  *
- * @author Ole
+ * @author Ole Bøe Andreassen - s188097
  */
+//FILBEHANDLERKLASSEN - Klassen er ansvarlig for å lagre filer som den for beskjed om å lagre
 public class FilBehandler {
        
   
     private final Logg logg;
 
-    
-    
-
-        
-        
+    //KONSTRUKTØR
     public FilBehandler()
     {
         logg = new Logg();  

@@ -1,4 +1,8 @@
 
+/**
+ *
+ * @author Ole Bøe Andreassen - s188097
+ */
 
 
 import javax.swing.*;
@@ -46,24 +50,34 @@ public class PasientRegisterPanel extends panelSuper {
 	      ex.printStackTrace();
 	    }
 		
-		
-		//pasientID = feilPasientId;
 		setLayout(new BorderLayout());
                 setBackground(Color.DARK_GRAY);
                 
+                //SEARCHPANEL
                 searchAdr = new JTextField(11);
                 searchFNavn = new JTextField(11);
                 searchENavn = new JTextField(11);
                 searchID = new JTextField(11);
 	
+                //FELTPANEL
 		navnFelt = new JTextField(10);
 		etternavnFelt = new JTextField(10);
 		adresseFelt = new JTextField(20);
                 
+                
+                searchAdr.setBorder(lineBorder);
+                searchFNavn.setBorder(lineBorder);
+                searchENavn.setBorder(lineBorder);
+                searchID.setBorder(lineBorder);
+		navnFelt.setBorder(lineBorder);
+		etternavnFelt.setBorder(lineBorder);
+		adresseFelt.setBorder(lineBorder);
+                
                 fNr = new JFormattedTextField(fNrformatter);
                 fNr.setColumns(14);
+                fNr.setBorder(lineBorder);
                        
-
+                //KNAPPER
                 radioMann  = new JRadioButton("Mann");
                 radioKvinne   = new JRadioButton("Kvinne");
                 radioGruppe = new ButtonGroup();
@@ -78,20 +92,28 @@ public class PasientRegisterPanel extends panelSuper {
 		kGenerer = new JButton("Generer Nye Pasienter");
                 kResept = new JButton("Vis Resepter");
                 
+                kEndrePasient.setBackground(greyWhite);
+		kRegPasient.setBackground(greyWhite);
+		kSlettPasient.setBackground(greyWhite);
+		kVisPasient.setBackground(greyWhite);
+		kNyPasient.setBackground(greyWhite);
+		kGenerer.setBackground(greyWhite);
+                kResept.setBackground(greyWhite);
+                
 
 
                 knappePanel.add(kNyPasient);
-               // knappePanel.add(kRegPasient);
                 knappePanel.add(kSlettPasient);
-               // knappePanel.add(kEndrePasient);
                 knappePanel.add(kGenerer);
                 knappePanel.add(kVisPasient);
                 knappePanel.add(kResept);
 
+                //Metoder som setter layouten for hver sitt panel
                 addFeltPanel();
                 addSearchPanel();
         
-                list = new JList(pasientRegister.returnObjekt()); //data has type Object[]
+                //Objektliste som skal inneholde alle legeobjektene
+                list = new JList(pasientRegister.returnObjekt());
                 list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 list.setLayoutOrientation(JList.VERTICAL);
                 JScrollPane scrollpane = new JScrollPane(list);
@@ -99,12 +121,15 @@ public class PasientRegisterPanel extends panelSuper {
                 listPanel.add(searchPanel, BorderLayout.PAGE_START);
                 listPanel.add(scrollpane, BorderLayout.CENTER);
                 listPanel.add(knappePanel, BorderLayout.PAGE_END);
+                //Legger panelene i splitpanel fra superklassen.
                 sptop.add(listPanel);
                 sptop.add(feltPanel);
                 spbottom.add(sptop);
                 spbottom.add(loggPanel);
+                //legger panelene i dette panelet
                 add(spbottom, BorderLayout.CENTER);
 
+                //Legger til lytterobjekt av klassen Lytter til hver knapp
                 sensor = new Lytter();	
                 kRegPasient.addActionListener(sensor);
                 kEndrePasient.addActionListener(sensor);
@@ -117,29 +142,33 @@ public class PasientRegisterPanel extends panelSuper {
                 kRegPasient.setEnabled(false);
                 kEndrePasient.setEnabled(false);
 
-                        documentListener = new DocumentListener() 
-                        {
-                            @Override
-                            public void changedUpdate(DocumentEvent documentEvent) {
-                                findIt(documentEvent);
-                            }
-                            @Override
-                            public void insertUpdate(DocumentEvent documentEvent) {
-                                findIt(documentEvent);
+                //Lytter til søkepanelets JTextFields
+                documentListener = new DocumentListener() 
+                {
+                    @Override
+                    public void changedUpdate(DocumentEvent documentEvent) {
+                        findIt(documentEvent);
+                    }
+                    @Override
+                    public void insertUpdate(DocumentEvent documentEvent) {
+                        findIt(documentEvent);
 
-                            }
-                            @Override
-                            public void removeUpdate(DocumentEvent documentEvent) {
-                                findIt(documentEvent);
-                            }
-                            };
-                               searchAdr.getDocument().addDocumentListener(documentListener);
-                               searchFNavn.getDocument().addDocumentListener(documentListener);
-                               searchENavn.getDocument().addDocumentListener(documentListener);
-                               searchID.getDocument().addDocumentListener(documentListener);		
+                    }
+                    @Override
+                    public void removeUpdate(DocumentEvent documentEvent) {
+                        findIt(documentEvent);
+                    }
+                    };
+                
+                //Legger til lytterobjekt til søkefeltene
+                       searchAdr.getDocument().addDocumentListener(documentListener);
+                       searchFNavn.getDocument().addDocumentListener(documentListener);
+                       searchENavn.getDocument().addDocumentListener(documentListener);
+                       searchID.getDocument().addDocumentListener(documentListener);		
                 }
 
-            private void findIt(DocumentEvent documentEvent) {
+       //Søkemetoden for list. Oppdaterer og viser listen etter det du skriver i de forskjellige feltene
+        private void findIt(DocumentEvent documentEvent) {
                     
                     String idfelt = searchID.getText();
                     String fnavn = searchFNavn.getText();
@@ -192,11 +221,6 @@ public class PasientRegisterPanel extends panelSuper {
                  gbc.gridx++;
                  searchPanel.add(searchAdr, gbc);
         }
-        
-        /**
-         * 
-         */
-        
         private void addFeltPanel()
         {
            
@@ -285,8 +309,8 @@ public class PasientRegisterPanel extends panelSuper {
              		
             feltPanel.setVisible(true);
       }
-	
-	
+        
+        //Metode som bruker FilBehandler-objekt for å laste innholdet av pasientregisteret fra fil
             private void lastInnFil() throws IOException
             {
               try
@@ -303,7 +327,7 @@ public class PasientRegisterPanel extends panelSuper {
                 System.out.println(logg.toString("Ferdig lastet lagringsfil!"));
               }
             }
-	
+	//Metode som bruker FilBehnadler-objekt for å lagre innholdet i pasientRegisteret til fil
             public void lagreFil() throws IOException
             {
               try
@@ -316,10 +340,8 @@ public class PasientRegisterPanel extends panelSuper {
                 ex.printStackTrace();
               }
             }
-
-	
-	
-	
+            
+          //Returnerer den radioknappen som er valgt, hvis ingen så returnerer den 0
         private char aktivRadio()
           {
             if(radioMann.isSelected())
@@ -331,10 +353,8 @@ public class PasientRegisterPanel extends panelSuper {
             return 0;
 
           }
-
-      
         
-	
+         //Metode som registrerer ny pasient
         private void regPasient() 
         {
             try
@@ -346,7 +366,7 @@ public class PasientRegisterPanel extends panelSuper {
                     String adr = adresseFelt.getText();
 
 
-
+              //Sjekker om alle feltene er fylt
              if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )            {
                  
                   if (!pasientRegister.finnes(id))
@@ -377,6 +397,7 @@ public class PasientRegisterPanel extends panelSuper {
 
         }
         
+         //Metode som setter ny informasjon til en pasient
         private void endrePasient()
         {
             try
@@ -387,7 +408,8 @@ public class PasientRegisterPanel extends panelSuper {
                 String enavn = etternavnFelt.getText();
                 char gen = aktivRadio();
                 String adr = adresseFelt.getText();
-
+                
+                //Sjekker om alle feltene er fylt
               if (!fnavn.equals("") && !enavn.equals("") && !id.equals("") && gen!=0 && !adr.equals("") )
               {
                 if (pasientRegister.finnes(id))
@@ -408,7 +430,7 @@ public class PasientRegisterPanel extends panelSuper {
                 else
                 {
                     error("Pasienten finnes ikke");
-
+                    //Hvis det skulle skje at pasienten ikke finnes får du mulighet til å registrere legen 
                     int n = JOptionPane.showConfirmDialog(null,
                             "Pasienten finnes ikke!\nVil du legge til pasient?",
                             "Ny Pasient!",
@@ -420,20 +442,18 @@ public class PasientRegisterPanel extends panelSuper {
                     }
                     else 
                         error("Pasient er ikke lagt til");
-
                 }
-
-
               }
                 else
                  error("Fyll ut alle feltene!");
             }
-    catch ( NumberFormatException | IndexOutOfBoundsException e)
-    {
-      error("Fyll ut alle feltene!");
-    }
+            catch ( NumberFormatException | IndexOutOfBoundsException e)
+            {
+              error("Fyll ut alle feltene!");
+            }
         }
-        
+
+        //Metode som tar imot Pasient-objekt og fyller feltene i feltPanelet  med informasjon fra objektet
 	private void visPasient( Pasient p ) 
         {
             if(p != null)
@@ -461,8 +481,9 @@ public class PasientRegisterPanel extends panelSuper {
                 else
                     error("Ingen pasient er valgt");
         }
+        //Metode som fjerner valgt pasient
 	private void slettPasient( Pasient p ) {
-            
+             //Får mulighet til å angre seg
              int n = JOptionPane.showConfirmDialog(null,
                             "Vil du fjerne pasientn?",
                             "Fjern Pasient!",
@@ -482,6 +503,7 @@ public class PasientRegisterPanel extends panelSuper {
                         error("Pasient er ikke fjernet");
 	}
         
+        //Tømmer alle feltene i feltPanel
 	private void  emptyFields() {
 
             fNr.setText("");
@@ -491,6 +513,7 @@ public class PasientRegisterPanel extends panelSuper {
             radioGruppe.clearSelection();
 	}
         
+        //metode som returnerer Pasient-objekt som er markert i objektlisten
         private Pasient getSelectedObject() {
 		
 		if(!list.isSelectionEmpty()) {
@@ -501,11 +524,13 @@ public class PasientRegisterPanel extends panelSuper {
                     return null;
 	}
         
+        //Oppdaterer listen
         private void oppdaterListe() {
 		
 		list.setListData(pasientRegister.returnObjekt());
 	}
         
+        //Lager nye tilfeldige pasienter med tilfeldig informasjon
         private void generatePasienter()
         {
             int Min;
@@ -596,9 +621,8 @@ public class PasientRegisterPanel extends panelSuper {
             }
             
         }
-
-	
-	
+        
+	//Lytterklasse som bestemmer hva som skjer når man trykker på knappene
 	private class Lytter implements ActionListener {
 		
 		@Override

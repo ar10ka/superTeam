@@ -1,26 +1,16 @@
 
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
-
 /**
  *
- * @author Ole
+ * @author Arthika Surendran - s198757
  */
 import java.io.Serializable;
 
+//MEDISINKLASSEN
 public class Medisin implements Serializable
 {
 	  
 	  private String navn, info, kategori,medID;
           private char reseptGruppe;
-
-
 	  public Medisin( String id, String n, String i, String k, char rGruppe  )
 	  {
                   medID = id;
@@ -28,10 +18,7 @@ public class Medisin implements Serializable
                   info = i;
                   kategori = k;
                   reseptGruppe = rGruppe;   
-		//liste over resepter skrevet ut paa pasienten.
 	  }
-
-
 	public String getMedID()
 	{
 		return medID;
@@ -73,12 +60,10 @@ public class Medisin implements Serializable
                 reseptGruppe = rGruppe;
         }
 
-
 	@Override
         public String toString(){
             return navn + ", " + reseptGruppe + "  " + medID;
         }
-        
         
 	public String getInfo()
 	  {
