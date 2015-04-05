@@ -2,9 +2,7 @@
 =========
 
 Hei!
-Dette er prosjektoppgaven for våren 2014 på HiOA.
+Dette er prosjektoppgaven for våren 2015 på HiOA.
 
 Vennlig hilsen
 Marius, Arthika og Ole.
-
-Hei
